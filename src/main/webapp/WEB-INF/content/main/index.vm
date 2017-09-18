@@ -1,0 +1,7 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><meta name=format-detection content="telephone=no"><title>天天特惠</title><script>!function(){function e(){document.documentElement.style.fontSize=(document.documentElement.clientWidth>414?414:document.documentElement.clientWidth)/12+"px"}var n=null;window.addEventListener("resize",function(){clearTimeout(n),n=setTimeout(e,300)},!1),e()}(window);</script><script>var baseUrl="${baseUrl}"</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ff38a29953ba98213b2c0e22805bca31";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link href=${staticUrl}/static/css/app.59025125d9ea25355ac377bd796c55f0.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=${staticUrl}/static/js/manifest.c29994c1d5918dd77225.js></script><script type=text/javascript src=${staticUrl}/static/js/vendor.78e70902a8ea8b8e5c76.js></script><script type=text/javascript src=${staticUrl}/static/js/app.578b5d6819cd7c812a72.js></script></body><script src=https://res.wx.qq.com/open/js/jweixin-1.0.0.js></script></html>

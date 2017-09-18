@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-活动列表-新增活动</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>新增活动
+							#parse("commons/backurl.vm")
+							</h3>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+											<form id="theForm" name="theForm" class="form-horizontal">
+											<input type="hidden" id="is_show" name="isShow" value="" />
+											<input type="hidden" id="top_banner" name="topBanner" value="" />
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>类型：</label>
+													
+													<div class="col-sm-3">
+														<select name="type" id="type" class="form-control chosen-select" data-placeholder="选择活动类型">
+															<option value="seckill">秒杀</option>
+															<option value="groupon">团购</option>
+														</select>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>展示位置 ： </label>
+				
+													<div class="col-sm-8 control-label align-left">
+														<div class="clearfix">
+															<label class="col-sm-2"><input name="showLocal" type="radio" class="ace" value="mall" checked/><span class="lbl">商城</span></label>
+															<label class="col-sm-2"><input name="showLocal" type="radio" class="ace" value="abc"/><span class="lbl">农行客户端</span></label>
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>活动名称：</label>
+				
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5" name="title" id="title" value="" type="text" />
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>活动简介：</label>
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5" name="intro" id="intro" value="" type="text" />
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-1">是否展示：</label>
+													<div class="col-sm-8 control-label align-left">
+														<div class="clearfix">
+															<input type="checkbox" name="showChecked" class="ace ace-switch ace-switch-2" />
+															<span class="lbl"></span>
+															<span class="help-inline"><span class="middle">YES：是；NO：否</span></span>
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 排序 ：</label>
+												<div class="col-sm-6">
+													<div class="clearfix">
+														<input type="text" id="sorting" name="sorting" placeholder="排序" value="1" class="col-xs-10 col-sm-5" />
+														<span class="help-inline"><span class="middle">越小越靠前</span></span>
+													</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div id="bannerAll" >
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>banner图1： </label>
+													<div class="col-sm-8 ">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5 tab-banner" name="banner1" id="banner1" type="text" readonly="readonly" value=""/>
+															<span class="help-inline col-sm-1">
+																<span class="middle">
+																	<a class="btn btn-minier btn-primary" onclick="addImg('banner1');">上传</a>
+																</span>
+															</span>
+															<span clss="help-inline">
+																<span class="middle">图片尺寸：750*1208</span>
+															</span>
+															<span class="middle">
+																	<a class="btn btn-minier btn-primary" onclick="addbanner();">添加</a>
+															</span>
+														</div>
+														<img id="banner1_preview" class="hidden" src="" width="100" height="100">
+													</div>
+												</div>
+												</div>
+												
+												<div class="clearfix form-actions">
+													<div class="col-md-offset-3 col-md-9">
+														<button class="btn btn-info" type="submit" id="submit">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('#sorting').ace_spinner({value:1,min:1,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+			
+			var rules = {},messages = {};
+			rules.title = {required:true};
+			rules.intro = {required:true};
+			messages.title = {required:"名称不能为空"};
+			messages.intro = {required:"简介不能为空"};
+			
+			Validate.init("theForm",rules,messages,
+					function(form){
+						$("input[name='showChecked']:checkbox").each(function(){
+			                if($(this).is(':checked')){
+			                    $("#is_show").val("1");
+			                }else{
+			                	$("#is_show").val("0");
+			                }
+			            });
+		            	var topBanner = [];
+		            	$(".tab-banner").each(function () {
+		            		var barVal = $(this).val();
+		            		if(barVal!=""){
+			            		topBanner.push($(this).val());
+		            		}
+		    			});
+		    			$("#top_banner").val(topBanner.toString());
+                        if(topBanner.length == 0){
+                            layer.msg('请添加图片');
+                            return
+                        }
+                        App.formAjaxSubmit('theForm','${base}/act/activity/addActivity.htm','post',
+                            function(result){
+                                var suc = result.success;
+                                if(suc){
+                                    window.location.href="${base}/act/activity/index.htm";
+                                }else{
+                                    layer.msg(result.message);
+                                }
+                            }
+                        );
+					})
+				});
+		
+		function addbanner(){
+			var len = $(".tab-banner").length;
+			var bannerId = "banner"+(len+1).toString();
+			var bannerMsg='<div class="form-group">'+
+							'<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>banner图'+(len+1)+'： </label>'+
+							'<div class="col-sm-8">'+
+								'<div class="clearfix">'+
+									'<input class="col-xs-10 col-sm-5 tab-banner" name="'+bannerId+'" id="'+bannerId+'" type="text" readonly="readonly" value="" />'+
+									'<span class="help-inline col-sm-1">'+
+										'<span class="middle">'+
+											"<a class='btn btn-minier btn-primary' onclick='addImg(&apos;"+bannerId+"&apos;)'>上传</a>"+
+										'</span>'+
+									'</span>'+
+									'<span clss="help-inline">'+
+										'<span class="middle">图片尺寸：750*1208</span>'+
+									'</span>'+
+									'<span clss="help-inline">'+
+										"<a class='btn btn-minier btn-danger' onclick='delBanner(&apos;"+bannerId+"&apos;)'>删除</a>"+
+									'</span>'+
+								'</div>'+
+								'<img id="'+bannerId+'-img" class="hidden" src="" style="height: 100px;width: 100px">'+
+							'</div>'+
+						'</div>'
+			$("#bannerAll").append(bannerMsg);
+		}
+
+		//删除banner
+		function delBanner(bannerId) {
+			$("#"+bannerId).parent().parent().parent().remove();
+			var ban = $("#bannerAll").find("div[class='form-group']");
+			for (var i = 0; i < ban.length; i++) {
+				var label = $(ban[i]).find("label");
+				var input = $(ban[i]).find('input');
+				var upload = $(ban[i]).find("a").eq(0);
+				var del = $(ban[i]).find("a").eq(1);
+				label.html("<span class='middle red'>*</span>banner图"+(i+1)+"： ");
+				input.attr('id','banner'+(i+1));
+				input.attr('name','banner'+(i+1));
+				upload.attr('onclick',"addImg("+"\'banner"+(i+1)+"\'"+")")
+				if (i!=0) {
+					del.attr('onclick',"delBanner("+"\'banner"+(i+1)+"\'"+")")
+				}
+			}
+		}
+		
+		/* 上传图片  */
+		function addImg(nodeId){
+			var index = layer.open({
+			  type: 2,
+			  title: "上传图片",
+			  shadeClose: true,
+			  closeBtn: 1,
+			  area: ['30%', '50%'],
+			  content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+			  btn: ['关闭'],
+			  yes:function(){
+			     	layer.close(index);
+			  	  }
+			});
+		}
+		</script>
+</body>
+</html>
+

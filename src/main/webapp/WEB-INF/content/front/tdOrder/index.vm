@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>测试去支付</title>
+	<style>
+		html{
+	        margin: 0;
+	        padding: 0;
+	    }
+		body{
+		   margin: 0;
+		    padding: 0;  
+		}
+		a{
+		    text-decoration:none;
+		}
+		.pay_success {
+		    width: 100%;
+		    height: 100%;
+		     } 
+		.success_img {
+		    width: 80px;
+		    height: 80px;
+		    margin:0 auto;
+		    margin-top: 30%;
+		    background: url(../img/abc-success.png) no-repeat center;
+		    background-size: 100% 100%;
+		    top: 3rem;
+		}
+		.lost_img{
+		    width: 80px;
+		    height: 80px;
+		    margin:0 auto;
+		    margin-top: 30%;
+		    background: url(../img/abc-fail.png) no-repeat center;
+		    background-size: 100% 100%;
+		    top: 3rem;
+		}
+		.success_money {
+		    margin-top: 2%;
+		    width: 100%;
+		    text-align: center;
+		}
+		.success_order {
+		    width: 300px;
+		    height: 40px;
+		    line-height: 40px;
+		    margin: 0 auto;
+		    text-align: center;
+		    background-color: #1ed7ad;
+		    border-radius: 30px;
+		    color: #fff;
+		}
+	</style>
+</head>
+
+<body>
+	   <div class="pay_success">
+            <div class="success_img"></div>
+            <a href="/front/tdOrder/payment.htm"><div class="success_order">去支付</div></a>
+       </div>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-编辑角色</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		<link href="${base}/plugin/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>编辑角色#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form id="theForm" name="theForm" class="form-horizontal" action="${base}/sys/role/save.htm" method="post">
+									<input type="hidden" name="id" id="id" value="$!{role.id}" />
+									<input type="hidden" name="ruleIds" id="rule_ids" value="" />
+									<input type="hidden" name="token" id="token" value="$!token" />
+									<input type="hidden" name="status" id="status" value="$!{role.status}" />
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 角色名称 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="role_name" name="roleName" placeholder="角色名称" value="$role.roleName" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+									</div>
+	
+									<div class="space-4"></div>
+	
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 是否启用</label>
+	
+										<div class="control-label no-padding-left col-sm-1">
+											<label>
+												<input name="isChecked" id="isChecked" #if($!role.status=='1') checked #end  class="ace ace-switch ace-switch-2" type="checkbox" />
+												<span class="lbl"></span>
+											</label>
+										</div>
+										<span class="help-inline col-xs-12 col-sm-7">
+											<span class="middle">YES，启用；NO，禁用</span>
+										</span>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 权限选择</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<ul id="ruleTree" class="ztree"></ul>
+											</div>
+										</div>
+									</div>
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-info" type="submit">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+	
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												重置
+											</button>
+										</div>
+									</div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script type="text/javascript" src="${base}/plugin/ztree/js/jquery.ztree.core.js"></script>
+		<script type="text/javascript" src="${base}/plugin/ztree/js/jquery.ztree.excheck.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var setting = {
+					view: {
+						selectedMulti: true
+					},
+					check: {
+						enable: true,
+						chkboxType: { "Y" : "ps", "N" : "ps" }
+					},
+					data: {
+						simpleData: {
+							enable: true
+						}
+					}
+				};
+				
+				var zNodes =[
+					#foreach($rule in $ruleList)
+					{ id:$rule.id, pId:$rule.parentId, name:"$rule.title", #foreach($ckr in $ckrule) #if($ckr==$rule.id) checked:true, #end #end open:false},
+					#end
+				];
+				
+				$.fn.zTree.init($("#ruleTree"), setting, zNodes);
+			
+				$('#birthday').datepicker({
+					format: 'yyyy-mm-dd',
+				  	weekStart: 1,
+					auoclose: true,
+					todayBtn: 'linked',
+					language: 'cn'
+				 });
+				 
+				$("#chosen-role").chosen(); 
+				 
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						roleName:{required: true,maxlength: 50}
+					},
+				    messages: {
+					    roleName:{required:"角色不能为空",maxlength:"至多输入50个字符"}
+					},
+					invalidHandler: function (event, validator) {
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function(form) {
+						var ischeck=false;
+			            $("input[name='isChecked']:checkbox").each(function(){ 
+			                if($(this).is(':checked')){
+			                    ischeck=true;
+			                }
+			            })
+			            if(ischeck){
+			            	$("#status").val("1")
+			            }else{
+			            	$("#status").val("0")
+			            }
+						var nodes = $.fn.zTree.getZTreeObj('ruleTree').getCheckedNodes(true);
+						var s=[];
+						for(var i=0;i<nodes.length;i++){
+							s.push(nodes[i].id);
+						}
+						if(s.length==0){
+							Box.alert('请选择权限!');
+							return;
+						}
+						$('#rule_ids').val(s.join(','));
+					    App.formAjaxSubmit('theForm','${base}/sys/role/save.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href="${base}/sys/role/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+			  	});
+				 
+			});
+		</script>
+</body>
+</html>

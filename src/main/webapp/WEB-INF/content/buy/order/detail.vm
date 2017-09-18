@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>订单详情-订单管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>订单详情#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+							
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">订单</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单类型：</label>
+												<label class="col-sm-8 control-label align-left">
+												#if($!{order.orderType}=='seckill')
+													秒杀订单
+												#elseif($!{order.orderType}=='groupon')
+													团购订单
+													#if($!{order.groupStatus}=='ungroup')
+													(<span class="red">未成团</span>)
+													#elseif($!{order.groupStatus}=='grouped')
+													(<span class="green">已成团</span>)
+													#elseif($!{order.groupStatus}=='grouping')
+													(<span class="blue">成团中</span>)
+													#end
+												#elseif($!{order.orderType}=='other')
+													普通订单
+												#end
+												</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单号： </label>
+												<label class="col-sm-8 control-label align-left">$!{order.orderNum}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">下单时间：</label>
+												<label class="col-sm-8 control-label align-left">$!date.format('yyyy-MM-dd HH:mm:ss',$!order.orderTime)</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单备注：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.remark}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">支付方式：</label>
+												<label class="col-sm-8 control-label align-left">
+													#if(${order.payType}=='kmpay')
+														K码支付
+													#elseif(${order.payType}=='wxpay')
+														微信支付
+													#elseif(${order.payType}=='alipay')
+														支付宝支付
+													#end
+												</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">支付状态：</label>
+												<label class="col-sm-8 control-label align-left">
+													#if(${order.payStatus}=='wait')
+														待支付
+													#elseif(${order.payStatus}=='success')
+														支付成功
+													#elseif(${order.payStatus}=='fail')
+														支付失败
+													#end
+												</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">支付流水号：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.irspRef}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单状态：</label>
+												<label class="col-sm-8 control-label align-left">
+													#if(${order.orderStatus}=='wait_pay')
+				                    					等待买家付款
+				                    				#elseif(${order.orderStatus}=='wait_send')
+				                    					买家已付款
+				                    				#elseif(${order.orderStatus}=='wait_accept')
+				                    					卖家已发货
+				                    				#elseif(${order.orderStatus}=='deal_suc')
+				                    					交易成功
+				                    				#elseif(${order.orderStatus}=='deal_close')
+				                    					交易关闭
+				                    				#end
+												</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">商品总价：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.goodsPrice}元</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">配送费：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.transFee}元</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单总价：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.totalPrice}元</label>
+											</div>
+											<div>
+												<table class="table table-striped table-bordered">
+													<thead>
+														<tr>
+															<th width="2%" class="center">#</th>
+															<th width="20%">商品名称</th>
+															<th width="10%" class="hidden-xs">规格</th>
+															<th width="5%" class="hidden-480">数量</th>
+															<th width="8%">价格(元)</th>
+															<th width="10%">优惠券</th>
+															<th width="10%">优惠金额(元)</th>
+															<th width="10%">退货状态</th>
+															<th width="10%">退货理由</th>
+															<th width="10%">退货说明</th>
+															<th width="5%">操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														#foreach($detail in $!detailList)
+														<tr>
+															<td class="center">$!{velocityCount}</td>
+															<td>$!{detail.goodsName}</td>
+															<td class="hidden-xs">$!{detail.goodsStandardDes}</td>
+															<td class="hidden-480">$!{detail.goodsAmount}</td>
+															<td>$!{detail.goodsRealPrice}</td>
+															<td>$!{detail.couponSn}</td>
+															<td>$!{detail.couponMoney}</td>
+															<td>
+																#if($!{detail.refundStatus}=='unrefund')
+																	无需退货
+																#elseif($!{detail.refundStatus}=='refunding')
+																	<span class="red">申请退货</span><span title="申请时间">($!date.format('yyyy-MM-dd HH:mm:ss',$!detail.applyTime))</span>
+																#elseif($!{detail.refundStatus}=='refunded')
+																	已退货<span title="退货时间">($!date.format('yyyy-MM-dd HH:mm:ss',$!detail.refundTime))</span>
+																#end
+															</td>
+															<td>$!{detail.refundReasonDes}</td>
+															<td>$!{detail.refundDes}</td>
+															<td>
+																#if(${order.orderStatus}=='wait_send'||${order.orderStatus}=='wait_accept'||${order.orderStatus}=='deal_suc')
+																	#if($!{detail.refundStatus}!='refunded'&&$!{detail.goodsRealPrice}>0)
+																	#permission("buy/order/orderRefund.htm","<a class='btn btn-minier btn-info' onclick=refund(this,'${order.orderNum}','$!{detail.orderDetailNum}')>退款</a>")
+																	#end
+																#end
+															</td>
+														</tr>
+														#end
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="space-8"></div>
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">收货信息</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">收件人： </label>
+												<label class="col-sm-8 control-label align-left">$!{order.recipient}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">手机号： </label>
+												<label class="col-sm-8 control-label align-left">$!{order.telephone}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">收货地址：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.address}</label>
+											</div>
+											#if($!{order.isInvoice}==1)
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">是否开发票：</label>
+												<label class="col-sm-8 control-label align-left">是</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">发票内容：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.billHeader}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">发票备注：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.billRemark}</label>
+											</div>
+											#else
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">是否开发票：</label>
+												<label class="col-sm-8 control-label align-left">否</label>
+											</div>
+											#end
+										</div>
+									</div>
+								</div>
+							</div>
+							#if(($!{order.orderType}=='groupon'&&$!{order.groupStatus}=='grouped')||($!{order.orderType}!='groupon'&&$!{order.orderStatus}!='wait_pay'&&$!{order.orderStatus}!='deal_close'))
+							<div class="space-8"></div>
+							<form id="theForm" name="theForm">
+							<input type="hidden" id="order_id" name="orderId" value="$!{order.id}" />
+							<input type="hidden" id="is_sms" name="isSms" value="" />
+							<input type="hidden" name="logisticsCode" id="logistics_code" value="$!{order.logisticsCode}">
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">发货物流</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单号： </label>
+												<label class="col-sm-8 control-label align-left">${order.orderNum}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流短信提醒：</label>
+												<label class="col-sm-1 control-label align-left">
+													<div>
+														<input type="checkbox" name="isChecked" #if($!{order.isSms}=='1') checked #end class="ace ace-switch ace-switch-2" />
+														<span class="lbl"></span>
+													</div>
+												</label>
+												<span class="help-inline"><span class="middle">YES：是；NO：否</span></span>
+											</div>
+											#if($!{order.orderStatus}=='wait_send')
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+												
+												<div class="col-sm-9">
+													<div class="clearfix">
+														<input type="text" id="exp_num" name="expNum" placeholder="物流单号" class="col-xs-10 col-sm-5" value="$!{order.expNum}"/>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+												<div class="col-sm-9">
+													<div class="clearfix">
+                                                        <select name="company" id="company" class="col-xs-10 col-sm-5" data-placeholder="物流公司">
+                                                            <option value=""></option>
+															#foreach($logistics in $logisticsList)
+                                                                <option value="$!{logistics.name}" data-code="$!{logistics.code}" #if($!{order.logisticsCode}== $!{logistics.code}) selected="selected" #end>$logistics.name</option>
+															#end
+                                                        </select>
+													</div>
+												</div>
+											</div>
+											<div class="clearfix form-actions">
+												<div class="col-md-offset-3 col-md-9">
+													<button class="btn btn-info" type="submit">
+														<i class="icon-ok bigger-110"></i>
+														提交
+													</button>
+			
+													&nbsp; &nbsp; &nbsp;
+													<button class="btn" type="reset">
+														<i class="icon-undo bigger-110"></i>
+														重置
+													</button>
+												</div>
+											</div>
+											#else
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+												<label class="col-sm-8 control-label align-left">$!{order.expNum}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+												<label class="col-sm-8 control-label align-left">
+													$!{order.company}&nbsp;&nbsp;#if(${order.orderStatus}!='deal_close')<a href="javascript:void(0)" id="edit_lgc">修改物流</a>#end
+												</label>
+											</div>
+											#end
+										</div>
+									</div>
+								</div>
+							</div>
+							</form>
+							#end
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		
+		<form id="lgcForm" name="lgcForm">
+			<input type="hidden" id="order_id" name="orderId" value="$!{order.id}" />
+			<input type="hidden" name="logisticsCode" id="logistics_code_layer" value="$!{order.logisticsCode}">
+
+			<div class="widget-box" id="lgc_div" style="display:none">
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+
+								<div class="col-sm-10">
+									<div class="clearfix">
+										<input type="text" id="exp_num" name="expNum" placeholder="物流单号" class="col-xs-10 col-sm-5" value="$!{order.expNum}"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+								<div class="col-sm-10">
+									<div class="clearfix">
+										<select name="company" id="company_layer" class="col-xs-10 col-sm-5" data-placeholder="物流公司">
+											<option value=""></option>
+											#foreach($logistics in $logisticsList)
+												<option value="$!{logistics.name}" data-code="$!{logistics.code}" #if($!{order.logisticsCode}== $!{logistics.code}) selected="selected" #end>$logistics.name</option>
+											#end
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		#parse("commons/footerJs.vm")
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#company').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+		var rules = {},messages = {};
+		rules.expNum = {required:true,maxlength:20};
+		rules.compay = {required:true,maxlength:50};
+		messages.expNum = {required:"物流单号不能为空",maxlength:"最多输入20个字符"};
+		messages.compay = {required:"物流公司不能为空",maxlength:"最多输入50个字符"};
+		Validate.init("theForm",rules,messages,
+			function(form){
+				var ischeck=false;
+	            $("input[name='isChecked']:checkbox").each(function(){ 
+	                if($(this).is(':checked')){
+	                    ischeck=true;
+	                }
+	            })
+	            if(ischeck){
+	            	$("#is_sms").val("1")
+	            }else{
+	            	$("#is_sms").val("0")
+	            }
+				App.formAjaxSubmit('theForm','${base}/buy/order/send.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href="${base}/buy/order/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+		
+		Validate.init("lgcForm",rules,messages,
+			function(form){
+				var ischeck=false;
+	            $("input[name='isChecked']:checkbox").each(function(){ 
+	                if($(this).is(':checked')){
+	                    ischeck=true;
+	                }
+	            })
+	            if(ischeck){
+	            	$("#is_sms").val("1")
+	            }else{
+	            	$("#is_sms").val("0")
+	            }
+				App.formAjaxSubmit('lgcForm','${base}/buy/order/editSend.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href="${base}/buy/order/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+		
+	  	$("#edit_lgc").click(function(){
+	  		$("#lgcForm")[0].reset();
+			layer.open({
+				type: 1,
+				title: '修改物流',
+				area: ['40%', '40%'],
+				shadeClose: true,
+				content: $('#lgc_div'),
+				btn: ['确定', '关闭'],
+				yes: function(){
+				   $("#lgcForm").submit();
+				}
+			});			  	
+	  	});
+		
+		$("#company").on('change',function () {
+			var code = $(this).find("option:selected").attr("data-code");
+			$("#logistics_code").val(code);
+		})
+		$("#company_layer").on('change',function () {
+			var code = $(this).find("option:selected").attr("data-code");
+			$("#logistics_code_layer").val(code);
+		})
+	});
+	
+	function refund(obj,orderNum,detailNum,refundType){
+		Box.confirm("确认退款?",function(){
+			var data = {};
+			data.orderNum = orderNum;
+			data.orderDetailNum = detailNum;
+            data.refundType = refundType;
+			App.ajaxSubmit('${base}/buy/order/orderRefund.htm',data,'post',
+				function(result){
+					var suc = result.success;
+					if(suc){
+						layer.msg("退款成功");
+						$(obj).remove();
+					}else{
+						layer.msg(result.message);
+					}
+				}
+			);
+		})
+	}
+	
+</script>
+</body>
+</html>
+

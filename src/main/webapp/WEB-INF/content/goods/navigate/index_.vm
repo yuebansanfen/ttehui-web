@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>导航栏管理</title>
+    <meta name="keywords" content="导航栏管理" />
+    <meta name="description" content="导航栏管理" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="${base}/mocentre/css/select2.css"/>
+	#parse("commons/commonCss.vm")
+	#parse("commons/commonJs.vm")
+    <style>
+        .err-td{
+            background-color:#3cc51f;
+        }
+
+    </style>
+</head>
+
+<body class="no-skin">
+	#parse("commons/header.vm")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+
+		#parse("commons/sidebar.vm")
+        <div class="main-content">
+
+			#parse("commons/breadcrumbs.vm")
+            <div class="page-content">
+				#parse("commons/setting.vm")
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="space-4"></div>
+                        <div class="row">
+                            <div class="table-header"></div>
+                            <div class="table-responsive">
+                                <table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="center">
+                                            <label>
+                                                <input type="checkbox" class="ace" />
+                                                <span class="lbl"></span>
+                                            </label>
+                                        </th>
+                                        <th>专题/活动</th>
+                                        <th>具体选项</th>
+                                        <th>导航名称</th>
+                                        <th>icon</th>
+                                        <th width="30%">操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="space-4"></div>
+                        </div>
+                        <div>
+                            <input id="btn-del" class="btn  btn-sm btn-primary" type="button" value="批量删除">
+                            <input id="btn_addRow"  class="btn btn-sm btn-white btn-primary" value="添加空行">
+                            <a id="btn_save"  class="btn btn-sm btn-primary" style="float: right" >保存</a>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container-inner -->
+
+	#parse("commons/scroll.vm")
+</div><!-- /.main-container -->
+
+<div id="hidden_select" hidden="hidden">
+
+</div>
+	#parse("commons/footerJs.vm")
+<script src="${base}/mocentre/js/select2.js"></script>
+<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+<script src="${base}/mocentre/js/common.js"></script>
+<script type="text/javascript">
+    var mTable;
+    var subject_data =[];
+    var activity_data=[];
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "${base}/sub/subject/query.htm",
+            type: "post",
+            "dataType": "JSON",
+            "success": function (data) {
+                if (data.success == true) {
+                    subject_data  = data.data;
+                    console.log(subject_data)
+                }
+            }
+        });
+        mTable = $('#sample-table').dataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false,
+            "ajax": {
+                url:"${base}/goods/navigate/getAll.htm",
+                type:"post",
+                data: function (d) {
+                }
+            },
+            "columns" : [
+                {"data":null,"orderable":false},
+                {"data":"type","orderable":true},
+                {"data":"typeId","orderable":true},
+                {"data":"title","orderable":true},
+                {"data":"icon","orderable":false},
+                { "data":null,"orderable":false},
+            ],
+            "columnDefs": [
+                {
+                    "class":"center",
+                    "orderable":false,
+                    "render":function(data, type, row){
+                        return '<input data-id="'+row.id+'" type=\"checkbox\" class=\"ace\" /><span class=\"lbl\"></span>';
+                    },
+                    "targets":0
+                },
+                {
+                    "class":"center",
+                    "orderable":false,
+                    "render": function (data, type, row) {
+                        return '<input type="radio" name="type' + row.id + '" class="activity">活动<input type="radio" name="type' + row.id + '"class="subject">专题';
+                    },
+                    "targets":1
+                },
+                {
+                    "class":"center",
+                    "orderable":false,
+                    "render": function (data, type, row) {
+                        return '<input type="text"  value="'+data+'"/>';
+                    },
+                    "targets":3
+                },
+                {
+                    "class":"center",
+                    "orderable":false,
+                    "render": function (data, type, row) {
+                        return '<input type="text"  value="'+data+'"><i class="'+data+'"></i>';
+
+                    },
+                    "targets":4
+                },
+                {
+                    "class":"center",
+                    "orderable":false,
+                    "render": function (data, type, row) {
+                        return '<div hidden="hidden" class="div_subject" ><select  style="width: 200px" class="select_subject"  name="state" class="select2" data-placeholder="专题"></select></div>'+
+                                '<div hidden="hidden" class="div_activity"> <select  style="width: 200px" class="select_activity"  name="state" class="select2" data-placeholder="活动"></select></div>';
+                    },
+                    "targets":2
+                },
+                {
+                    "render":function(data, type, row){
+                        var html =' <a href="javascript:void(0);" class="delete btn btn-white btn-xs"><i class="fa fa-times"></i> 删除 </a>'
+                        html += ' <a href="javascript:void(0);" class="up btn btn-white btn-xs"><i class="fa fa-arrow-up"></i> 上升</a>'
+                        html += ' <a href="javascript:void(0);" class="down btn btn-white btn-xs"><i class="fa fa-arrow-down"></i> 下降</a>'
+                        return html;
+                    },
+                    "targets":5,
+                    "orderable":false
+                }
+            ],
+            "initComplete": function(settings, json ) {
+                console.log("-------initComplete--------------");
+                initSelect($("#sample-table .select_subject"),subject_data);
+                initSelect($("#sample-table .select_activity"),activity_data);
+
+                var data = json.data;
+                $(data).each(function(e){
+                    var otr = $("#sample-table tbody tr").eq(e)
+                    createType(otr,data[e].type,data[e].typeId);
+                });
+            },
+        });
+
+        $('table th input:checkbox').on('click' , function(){
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                    .each(function(){
+                        this.checked = that.checked;
+                        $(this).closest('tr').toggleClass('selected');
+                    });
+        });
+
+        $('#sample-table tbody').on('click', 'a.delete', function(e) {
+            e.preventDefault();
+            var otr = $(this).closest("tr");
+            Box.confirm("是否删除该数据?",function(){
+                $("#btn_save").addClass("btn-danger").html("注意！未保存");
+                var table = $('#sample-table').DataTable();
+                table.row(otr).remove().draw();
+                $("#btn_save").addClass("btn-danger").html("注意！未保存");
+            })
+        });
+
+        // 初始化上升按钮
+        $('#sample-table tbody').on('click', 'a.up', function(e) {
+            e.preventDefault();
+            $("#btn_save").addClass("btn-danger").html("注意！未保存");
+            var table = $('#sample-table').DataTable();
+            var index = table.row($(this).parents('tr')).index();
+            if ((index - 1) >= 0) {
+                var data = table.data();
+                table.clear();
+                data.splice((index - 1), 0, data.splice(index, 1)[0]);
+                table.rows.add(data).draw();
+                initSelect($("#sample-table .select_subject"),subject_data);
+                initSelect($("#sample-table .select_activity"),activity_data);
+                $(data).each(function(e){
+                    var otr = $("#sample-table tbody tr").eq(e)
+                    createType(otr,data[e].type,data[e].typeId);
+                });
+
+            } else {
+                alert("亲，已经到顶了");
+            }
+            $('#sample-table').find("tr").eq(index).css('background-color','red')
+                    .delay(150)
+                    .queue(function(){$('#sample-table').find("tr").eq(index).css('background-color','')});
+        });
+        // 鼠标移动换行
+        $(document).on('mouseover', '#sample-table tbody tr', function(e) {
+            $(this).css('background-color',"#d5d5d5");
+        })
+        $(document).on('mouseleave', '#sample-table tbody tr', function(e) {
+            $(this).css('background-color','');
+        })
+
+        // 初始化下降按钮
+        $('#sample-table tbody').on('click', 'a.down', function(e) {
+            e.preventDefault();
+            var table = $('#sample-table').DataTable();
+            var index = table.row($(this).parents('tr')).index();
+            var max = table.rows().data().length;
+            if ((index + 1) < max) {
+                var data = table.data();
+                table.clear();
+                data.splice((index + 1), 0, data.splice(index, 1)[0]);
+                table.rows.add(data).draw();
+                initSelect($("#sample-table .select_subject"),subject_data);
+                initSelect($("#sample-table .select_activity"),activity_data);
+                $(data).each(function(e){
+                    var otr = $("#sample-table tbody tr").eq(e)
+                    createType(otr,data[e].type,data[e].typeId);
+                });
+            } else {
+                alert("亲，已经到底了");
+            }
+            $('#sample-table').find("tr").eq(index+2).css('background-color','red');
+        });
+    });
+
+    $("#btn_addRow").on("click",function(){
+        $("#btn_save").addClass("btn-danger").html("注意！未保存");
+        var table = $('#sample-table').DataTable();
+        var rowNode = table.row.add({"id":"","title":"","type":"","typeId":"","icon":""}).draw().node();
+        initSelect($(rowNode).find(".select_subject"),subject_data);
+        initSelect($(rowNode).find(".select_activity"),activity_data);
+        $(rowNode).find(".subject").trigger("change");
+    })
+
+    function initSelect(o,optionList){
+        o.select2({allowClear:true})
+        append_select_option(o,optionList);
+    }
+
+    $(document).on("change","tr [type='radio']", function (){
+        var otr = $(this).closest("tr");
+        var type = $(this).attr("class");
+        $(this).siblings().attr("checked",false);
+        $(this).attr("checked",true);
+        createType(otr,type);
+    })
+
+    function  createType(otr,type,typeId){
+        if(type == "subject"){
+            otr.find(".subject").attr("checked",true);
+            var o = otr.find(".div_subject").attr("hidden",false);
+            o.siblings().attr("hidden",true)
+            bindSelect(o.find("select"),typeId);
+        } else if(type == "activity"){
+            otr.find(".activity").attr("checked",true);
+            var o = otr.find(".div_activity").attr("hidden",false);
+            o.siblings().attr("hidden",true)
+            bindSelect(o.find("select"),typeId);
+        }
+    }
+
+    /**
+     * 拼接select下的option
+     */
+    function append_select_option(oselect, optList) {
+        if (optList.length != 0) {
+            for (var i in optList) {
+                var oOption = $(' <option hidden="hidden" value="'+optList[i].id+'" subTmpCode = "'+optList[i].subTmpCode+'">' + optList[i].title + '</option>');
+                oselect.append(oOption);
+            }
+        }
+    }
+
+    /**
+     * 绑定下拉框的值
+     */
+    function bindSelect(o,v){
+        o.val(v).trigger("change");
+    }
+
+    // 保存
+    $(document).on("click","#btn_save",function (){
+        var trList = $("#sample-table tbody tr");
+        var flag = true;
+        $(".err-td").removeClass("err-td");
+        var paramList = [];
+        for(var i = 0;i<trList.length;i++){
+            var param = {};
+            var otr = trList.eq(i);
+            param.type= otr.find("td").eq(1).find("[checked='checked']").attr("class");
+            param.typeId = otr.find("td").eq(2).find(".div_"+ param.type).find("select").val();
+            param.subTmpCode = otr.find("td").eq(2).find(".div_"+ param.type).find("select").find("option:selected").attr("subTmpCode");
+            param.title = otr.find("td").eq(3).find("input").val();
+            param.icon = otr.find("td").eq(4).find("input").val();
+            paramList.push(param);
+            if(!param.type){
+                otr.find("td").eq(1).addClass("err-td");
+                flag = false;
+            }
+            if(!param.typeId){
+                otr.find("td").eq(2).addClass("err-td");
+                flag = false;
+            }
+            if(!param.title){
+                otr.find("td").eq(3).addClass("err-td");
+                flag = false;
+            }
+        }
+        if(flag){
+            $.ajax({
+                url: "${base}/goods/navigate/addNavigate.htm",
+                type: "post",
+                dataType:"JSON",
+//                contentType:"application/json",
+                "data":{"paramList":JSON.stringify(paramList)},
+                "success": function (data) {
+                    if (data.success == true) {
+//                        subject_data  = data.data;
+                        location.reload();
+                    }
+                }
+            });
+        }
+    })
+
+    /**
+     * 批量删除
+     */
+    $('#btn-del').on('click', function () {
+        var table = $("table");
+        var trs = [];
+        table.find('tr > td:first-child input:checkbox').each(function () {
+            var chk = $(this).prop('checked');
+            if (chk) {
+                trs.push($(this).closest("tr"));
+            }
+        })
+        Box.confirm("是否删除选中的" + trs.length + "条数据?", function () {
+            $("#btn_save").addClass("btn-danger").html("注意！未保存");
+            var table = $('#sample-table').DataTable();
+            $.each(trs,function(){
+                table.row($(this)).remove().draw();
+            })
+            $("#btn_save").addClass("btn-danger").html("注意！未保存");
+        })
+    })
+
+</script>
+</body>
+</html>

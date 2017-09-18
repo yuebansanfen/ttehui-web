@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>礼品列表</title>
+		<meta name="keywords" content="礼品列表" />
+		<meta name="description" content="礼品列表" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+
+                                <div class="row">
+                                    <form id="search_form" class="form-inline">
+                                        <a class="btn btn-sm btn-primary" href="${base}/ggoods/goods/add.htm" value="">新增礼品</a>
+                                        <input type="text" id="title" name="title" class="input-sm" placeholder="商品名称">&nbsp;&nbsp;
+                                        审核状态：
+                                        <select id="isCheck" name="isCheck">
+                                            <option value=""></option>
+                                            <option value="unCheck">待审核</option>
+                                            <option value="checkPass">审核通过</option>
+                                            <option value="checkFail">审核驳回</option>
+                                        </select>
+                                        上架状态：
+                                        <select id="isShow" name="isShow">
+                                            <option value=""></option>
+                                            <option value="notShelf">待上架</option>
+                                            <option value="onShelf">上架中</option>
+                                            <option value="offShelf">已下架</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-purple btn-sm" >
+                                            搜索
+                                        </button>
+                                        <button type="submit" class="btn btn-purple btn-sm pull-right inline">
+                                            <i class="icon-refresh"></i>
+                                            刷新
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="space-4"></div>
+
+
+								<div class="space-4"></div>
+								
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="5%" class="center">#</th>
+													<th width="20%">礼品名称</th>
+                                                    <th width="5%">价格</th>
+                                                    <th width="15%">审核状态</th>
+                                                    <th width="15%">上下架状态</th>
+                                                    <th width="5%">排序</th>
+													<th width="15%">操作</th>
+												</tr>
+											</thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th width="5%" class="center">#</th>
+                                                    <th width="20%">礼品名称</th>
+                                                    <th width="5%">价格</th>
+                                                    <th width="15%">审核状态</th>
+                                                    <th width="15%">上下架状态</th>
+                                                    <th width="5%">排序</th>
+                                                    <th width="15%">操作</th>
+                                                </tr>
+                                            </tfoot>
+										</table>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+
+                                <div id="goods_detail" class="hide">
+                                    <div class="col-xs-12">
+                                        <div class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" >礼品名称 ：</label>
+                                                <div class="col-sm-7 control-label align-left" id="dlg_title"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"> 礼品价格（元）： </label>
+                                                <div class="col-sm-7 control-label align-left" id="dlg_price"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"> 限制购买数量： </label>
+                                                <div class="col-sm-7 control-label align-left" id="dlg_limit_nums"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right"> 发放方式： </label>
+                                                <div class="col-sm-7 control-label align-left" id="dlg_delivery_type"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+        <script type="text/javascript">
+            var mTable;
+            $(document).ready(function() {
+                mTable = $('#sample-table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        url:"${base}/ggoods/goods/query.htm",
+                        type:"post",
+                        data: function (d) {
+                            d.orderby = 'asc';
+                            d.column = 'sorting'
+                            d.title = $("#title").val();
+                            d.isShow = $("#isShow").val();
+                            d.isChecked = $("#isCheck").val();
+                        },
+                        "dataSrc":function(json){
+                            if(!json.success){
+                                json.data=[];
+                                var code = json.code;
+                                if(code==400){
+                                    Box.alert(json.message,function(){
+                                        window.location.href="${base}/sys/login/logout";
+                                    },"确定");
+                                }else{
+                                    layer.msg(json.message);
+                                }
+                            }
+                            return json.data;
+                        }
+                    },
+                    "columns" : [
+                        { "data":null,"orderable":false},
+                        { "data":"title","orderable":true},
+                        { "data":"price","orderable":true},
+                        { "data":"isChecked","orderable":true},
+                        { "data":"isShow","orderable":true},
+                        { "data":"sorting","orderable":true},
+                        { "data":null,"orderable":false},
+                    ],
+                    "columnDefs": [
+                        {
+                            "class":"center",
+                            "targets":0
+                        },
+                        {
+                            "class":"left",
+                            "orderable":false,
+                            "render":function(data, type, row){
+                                if (data=="unCheck") {
+                                    return '<span>待审核 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">审核</a>';
+                                }else if(data=="checkPass"){
+                                    return '<span style="color:green">审核通过 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">重新审核</a>';
+                                }else if(data=="checkFail"){
+                                    return '<span style="color:red">审核驳回 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">重新审核</a>';
+                                }
+                                return data;
+                            },
+                            "targets":3
+                        },
+                        {
+                            "class":"left",
+                            "orderable":false,
+                            "render":function(data, type, row){
+                                if(data=="notShelf"){
+                                    return "<span>待上架 </span><a href=\"javascript:void(0)\" onclick=\"updateShow('"+row.isChecked+"',"+row.id+",'onShelf')\">上架</a> ";
+                                }else if(data=="onShelf"){
+                                    return "<span style=\"color:green\">已上架 </span><a href=\"javascript:void(0)\" onclick=\"updateShow('"+row.isChecked+"',"+row.id+",'offShelf')\">下架</a> ";
+                                }else if(data=="offShelf"){
+                                    return "<span style=\"color:red\">已下架 </span><a href=\"javascript:void(0)\" onclick=\"updateShow('"+row.isChecked+"',"+row.id+",'onShelf')\">重新上架</a> ";
+                                }
+                                return data;
+                            },
+                            "targets":4
+                        },
+                        {
+                            "class":"left",
+                            "orderable":false,
+                            "render":function(data, type, row){
+                                var ope = [];
+                                ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+                                ope.push("<a href=\"${base}/ggoods/goods/edit.htm?id="+row.id+"\">修改</a>");
+                                ope.push("<span class=\"text-explode\">|</span>");
+                                ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+                                return ope.join("");
+                            },
+                            "targets":6
+                        }
+                    ],
+                    "order": [[4, 'asc']],
+                    "bFilter" : false,
+                    "bPaginate" : true ,
+                    "iDisplayLength" : 50,
+                    "oLanguage" : {
+                        "sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+                    }
+                });
+
+                mTable.on('draw.dt',
+                        function() {
+                            mTable.column(0, {
+                                search: 'applied',
+                                order: 'applied'
+                            }).nodes().each(function(cell, i) {
+                                i = i+1;
+                                var page = mTable.page.info();
+                                var pageno = page.page;
+                                var length = page.length;
+                                var columnIndex = (i+pageno*length);
+                                cell.innerHTML = columnIndex;
+                            });
+                        });
+
+                $('#search_form').submit(function(){
+                    mTable.draw();
+                    return false;
+                });
+
+            });
+
+            /* 审核页面弹出窗 */
+            function goodsCheck(id){
+                $.ajax({
+                    "url": '${base}/ggoods/goods/queryGoodsById.htm',
+                    "type": "POST",
+                    "data": {"id":id},
+                    "dataType":"JSON",
+                    "success": function (d) {
+                        if (d.success){
+                            var result = d.data;
+                            $('#goods_detail').removeClass("hide");
+                            $("#dlg_title").html(result.title);
+                            $("#dlg_price").html(result.price);
+                            if (result.limitNums == null || result.limitNums == '') {
+                                $("#dlg_limit_nums").html('无限制购买数量');
+                            } else {
+                                $("#dlg_limit_nums").html(result.limitNums);
+                            }
+                            if (result.deliveryType == 'dr') {
+                                $("#dlg_delivery_type").html('直充');
+                            }else if (result.deliveryType == 'exp') {
+                                $("#dlg_delivery_type").html('物流快递');
+                            }else if (result.deliveryType == 'eec') {
+                                $("#dlg_delivery_type").html('电子兑换码');
+                            }
+                        }else {
+                            Box.alert(data.message);
+                        }
+                        layer.open({
+                            type: 1,
+                            title: "礼品审核",
+                            area: ['40%', '40%'],
+                            shade: 0.5,
+                            shadeClose: true,
+                            content: $('#goods_detail'),
+                            end: function(){
+                                $('#goods_detail').addClass("hide");
+                            },
+                            btn: ['审核通过', '审核驳回','关闭'],
+                            btn1: function(){
+                                updateChecked(id,"checkPass");
+                                return false;
+                            },
+                            btn2: function(){
+                                updateChecked(id,"checkFail");
+                                return false;
+                            },
+                            btn3: function(){
+                                $('#goods_detail').addClass("hide");
+                                layer.closeAll();
+                            }
+                        });
+                    },
+                    "error": function(){
+                        layer.closeAll();
+                    }
+                })
+            }
+
+            /* 删除礼品操作 */
+            function del(id){
+                Box.confirm("是否删除该礼品?",function(){
+                    jQuery.ajax({
+                        type: 'post',
+                        url: '${base}/ggoods/goods/delGiftGoods.htm',
+                        data:  {"id":id},
+                        dataType: 'json',
+                        success: function(data){
+                            if(data.success){
+                                mTable.draw();
+                            }else{
+                                Box.alert(data.message);
+                            }
+                        },
+                        error: function(data) {
+                            Box.alert('系统异常，请联系系统管理员!');
+                        }
+                    });
+                });
+            }
+
+            /* 修改审核状态 */
+            function updateChecked(id,isChecked){
+                var isShow ;
+                if ( isChecked == "checkFail"){
+                    isShow = "offShelf";
+                }
+                $.ajax({
+                    "async":"false",
+                    "type":"post",
+                    "url":"${base}/ggoods/goods/editGiftGoods.htm",
+                    "data":{"id":id,"isChecked":isChecked,"isShow":isShow},
+                    "success":function(data){
+                        layer.closeAll();
+                        mTable.draw();
+                    },
+                    "error":function(data){
+                        layer.msg("系统异常");
+                    }
+                })
+            }
+
+            /* 修改上下架状态 */
+            function updateShow(checked, id, show){
+                if(show == "onShelf" && (checked == "unCheck" || checked == "checkFail")){
+                    layer.msg("请先审核，再上架！");
+                    return;
+                }
+                Box.confirm("是否确定这样操作?",function(){
+                    jQuery.ajax({
+                        type: 'post',
+                        url: '${base}/ggoods/goods/editGiftGoods.htm',
+                        data:  {"id":id,"isShow":show},
+                        dataType: 'json',
+                        success: function(data){
+                            if(data.success){
+                                mTable.draw();
+                            }else{
+                                Box.alert(data.message);
+                            }
+                        },
+                        error: function(data) {
+                            Box.alert('系统异常，请联系系统管理员!');
+                        }
+                    });
+                });
+            }
+
+        </script>
+
+</body>
+</html>

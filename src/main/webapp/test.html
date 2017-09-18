@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<title>test</title>
+	<meta name="keywords" content="关键词" />
+	<meta name="description" content="描述" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+	<style>
+            .ke-icon-hello {
+                    background-image: url(../skins/default/default.gif);
+                    background-position: 0px -672px;
+                    width: 16px;
+                    height: 16px;
+            }
+    </style>
+    <link rel="stylesheet" href="plugin/kindeditor/themes/default/default.css" />
+    <link rel="stylesheet" href="/ttehui-web/plugin/layer/skin/layer.css" />
+		<link rel="stylesheet" href="/ttehui-web/plugin/layer/skin/layer.ext.css" />
+		<script src="/ttehui-web/mocentre/js/jquery.js"></script>
+	<script charset="utf-8" src="/ttehui-web/plugin/layer/layer.js?v=2.2"></script>
+		<script charset="utf-8" src="/ttehui-web/plugin/layer/extend/layer.ext.js"></script>
+	<script src="plugin/kindeditor/kindeditor.js"></script>
+	<script src="plugin/kindeditor/lang/zh_CN.js"></script>
+	<script>
+	
+	KindEditor.lang({
+        hello : '你好a'
+	});
+	KindEditor.ready(function(K) {
+	        K.create('#editor_id', {
+	                items : ['hello']
+	        });
+	});
+	
+	KindEditor.ready(function(K){
+        editor = K.create('#editor_id_1',{
+            resizeType: 1,
+            allowFileManager: true,
+            allowImageUpload: false,
+            items : [
+             		'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+             		'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+             		'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+             		'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+             		'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+             		'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 
+             		'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+             		'anchor', 'link', 'unlink', '|'
+             	],
+            uploadCallback: function(nodeId){
+            	var index = layer.open({
+  				  type: 2,
+  				  title: "上传图片",
+  				  shadeClose: true,
+  				  closeBtn: 1,
+  				  area: ['30%', '50%'],
+  				  content: ['http://localhost:8098/ttehui-web/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+  				  btn: ['关闭']
+  				});           	
+            }
+        });
+        
+        K('#image').click(function (){
+        	editor.loadPlugin('image', function (){
+        		editor.plugin.imageDialog({
+        			imageUrl: K('#url').val(),
+        			clickFn: function (url, title, width, height, border, align) {
+        				K('#url').val(url);
+        				editor.hideDialog();
+        			}
+        		})
+        	})
+		});
+    });
+	
+                </script>
+</head>
+
+<body>
+<div>测试用</div>
+<input type="button" id="image" value="选择图片" />（网络图片 + 本地上传）
+<textarea id="editor_id" name="content" style="width:700px;height:300px;"></textarea>
+<textarea id="editor_id_1" name="content" style="width:700px;height:300px;"></textarea>
+</body>
+</html>

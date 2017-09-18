@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改第三方账户信息-第三方账户管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>修改第三方账户信息#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form id="theForm" name="theForm" class="form-horizontal">
+									<input type="hidden" name="id" id="id" value="${memberAccount.id}"/>
+									<input type="hidden" name="isDeny" id="is_deny" value="${memberAccount.isDeny}"/>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>活动标识：</label>
+										<div class="col-sm-9">
+											<div class="clearfix">
+                                                <input type="text" id="keymark" name="keymark" placeholder="活动标识" class="col-xs-10 col-sm-5" value="$!{memberAccount.keymark}"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>appKey：</label>
+										<div class="col-sm-9">
+											<div class="clearfix">
+                                                <input type="text" id="appKey" name="appKey" placeholder="appKey" class="col-xs-10 col-sm-5" readonly="readonly" value="$!{memberAccount.appKey}"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>appSecret：</label>
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="appSecret" name="appSecret" placeholder="appSecret" class="col-xs-10 col-sm-5 " readonly="readonly" value="$!{memberAccount.appSecret}"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>农行appid：</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+                                                <input type="text" id="abc_appid" name="abcAppid" placeholder="农行appid" class="col-xs-10 col-sm-5" value="$!{memberAccount.abcAppid}"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>农行appsecret：</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+                                                <input type="text" id="abc_appsecret" name="abcAppsecret" placeholder="农行appsecret" class="col-xs-10 col-sm-5" value="$!{memberAccount.abcAppsecret}"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-1">是否启用：</label>
+										<div class="col-sm-9 control-label align-left">
+											<div class="clearfix">
+												<input type="checkbox" name="isDenyChecked" #if($!{memberAccount.isDeny}==1)checked#end class="ace ace-switch ace-switch-2" />
+												<span class="lbl"></span>
+											</div>
+										</div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2">活动备注：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="remark" name="remark" placeholder="活动备注" class="col-xs-10 col-sm-5" value="$!{memberAccount.remark}"/>
+                                            </div>
+                                        </div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2">页面地址：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="page_address" name="pageAddress" placeholder="页面地址" class="col-xs-10 col-sm-5" value="$!{memberAccount.pageAddress}"/>
+                                            </div>
+                                        </div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2">支付结果跳转地址：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="return_url" name="returnUrl" placeholder="支付结果跳转地址" class="col-xs-10 col-sm-5" value="$!{memberAccount.returnUrl}"/>
+                                            </div>
+                                        </div>
+									</div>
+									
+									<div class="space-4"></div>
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-info" type="btn-submit">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												重置
+											</button>
+										</div>
+									</div>
+								</form>
+								
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var rules = {},messages = {};
+				rules.keymark = {required:true};
+				rules.appKey = {required:true};
+				rules.appSecret = {required:true};
+				rules.abcAppid = {required:true};
+				rules.abcAppsecret = {required:true};
+				rules.remark = {required:true};
+				messages.keymark = {required:"活动标识不能为空"};
+				messages.appKey = {required:"appKey不能为空"};
+				messages.appSecret = {required:"appSecret不能为空"};
+				messages.abcAppid = {required:"abcAppid不能为空"};
+				messages.abcAppsecret = {required:"abcAppsecret不能为空"};
+				messages.remark = {required:"备注不能为空"};
+				Validate.init("theForm",rules,messages,
+					function(form){
+						$("input[name='isDenyChecked']:checkbox").each(function(){ 
+			                if($(this).is(':checked')){
+			                    $("#is_deny").val(1);
+			                }else{
+			                	$("#is_deny").val(0);
+			                }
+			            });
+						App.formAjaxSubmit('theForm','${base}/td/memberAccount/editMemberAccount.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href="${base}/td/memberAccount/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+				);
+		
+			});
+		</script>
+</body>
+</html>

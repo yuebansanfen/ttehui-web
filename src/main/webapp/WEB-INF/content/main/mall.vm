@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><meta name=format-detection content="telephone=no"><title>天天特惠</title>#if(${isWx}==true)<script type=text/javascript src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>#end<script type=text/javascript src="https://api.map.baidu.com/api?v=2.0&ak=235dda1f8d956e2a32a010b43fb30b3f"></script><script>!function(){function e(){document.documentElement.style.fontSize=(document.documentElement.clientWidth>414?414:document.documentElement.clientWidth)/12+"px"}var n=null;window.addEventListener("resize",function(){clearTimeout(n),n=setTimeout(e,300)},!1),e()}(window);</script><script>var baseUrl="${baseUrl}"</script>
+	<script>
+		var locaObj=$!{locaObj}
+		var isWx=$!{isWx}
+		#if(${isWx}==false)
+		function back(){
+			window.location.href = escape('https://web2native|channel=goto_xhtml*path=login/xhtml/unlogin_menu_location.xhtml');
+		}	
+		function setAndroidBackKey(backKeyFunc) {
+			var onBackKey = backKeyFunc
+			function connectWebViewJavascriptBridge(callback) {
+				if (window.WebViewJavascriptBridge) {
+					callback(WebViewJavascriptBridge);
+				} else {
+					document.addEventListener(
+						'WebViewJavascriptBridgeReady'
+						, function() {
+							callback(WebViewJavascriptBridge)
+						},
+						false
+						);
+				}
+			}
+			function onBackPressed() {
+				WebViewJavascriptBridge.callHandler('setPhysicalBackListener', {}, function(responseData) {
+					onBackPressed();
+				});
+				onBackKey()
+			}
+			connectWebViewJavascriptBridge(function(bridge) {
+				bridge.init(function(message, responseCallback) {});
+				bridge.callHandler('setPhysicalBackListener', {}, function(responseData) {
+					onBackPressed();
+				});
+			});
+
+		}
+		window.onload=function(){
+			setAndroidBackKey(back)
+		}
+		#else
+			wx.config({
+			    debug: true,
+			    appId: '$!{wxConfig.weChatAppId}',
+			    timestamp: $!{wxConfig.weChatTimestamp},
+			    nonceStr: '$!{wxConfig.weChatNonceStr}',
+			    signature: '$!{wxConfig.weChatSignature}',
+			    jsApiList: [
+			    	'checkJsApi',
+			    	'getLocation'
+			    ]
+			});
+	        
+	        wx.error(function (res) {  
+	        	//var errMsg = JSON.stringify(res); 
+				//alert(errMsg)
+	            if (typeof error == "function") {  
+	                //error();  
+	            }  
+	        }); 
+		#end
+		</script><link href=${staticUrl}/static/css/app.950dee12f78a981e0f1c05a4029861e6.css rel=stylesheet></head><body><div id=app></div><script>var _hmt = _hmt || [];
+		(function() {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?c4a3ff2c2e67abdd34fca63c67a53e98";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();</script><script type=text/javascript src=${staticUrl}/static/js/manifest.be14341f31e87808a484.js></script><script type=text/javascript src=${staticUrl}/static/js/vendor.b2ad79ef97152e7b210e.js></script><script type=text/javascript src=${staticUrl}/static/js/app.871cc231ac6c61a402ac.js></script></body></html>

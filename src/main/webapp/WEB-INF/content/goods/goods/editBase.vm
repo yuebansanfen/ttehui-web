@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改商品-商品管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="${base}/plugin/area/css/default/zyzn.css" />
+		#parse("commons/commonCss.vm")
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>
+                                                                                     修改商品基本信息
+                               #parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+                                <form id="baseInfoForm" name="baseInfoForm" class="form-horizontal">
+                                	<input type="hidden" id="goods_id" name="goodsId" value="${id}"/>
+                                	<input type="hidden" id="param_map" name="paramMap" value=""/>
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label no-padding-right " ><h4><strong>基本信息</strong></h4>  </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">商品名称： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="title" name="title" placeholder="商品名称" value="$!{goods.title}" class="col-xs-10 col-sm-5 disable"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">商品简介： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <textarea  id="describe" name="describe" placeholder="商品简介" class="col-xs-10 col-sm-5 disable">$!{goods.describe}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">是否限制购买 ：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                            	<div class="col-sm-2">
+                                            	<input type="checkbox" class="ace" id="isLimitBuy" #if(${goods.isLimitBuy}==1) checked #end/>
+                                            	<span class="lbl"> 限制</span>
+                                            	</div>
+                                                <input type="text" class="col-xs-6 col-sm-3" id="limitNums" name="limitNums" value="$!{goods.limitNums}" placeholder="最大购买数量" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">天猫价 ：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="tmPrice" name="tmPrice" placeholder="天猫价" value="$!{goods.tmPrice}" class="col-xs-10 col-sm-5"/>
+                                                <span class="help-inline col-xs-12 col-sm-7"><span class="middle">注：页面展示用，可以是一个区间值，单位为元</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">京东价： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="jdPrice" name="jdPrice" placeholder="京东价" value="$!{goods.jdPrice}" class="col-xs-10 col-sm-5"/>
+                                                <span class="help-inline col-xs-12 col-sm-7"><span class="middle">注：页面展示用，可以是一个区间值，单位为元</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">积分： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="score" name="score" placeholder="积分" value="$!{goods.score}" class="col-xs-10 col-sm-5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">在店铺中的排序：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input type="text" id="shopSorting" name="shopSorting" placeholder="在店铺中的排序（1-10）" value="$!{goods.shopSorting}" class="col-xs-10 col-sm-5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">商品分类：</label>
+                                        <div class="col-sm-4">
+                                            <select id="select_category" name="category" class="form-control" data-placeholder="商品分类">
+                                            	#foreach($category in $categoryList)
+                                            	<option value="$!{category.id}" #if($!{category.id}==$!{goods.categoryId}) selected #end>$!{category.name}</option>
+                                            	#end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">投放城市：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                            	#set($areaCode='')
+                                            	#set($areaName='')
+                                            	#if($goodsLaunchList&&$goodsLaunchList.size()>0)
+                                            	#foreach($launch in $goodsLaunchList)
+                                            		#set($areaCode=$areaCode+$!{launch.areasCode}+"-")
+                                            		#set($areaName=$areaName+$!{launch.areasName}+"-")
+                                            	#end
+                                            	#set($areaCode=$areaCode.substring(0,$areaCode.lastIndexOf('-')))
+                                            	#set($areaName=$areaName.substring(0,$areaName.lastIndexOf('-')))
+                                            	#end
+                                            	<input type='text' class="col-xs-10 col-sm-5" id="put_areas" value="$areaName" readonly="readonly" data-value="$areaCode" onclick="appendCity(this,'duoxuan')">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">运费标准： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <select style="width: 200px" id="select_freightMould" name="state" class="select2" data-placeholder="运费"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>列表展示页商品图： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input class="col-xs-10 col-sm-5" name="imgListPage" id="imgListPage" type="text" value="$!{goods.imgListPage}" readonly="readonly"/>
+												<span class="help-inline col-xs-12 col-sm-7">
+													<span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('imgListPage');">添加</a></span>
+													<span class="middle">注：图片尺寸228*228</span>
+												</span>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <img class="preview_pic" src="$!{goods.imgListPage}" width="260px"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>购物车展示图： </label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input class="col-xs-10 col-sm-5" name="imgCart" id="imgCart" type="text" value="$!{goods.imgCart}" readonly="readonly"/>
+                                                <span class="help-inline col-xs-12 col-sm-7">
+                                                	<span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('imgCart');">添加</a></span>
+                                                	<span class="middle">注：图片尺寸228*228</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <img class="preview_pic" src="$!{goods.imgCart}" width="228" height="228"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="submit" id="submit">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												重置
+											</button>
+                                        </div>
+                                    </div>
+                                </form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+        <script src="${base}/mocentre/js/jquery.toast.js"></script>
+        <script src="${base}/mocentre/js/common.js"></script>
+		<script >
+			var __LocalDataCities = {};
+			__LocalDataCities.list = {};
+			__LocalDataCities.relations = {};
+			__LocalDataCities.category = {};
+            $(document).ready(function() {
+            	$("#select_category").chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+            	$("#select_freightMould").chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+                $.ajax({
+                    type:"post",
+                    url:"${base}/goods/goods/areas.htm",
+                    dataType:"json",
+                    success:function(result){
+                        if(result.success == true) {
+                        	var dataStr = result.data;
+                        	if(dataStr!=null){
+                        		var provArr = JSON.parse(dataStr);
+        						__LocalDataCities.category["provinces"] = [];
+        						__LocalDataCities.category["hotcities"] = [];
+                        		$.each(provArr,function(n,prov){
+	                    			__LocalDataCities.list[prov.code] = [prov.name,prov.code];
+            						__LocalDataCities.relations[prov.code] = [];
+            						if(prov.name!='北京市'&&prov.name!='天津市'&&prov.name!='上海市'){
+            							__LocalDataCities.category["provinces"].push(prov.code);
+            						}
+                    				var cityArr = prov.childrenList;
+                    				if(cityArr!=null){
+                    					$.each(cityArr,function(m,city){
+                							__LocalDataCities.list[city.code] = [city.name,city.code];
+                    						__LocalDataCities.relations[prov.code].push(city.code);
+                    						if(city.name=='北京'||city.name=='上海'||city.name=='广州'||city.name=='深圳'||
+                    							city.name=='天津'||city.name=='苏州'||city.name=='重庆'||city.name=='南京'||
+                    							city.name=='杭州'||city.name=='大连'||city.name=='成都'||city.name=='武汉'){
+	                    						__LocalDataCities.category["hotcities"].push(city.code);
+                    						}
+                    					});
+                    				}
+                        		})
+                        	}
+                        }
+                    }
+                });
+                //商品基本信息
+            	var rules = {},messages = {};
+				rules.title = {required:true};
+				rules.score = {digits:true};
+				rules.limitNums = {digits:true};
+				rules.shopSorting = {digits:true};
+				rules.selectCategory = {required:true};
+				messages.title = {required:"名称不能为空"};
+				messages.score = {digits:"必须输入整数"};
+				messages.limitNums = {digits:"必须输入整数"};
+				messages.shopSorting = {digits:"必须输入整数"};
+				messages.selectCategory = {required:"商品分类不能为空"};
+				Validate.init("baseInfoForm",rules,messages,
+					function(form){
+						if($("#imgListPage").val()==""||$("#imgCart").val()==""){
+							return;
+						}
+						var id = $("#goods_id").val();
+		                var paramMap = {};
+		                paramMap.id = id;
+		                paramMap.title = $("#title").val();
+		                paramMap.describe = $("#describe").val();
+		                paramMap.tmPrice = $("#tmPrice").val();
+		                paramMap.jdPrice = $("#jdPrice").val();
+		                paramMap.isLimitBuy = getCheckboxVal($("#isLimitBuy"));
+		                if(getCheckboxVal($("#isLimitBuy")) == 1){
+		                    paramMap.limitNums = $("#limitNums").val();
+		                }
+		                paramMap.score = $("#score").val();
+		                paramMap.shopSorting = $("#shopSorting").val();
+		                paramMap.categoryId = $("#select_category").val();
+		                paramMap.areaList = $("#put_areas").data("value");
+		                paramMap.freightMould = $("#select_freightMould").val();
+		                paramMap.imgListPage =  $("#imgListPage").val();
+		                paramMap.imgCart = $("#imgCart").val();
+		                $("#param_map").val(JSON.stringify(paramMap));
+		                App.formAjaxSubmit('baseInfoForm','${base}/goods/goods/addOrUpdateBaseInfo.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href = "${base}/goods/goods/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+				);
+                
+            });
+
+            $(document).on("click","#saveBaseInfo",function(){
+            	$("#baseInfoForm").submit();
+            });
+
+            function getCheckboxVal(o){
+                if(o.is(':checked')){
+                    return 1;
+                }else {
+                    return 0;
+                }
+            }
+
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        var imgsrc = $("#"+nodeId).val();
+                        if (imgsrc != ''){
+                            var imgPreview = $("#"+nodeId).parent().next().find('img').eq(0);
+                            $(imgPreview).attr("src",imgsrc);
+                        }
+                        layer.close(index);
+                    }
+                });
+            }
+        </script>
+        <script src="${base}/plugin/area/js/areadata.js"></script>
+</body>
+</html>

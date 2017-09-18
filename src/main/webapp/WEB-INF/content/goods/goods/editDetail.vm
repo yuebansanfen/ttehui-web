@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改商品-商品管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="${base}/plugin/kindeditor/themes/default/default.css" />
+		#parse("commons/commonCss.vm")
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>
+                                                                                     修改商品详情信息
+                               #parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+                                <form id="detailForm" name="detailForm" class="form-horizontal">
+                                	<input type="hidden" id="goods_id" name="goodsId" value="$!{goodsIns.id}"/>
+                                	<input type="hidden" id="param_map" name="paramMap" value=""/>
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label no-padding-right "><h4><strong>详情信息</strong></h4></label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>详细页顶部banner： </label>
+                                        <div class="col-sm-10" id="banners_div">
+                                           	<div class="row"><div class="clearfix">加载中...</div></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">图文详细页内容：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <textarea id="details" name="content" style="width:700px;height:300px;">$!{goodsIns.details}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <a class="btn btn-primary" id="saveDetail">
+                                                <i class="ace-icon fa fa-floppy-o bigger-120"></i>
+                                                	保存
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+        <script src="${base}/mocentre/js/common.js"></script>
+		<script>
+            var editor;
+            KindEditor.ready(function(K){
+                editor = K.create('#details',{
+                    resizeType: 1,
+                    allowFileManager: true,
+                    allowImageUpload: false,
+                    items : [
+                        'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                        'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                        'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+                        'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                        'anchor', 'link', 'unlink', '|'
+                    ],
+                    uploadCallback: addImg
+                });
+            });
+            
+            $(document).ready(function() {
+            	#if($!{goodsIns.ImgBanner}&&$!{goodsIns.ImgBanner}!='')
+            	var bannersArray=$!{goodsIns.ImgBanner};
+            	#else
+                var bannersArray=[];
+            	#end
+            	bindImgBan(bannersArray);
+                var rules = {},messages = {};
+				Validate.init("detailForm",rules,messages,
+					function(form){
+						var id = $("#goods_id").val();
+		                var detailparam = {};
+		                var inputDom = $(".imgBanner");
+		                detailparam.imgBanner = [];
+		                inputDom.each(function(i,dom){
+		                    var domVal = $(dom).val();
+		                    if(domVal!=""){
+		                        detailparam.imgBanner.push(domVal);
+		                    }
+		                })
+		                detailparam.details = editor.html();
+		                detailparam.goodsId = id;
+		                $("#param_map").val(JSON.stringify(detailparam));
+		                App.formAjaxSubmit('detailForm','${base}/goods/goods/addOrUpdateDetailInfo.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href = "${base}/goods/goods/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+				);
+                
+            });
+
+            $(document).on("click","#saveDetail",function(){
+                $("#detailForm").submit();
+            });
+
+            function bindImgBan(banners){
+            	var bannerDom = $("#banners_div");
+            	bannerDom.empty();
+                var times= new Date().getTime();
+                var banHtm = [];
+                if(banners.length==0){
+                	banHtm.push('<div class="row">')
+	                banHtm.push('<div class="clearfix">')
+	                banHtm.push("<input class=\"col-xs-10 col-sm-5  imgBanner\" name=\"imgBanner"+times+"\" id=\"imgBanner"+times+"\" type=\"text\" value=\"\" readonly=\"readonly\"/>")
+	                banHtm.push("<span class=\"help-inline col-sm-5\">");
+	                banHtm.push("<span class=\"middle\"><a class=\"btn btn-minier btn-primary\" onclick=\"addImg('imgBanner"+times+"')\">添加</a></span>&nbsp");
+	                banHtm.push('<span class=\"middle\">注：图片尺寸750*716</span>&nbsp');
+	                banHtm.push("<span class=\"middle\"><a class=\"btn btn-sm btn-primary\" id=\"addImgBan\" onclick=\"addImgBan();\">新增多张展示图</a></span>");
+	                banHtm.push('</span></div>');
+	                banHtm.push('<div class="col-xs-4">');
+	                banHtm.push("<img id=\"imgBanner"+times+"_preview\" src=\"\" width=\"200\" height=\"200\"/>");
+	                banHtm.push('</div></div>');
+	                banHtm.push('');
+                }else{
+	                for(var i=0;i<banners.length;i++){
+		                banHtm.push('<div class="row">')
+		                banHtm.push('<div class="clearfix">')
+		                banHtm.push("<input class=\"col-xs-10 col-sm-5  imgBanner\" name=\"imgBanner"+times+"\" id=\"imgBanner"+times+"\" type=\"text\" value=\""+banners[i]+"\" readonly=\"readonly\"/>")
+		                banHtm.push("<span class=\"help-inline col-sm-5\">");
+		                banHtm.push("<span class=\"middle\"><a class=\"btn btn-minier btn-primary\" onclick=\"addImg('imgBanner"+times+"')\">添加</a></span>&nbsp");
+		                if(i>0){
+			                banHtm.push('<span class=\"middle\"><a class=\"btn btn-minier btn-danger\" onclick=\"delImg(this)\">删除</a></span>&nbsp');
+		                }
+		                banHtm.push('<span class=\"middle\">注：图片尺寸750*716</span>&nbsp');
+		                if(i==0){
+		                	banHtm.push("<span class=\"middle\"><a class=\"btn btn-sm btn-primary\" id=\"addImgBan\" onclick=\"addImgBan();\">新增多张展示图</a></span>");
+		                }
+		                banHtm.push('</span></div>');
+		                banHtm.push('<div class="col-xs-4">');
+		                banHtm.push("<img id=\"imgBanner"+times+"_preview\" src=\""+banners[i]+"\" width=\"200\" height=\"200\"/>");
+		                banHtm.push('</div></div>');
+		                banHtm.push('');
+	                }
+                }
+                bannerDom.append(banHtm.join(""));
+            }
+
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        layer.close(index);
+                    }
+                });
+            }
+
+            function addImgBan(){
+                var times= new Date().getTime();
+                var banHtm = [];
+                banHtm.push('<div class="row">')
+                banHtm.push('<div class="clearfix">')
+                banHtm.push("<input class=\"col-xs-10 col-sm-5  imgBanner\" name=\"imgBanner"+times+"\" id=\"imgBanner"+times+"\" type=\"text\" readonly=\"readonly\"/>")
+                banHtm.push("<span class=\"help-inline col-sm-5\">");
+                banHtm.push("<span class=\"middle\"><a class=\"btn btn-minier btn-primary\" onclick=\"addImg('imgBanner"+times+"')\">添加</a></span>&nbsp");
+                banHtm.push('<span class=\"middle\"><a class=\"btn btn-minier btn-danger\" onclick=\"delImg(this)\">删除</a></span>&nbsp');
+                banHtm.push('<span class=\"middle\">注：图片尺寸750*716</span>');
+                banHtm.push('</span></div>');
+                banHtm.push('<div class="col-xs-4">');
+                banHtm.push("<img id=\"imgBanner"+times+"_preview\" width=\"200\" height=\"200\"/>");
+                banHtm.push('</div></div>');
+                banHtm.push('');
+                $("#banners_div").append(banHtm.join(""));
+                return "imgBanner"+times;
+            }
+            
+            function delImg(obj){
+                var objp = $(obj).closest(".row");
+                objp.remove();
+            }
+            
+        </script>
+	</body>
+</html>

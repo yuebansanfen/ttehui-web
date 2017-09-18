@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-供货商管理-新增供应商</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>新增供应商
+							#parse("commons/backurl.vm")
+							</h3>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+											<form id="theForm" name="theForm" class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>供货商名称：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input class="col-xs-10 col-sm-5" name="title" id="title" value="" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>负责人：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input class="col-xs-10 col-sm-5" name="name" id="name" value="" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>产品数量：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input class="col-xs-10 col-sm-5" name="goodsCount" id="goods_count" value="" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>账期：</label>
+													<div class="col-sm-3">
+														<select name="period" id="period" class="form-control chosen-select" data-placeholder="选择账期">
+															<option value="prepay">预付</option>
+															<option value="weekpay">月结</option>
+															<option value="monthpay">周结</option>
+														</select>
+													</div>
+												</div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>客服电话：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input class="col-xs-10 col-sm-5" name="telephone" id="telephone" value="" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>E-mail：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input class="col-xs-10 col-sm-5" name="mail" id="mail" value="" type="text" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2">备注：</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+															<textarea class="col-xs-10 col-sm-5" name="note" id="note" ></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+												
+												<div class="clearfix form-actions">
+													<div class="col-md-offset-3 col-md-9">
+														<button class="btn btn-info" type="submit" id="submit">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script>
+		$(document).ready(function(){
+
+			var rules = {},messages = {};
+			rules.title = {required:true};
+			rules.name = {required:true};
+			rules.goodsCount = {required:true};
+			rules.period = {required:true};
+			rules.telephone = {required:true};
+			rules.mail = {email:true};
+			messages.title = {required:"名称不能为空"};
+			messages.name = {required:"负责人不能为空"};
+			messages.goodsCount = {required:"产品数量不能为空"};
+			messages.period = {required:"账期不能为空"};
+			messages.telephone = {required:"电话不能为空"};
+			messages.mail = {email:"请输入正确的email,eg:xxx@xx.xx"};
+
+			Validate.init("theForm",rules,messages,
+					function(form){
+                        App.formAjaxSubmit('theForm','${base}/goods/supplier/addSupplier.htm','post',
+                            function(result){
+                                var suc = result.success;
+                                if(suc){
+                                    window.location.href="${base}/goods/supplier/index.htm";
+                                }else{
+                                    layer.msg(result.message);
+                                }
+                            }
+                        );
+					})
+				});
+
+		</script>
+</body>
+</html>
+

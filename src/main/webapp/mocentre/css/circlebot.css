@@ -1,0 +1,17 @@
+/*提示圆角框*/
+.circle_bot { clear:both; font: 12px/1.125 Arial; }
+.circle_bot .s_b b, .circle_bot span.s_i i { font-size:1px; line-height:1px; overflow:hidden; display:block; clear:both; }
+.circle_bot .s_b b, .circle_bot span.s_i i, .circle_bot .info { background:#fff2f2; border:#f88 solid; }
+.circle_bot b.b1 { border-width:1px 0 0 0; margin:0 2px; height:0px; }
+.circle_bot b.b2 { border-width:0 1px; margin:0 1px; height:1px; }
+.circle_bot span.s_i i { height:1px; border-width:0 1px; }
+.circle_bot .i1 { width:0px; margin-left:36px; }
+.circle_bot .i2 { width:2px; margin-left:35px; }
+.circle_bot .i3 { width:4px; margin-left:34px; }
+.circle_bot .i4 { width:6px; margin-left:33px; }
+.circle_bot .i5 { width:8px; margin-left:32px; }
+.circle_bot .i6 { width:10px; margin-left:31px; margin-top:-1px; }
+.circle_bot .info { border-width:0 1px; color:#333; padding:10px;}
+/*浅黄边白底*/
+div.circle_green {clear:both;}
+div.circle_green .s_b b,div.circle_green .s_i i, div.circle_green .info { background:#a2ffac; border-color:#3dff3d; }

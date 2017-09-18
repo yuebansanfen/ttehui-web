@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改专题商品-商品列表-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>修改“${subject.title}”专题商品
+							<button type="submit" class="btn btn-purple btn-sm pull-right inline" onclick="javascript:window.location.href='${base}/sub/subject/view.htm?id=${subjectGoods.subjectId}'">
+								<i class="ace-icon fa fa-reply icon-only"></i>
+								返回
+							</button>
+							</h3>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+											<form id="theForm" name="theForm" class="form-horizontal">
+												<input type="hidden" name="id" id="id" value="$!{subjectGoods.id}"/>
+												<input type="hidden" name="goodsId" id="goods_id" value="$!{subjectGoods.goodsId}"/>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品名称：</label>
+													<label class="col-sm-2 control-label align-left">
+														$!{subjectGoods.goodsName}
+													</label>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品图片： </label>
+													<div class="col-sm-8 ">
+														<div class="clearfix">
+															<input class="col-xs-4" name="goodsImg" id="goods_img" type="text" readonly="readonly" value="$!{subjectGoods.goodsImg}"/>
+															<span class="help-inline col-sm-5">
+																<span class="middle">
+																	<a class="btn btn-minier btn-primary" onclick="addImg('goods_img');">上传</a>
+																	<span class="middle">图片尺寸：$!{subject.tmpImgWidth}*$!{subject.tmpImgHeight}</span>
+																</span>
+															</span>
+														</div>
+                                                        <img id="goods_img_preview" src="$!{subjectGoods.goodsImg}" style="height: 100px;width: 100px">
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>宣传语：</label>
+													<div class="col-sm-3">
+														<div class="clearfix">
+															<textarea class="col-xs-12 col-sm-12 valid" id="tagline" name="tagline" aria-invalid="false">$!{subjectGoods.tagline}</textarea>
+														</div>
+													</div>
+												</div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 排序 ：</label>
+
+                                                    <div class="col-sm-6">
+                                                        <div class="clearfix">
+                                                            <input type="text" id="sorting" name="sorting" placeholder="排序" value="$!{subjectGoods.sorting}" class="col-xs-10 col-sm-5" />
+                                                            <span class="help-inline"><span class="middle">越小越靠前</span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+												
+												<div class="clearfix form-actions">
+													<div class="col-md-offset-3 col-md-9">
+														<button class="btn btn-info" type="submit" id="submit">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+    	<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script>
+		$(document).ready(function(){
+
+            $('#sorting').ace_spinner({min:1,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+
+			var rules = {},messages = {};
+			rules.goodsImg = {required:true};
+			rules.tagline = {required:true};
+			messages.goodsImg = {required:"图片不能为空"};
+			messages.tagline = {required:"宣传语不能为空"};
+			Validate.init("theForm",rules,messages,function(form){
+                App.formAjaxSubmit('theForm','${base}/sub/subject/editSubjectGoods.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href = "${base}/sub/subject/view.htm?id=$!{subject.id}";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			})
+		});
+	
+		/* 上传图片  */
+		function addImg(nodeId){
+			var index = layer.open({
+			  type: 2,
+			  title: "上传图片",
+			  shadeClose: true,
+			  closeBtn: 1,
+			  area: ['30%', '50%'],
+			  content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+			  btn: ['关闭'],
+              yes:function(){
+                    layer.close(index);
+              }
+			});
+		}
+		
+		</script>
+</body>
+</html>
+

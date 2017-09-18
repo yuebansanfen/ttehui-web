@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>店铺添加-${baseDescribe}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">	
+		<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+
+        #parse("commons/sidebar.vm")
+        <div class="main-content">
+			
+            #parse("commons/breadcrumbs.vm")
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>基本信息添加</h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="widget-box">
+							<div class="widget-body">
+								<div class="widget-main">
+		                        <form id="theForm" name="theForm" class="form-horizontal" method="post" enctype="multipart/form-data">
+		                            <div class="form-group">
+		                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>店铺名称: </label>
+		
+		                                <div class="col-sm-8">
+		                                    <div class="clearfix">
+		                                        <input type="text" id="name" name="name"  placeholder="店铺名称" class="col-xs-10 col-sm-5" />
+		                                    </div>
+		                                </div>
+		                            </div>
+		                            <div class="space-4"></div>
+		                            <div class="form-group">
+		                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>店铺负责人: </label>
+		
+		                                <div class="col-sm-8">
+		                                    <div class="clearfix">
+		                                        <input type="text" id="leader" name="leader"  placeholder="店铺负责人" class="col-xs-10 col-sm-5" />
+		                                    </div>
+		                                </div>
+		                            </div>
+		                            <div class="space-4"></div>
+		                            <div class="form-group">
+		                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>店铺地址: </label>
+		
+		                                <div class="col-sm-8">
+		                                    <div class="clearfix">
+		                                        <input type="text" id="address" name="address"  placeholder="店铺地址" class="col-xs-10 col-sm-5" />
+		                                    </div>
+		                                </div>
+		                            </div>
+		                            <div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>店铺Logo： </label>
+										<div class="col-sm-8">
+											<div class="clearfix">
+												<input class="col-xs-10 col-sm-5" name="img_logo" id="img_logo" type="text" readonly="readonly"/>
+												<span class="help-inline col-sm-1"><span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('img_logo');">添加</a></span></span>
+											</div>
+                                            <img id="img_logo_show" class="hidden" src="" style="height: 100px;width: 100px">
+										</div>
+									</div>
+		                            <div class="clearfix form-actions">
+		                                <div class="col-md-offset-3 col-md-9">
+		                                    <button class="btn btn-info" type="submit">
+		                                    		提交
+		                                    </button>
+		                                    &nbsp; &nbsp; &nbsp;
+		                                    <button class="btn" type="reset" id="reset">
+		                                        	重置
+		                                    </button>
+		                                </div>
+		                            </div>
+		                        </form>
+                        		</div>
+                        	</div>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+         #parse("commons/scroll.vm")
+    </div><!-- /.main-container-inner -->
+    #parse("commons/footerJs.vm")
+</div>
+<script>
+	$(document).ready(function(){
+		
+		var rules = {},messages = {};
+		rules.name = {required:true};
+		rules.leader = {required:true};
+		rules.address = {required:true};
+		rules.img_logo = {required:true};
+		messages.name = {required:"店铺名称不能为空"};
+		messages.leader = {required:"店铺负责人不能为空"};
+		messages.address = {required:"店铺地址不能为空"};
+		messages.img_logo = {required:"店铺Logo不能为空"};
+		Validate.init("theForm",rules,messages,
+			function(form){
+	            if($("#img_logo").val()==""){
+	            	layer.msg("请先上传图片");
+	            	return;
+	            }
+				App.formAjaxSubmit('theForm','${base}/sp/shop/addshop.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href="${base}/sp/shop/uindex.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+		
+	})
+	function addImg(nodeId){
+		var index = layer.open({
+		  type: 2,
+		  title: "上传图片",
+		  shadeClose: true,
+		  closeBtn: 1,
+		  area: ['30%', '50%'],
+		  content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+		  btn: ['关闭'],
+            yes:function(){
+                var imgsrc = $("#"+nodeId).val();
+                if (imgsrc != ''){
+                    $("#"+nodeId+"_show").removeClass("hidden");
+                    $("#"+nodeId+"_show").attr("src",imgsrc);
+                }
+                layer.close(index);
+            }
+		});
+	}
+</script>
+</body>
+</html>

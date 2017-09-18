@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no" />
+		<title></title>
+		<script>
+			! function() {
+				function e() {
+					document.documentElement.style.fontSize = (document.documentElement.clientWidth > 414 ? 414 : document.documentElement.clientWidth) / 12 + "px"
+				}
+				var n = null;
+				window.addEventListener("resize", function() {
+					clearTimeout(n), n = setTimeout(e, 300)
+				}, !1), e()
+			}(window);
+		</script>
+	</head>
+	<style>
+		html {
+    			font-family: sans-serif;
+    			-ms-text-size-adjust: 100%;
+    			-webkit-text-size-adjust: 100%;
+			}
+		html,body,h1,h2,h3,h4,h5,h6,p,ul,ol,form,button,dl,dt,dd,input,textarea {
+    			-webkit-box-sizing:border-box;
+    			-webkit-tap-highlight-color:rgba(0,0,0,0);
+    			padding:0;
+    			margin:0;
+			}
+		a {
+			text-decoration: none;
+		}
+		
+		a {
+			background-color: transparent;
+		}
+		
+		a:active,
+		a:hover {
+			outline-width: 0;
+		}
+		
+		.exception-box {
+			position: absolute;
+			width: 12rem;
+			min-height: 100%;
+			background: url(https://static.mocentre.com/staticflie/ttehui_static_abcbank/stable/page/img/404-bg.png) no-repeat center;
+			background-size: 100% 100%;
+		}
+		
+		.msg-1 {
+			position: absolute;
+			top: 3.84rem;
+			width: 12rem;
+			lin-height: .8rem;
+			font-size: .736rem;
+			color: #7d7b7b;
+			text-align: center;
+		}
+		
+		.msg-2 {
+			position: absolute;
+			top: 5.28rem;
+			width: 12rem;
+			lin-height: .512rem;
+			color: rgba(125, 123, 123, .76);
+			font-size: .512rem;
+			text-align: center;
+		}
+		
+		.common-btn {
+			width: 2.72rem;
+			padding-left: .8rem;
+			line-height: .704rem;
+			height: .704rem;
+			color: #11d9ac;
+			font-size: .608rem;
+		}
+		
+		.go-index-btn {
+			position: absolute;
+			top: 8.16rem;
+			left: .96rem;
+			background: url(https://static.mocentre.com/staticflie/ttehui_static_abcbank/stable/page/img/icon-goindex.png) no-repeat;
+			background-size: .512rem .528rem;
+			background-position-y: .08rem;
+		}
+		
+		.go-near-btn {
+			position: absolute;
+			top: 8.16rem;
+			left: 5.12rem;
+			background: url(https://static.mocentre.com/staticflie/ttehui_static_abcbank/stable/page/img/icon-return.png) no-repeat;
+			background-size: .64rem .544rem;
+			background-position-y: .08rem;
+		}
+	</style>
+
+	<body>
+		<div class="exception-box">
+			<div class="msg-1">抱歉,您访问的页面找不到了！:(</div>
+			<div class="msg-2"> >> <span id="time">5</span>s后，返回首页</div>
+			<a href="https://abcshop.mocentre.cn/main/mall#/">
+				<div class="go-index-btn common-btn">返回首页</div>
+			</a>
+			<div class="go-near-btn common-btn" onclick='back()'>逛逛附近</div>
+		</div>
+		<script>
+			function back() {
+				window.location.href = escape('https://web2native|channel=goto_xhtml*path=login/xhtml/unlogin_menu_location.xhtml');
+			}
+
+			function setAndroidBackKey(backKeyFunc) {
+				var onBackKey = backKeyFunc
+
+				function connectWebViewJavascriptBridge(callback) {
+					if(window.WebViewJavascriptBridge) {
+						callback(WebViewJavascriptBridge);
+					} else {
+						document.addEventListener(
+							'WebViewJavascriptBridgeReady',
+							function() {
+								callback(WebViewJavascriptBridge)
+							},
+							false
+						);
+					}
+				}
+
+				function onBackPressed() {
+					WebViewJavascriptBridge.callHandler('setPhysicalBackListener', {}, function(responseData) {
+						onBackPressed();
+					});
+					onBackKey()
+				}
+				connectWebViewJavascriptBridge(function(bridge) {
+					bridge.init(function(message, responseCallback) {});
+					bridge.callHandler('setPhysicalBackListener', {}, function(responseData) {
+						onBackPressed();
+					});
+				});
+
+			}
+			function goIndexDjs(){
+				var djsTime=5;
+				var self=document.getElementById('time');
+				var djsIndex=setInterval(function(){
+					djsTime--;
+					if (djsTime<=0) {		
+						window.location.href='https://abcshop.mocentre.cn/main/mall#/';
+						clearInterval(djsIndex);
+					}
+					document.getElementById("time").textContent=djsTime;
+				},1000)
+			}
+			window.onload = function() {
+				setAndroidBackKey(back);
+				goIndexDjs();
+			}
+		</script>
+		
+		<script>
+		var _hmt = _hmt || [];
+		(function() {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?c4a3ff2c2e67abdd34fca63c67a53e98";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+	</body>
+
+</html>

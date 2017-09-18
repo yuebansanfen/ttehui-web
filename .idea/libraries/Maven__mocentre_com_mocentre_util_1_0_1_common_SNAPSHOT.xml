@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: mocentre.com:mocentre.util:1.0.1-common-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/mocentre/com/mocentre.util/1.0.1-common-SNAPSHOT/mocentre.util-1.0.1-common-20170727.085202-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/mocentre/com/mocentre.util/1.0.1-common-SNAPSHOT/mocentre.util-1.0.1-common-20170727.085202-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/mocentre/com/mocentre.util/1.0.1-common-SNAPSHOT/mocentre.util-1.0.1-common-20170727.085202-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>修改商品分享-商品管理-${baseDescribe}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    #parse("commons/commonCss.vm")
+    #parse("commons/commonJs.vm")
+</head>
+
+<body class="no-skin">
+    #parse("commons/header.vm")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+
+        #parse("commons/sidebar.vm")
+        <div class="main-content">
+
+            #parse("commons/breadcrumbs.vm")
+            <div class="page-content">
+
+                #parse("commons/setting.vm")
+                <div class="page-header">
+                    <h1>
+                       	 修改商品分享
+                       	#parse("commons/backurl.vm")
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form id="shareInfo" name="shareInfo" class="form-horizontal">
+                        <input type="hidden" id="goods_id" name="goodsId" value="$!{goodsId}" />
+                        <input type="hidden" id="param_map" name="paramMap" value=""/>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" >分享标题： </label>
+                                <div class="col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" id="share_title" name="shareTitle" placeholder="分享标题" value="$!{goodsShare.title}" class="col-xs-10 col-sm-5"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" >分享描述： </label>
+                                <div class="col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" id="share_description" name="shareDescription" placeholder="分享描述" value="$!{goodsShare.description}" class="col-xs-10 col-sm-5"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2">分享图片： </label>
+                                <div class="col-sm-8">
+                                    <div class="clearfix">
+                                        <input class="col-xs-10 col-sm-5" name="sharePic" id="share_pic" type="text" readonly="readonly" value="$!{goodsShare.sharePic}"/>
+                                        <span class="help-inline col-sm-1"><span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('share_pic');">添加</a></span></span>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <img id="share_pic_preview" #if(${goodsShare.sharePic}&&${goodsShare.sharePic}!='')src="$!{goodsShare.sharePic}" #else class="hidden" src="" #end width="100" height="100"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div><div class="space-4"></div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <a class="btn btn-primary" id="saveShareInfo">
+                                        <i class="ace-icon fa fa-floppy-o bigger-120"></i>
+                                        	保存
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+    </div><!-- /.main-container-inner -->
+
+    #parse("commons/scroll.vm")
+</div><!-- /.main-container -->
+#parse("commons/footerJs.vm")
+<script>
+	$(document).ready(function() {
+		var rules = {},messages = {};
+		rules.shareTitle = {required:true};
+		rules.shareDescription = {required:true};
+		rules.sharePic = {required:true};
+		messages.shareTitle = {required:"名称不能为空"};
+		messages.shareDescription = {required:"描述不能为空"};
+		messages.sharePic = {required:"图片不能为空"};
+		Validate.init("shareInfo",rules,messages,
+			function(form){
+				if($("#share_pic").val()==""){
+					layer.msg("图片不能为空");
+					return;
+				}
+				var paramMap = {};
+		        paramMap.title = $("#share_title").val();
+		        paramMap.description = $("#share_description").val();
+		        paramMap.sharePic = $("#share_pic").val();
+		        paramMap.goodsId = $("#goods_id").val();
+                $("#param_map").val(JSON.stringify(paramMap));
+                App.formAjaxSubmit('shareInfo','${base}/goods/goods/addOrUpdateShareInfo.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href = "${base}/goods/goods/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+	})
+
+    function addImg(nodeId){
+        var index = layer.open({
+            type: 2,
+            title: "上传图片",
+            shadeClose: true,
+            closeBtn: 1,
+            area: ['30%', '50%'],
+            content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+            btn: ['关闭']
+        });
+    }
+    
+    $(document).on("click","#saveShareInfo",function(){
+        $("#shareInfo").submit();
+    });
+</script>
+</body>
+</html>

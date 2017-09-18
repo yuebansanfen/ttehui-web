@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>礼品订单详情-订单管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>订单详情#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+							
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">订单</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">奖品图片： </label>
+												<label class="col-sm-8 control-label align-left"><img src="$!{prizeOrder.prizeImg}" width="150" height="100"/></label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">奖品名称： </label>
+												<label class="col-sm-8 control-label align-left">$!{prizeOrder.prizeName}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">开始时间：</label>
+												<label class="col-sm-8 control-label align-left">$!date.format('yyyy-MM-dd',$!prizeOrder.startTime)</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">结束时间：</label>
+												<label class="col-sm-8 control-label align-left">$!date.format('yyyy-MM-dd',$!prizeOrder.endTime)</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">发货状态：</label>
+												<label class="col-sm-8 control-label align-left">
+													#if(${prizeOrder.sendStatus}=='wait_send')
+														未发货
+													#elseif(${prizeOrder.sendStatus}=='have_send')
+														已发货
+													#end
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="space-8"></div>
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">收货信息</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">收件人： </label>
+												<label class="col-sm-8 control-label align-left">$!{prizeOrder.recipient}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">手机号： </label>
+												<label class="col-sm-8 control-label align-left">$!{prizeOrder.telephone}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">收货地址：</label>
+												<label class="col-sm-8 control-label align-left">$!{prizeOrder.address}</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="space-8"></div>
+							<form id="theForm" name="theForm">
+							<input type="hidden" id="id" name="id" value="$!{prizeOrder.id}" />
+							<input type="hidden" id="sendStatus" name="sendStatus" value="have_send" />
+							<input type="hidden" name="logisticsCode" id="logistics_code" value="$!{prizeOrder.logisticsCode}">
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">发货物流</h4>
+								</div>
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+											#if($!{prizeOrder.sendStatus}=='wait_send')
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+												
+												<div class="col-sm-9">
+													<div class="clearfix">
+														<input type="text" id="logisticsNum" name="logisticsNum" placeholder="物流单号" class="col-xs-10 col-sm-5" value="$!{prizeOrder.logisticsNum}"/>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+												<div class="col-sm-9">
+													<div class="clearfix">
+                                                        <select name="company" id="company" class="col-xs-10 col-sm-5" data-placeholder="物流公司">
+                                                            <option value=""></option>
+															#foreach($logistics in $logisticsList)
+                                                                <option value="$!{logistics.name}" data-code="$!{logistics.code}" #if($!{prizeOrder.logisticsCode}== $!{logistics.code}) selected="selected" #end>$logistics.name</option>
+															#end
+                                                        </select>
+													</div>
+												</div>
+											</div>
+											<div class="clearfix form-actions">
+												<div class="col-md-offset-3 col-md-9">
+													<button class="btn btn-info" type="submit">
+														<i class="icon-ok bigger-110"></i>
+														提交
+													</button>
+			
+													&nbsp; &nbsp; &nbsp;
+													<button class="btn" type="reset">
+														<i class="icon-undo bigger-110"></i>
+														重置
+													</button>
+												</div>
+											</div>
+											#else
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+												<label class="col-sm-8 control-label align-left">$!{prizeOrder.logisticsNum}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+												<label class="col-sm-8 control-label align-left">
+													$!{prizeOrder.company}&nbsp;&nbsp;<a href="javascript:void(0)" id="edit_lgc">修改物流</a>
+												</label>
+											</div>
+											#end
+										</div>
+									</div>
+								</div>
+							</div>
+							</form>
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		
+		<form id="lgcForm" name="lgcForm">
+			<input type="hidden" id="id" name="id" value="$!{prizeOrder.id}" />
+			<input type="hidden" id="sendStatus" name="sendStatus" value="have_send" />
+			<input type="hidden" name="logisticsCode" id="logistics_code_layer" value="$!{prizeOrder.logisticsCode}">
+
+			<div class="widget-box" id="lgc_div" style="display:none">
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+
+								<div class="col-sm-10">
+									<div class="clearfix">
+										<input type="text" id="logisticsNum" name="logisticsNum" placeholder="物流单号" class="col-xs-10 col-sm-5" value="$!{prizeOrder.logisticsNum}"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+								<div class="col-sm-10">
+									<div class="clearfix">
+										<select name="company" id="company_layer" class="col-xs-10 col-sm-5" data-placeholder="物流公司">
+											<option value=""></option>
+											#foreach($logistics in $logisticsList)
+												<option value="$!{logistics.name}" data-code="$!{logistics.code}" #if($!{prizeOrder.logisticsCode}== $!{logistics.code}) selected="selected" #end>$logistics.name</option>
+											#end
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		#parse("commons/footerJs.vm")
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#company').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+		var rules = {},messages = {};
+		rules.logisticsNum = {required:true,maxlength:20};
+		rules.compay = {required:true,maxlength:50};
+		messages.logisticsNum = {required:"物流单号不能为空",maxlength:"最多输入20个字符"};
+		messages.compay = {required:"物流公司不能为空",maxlength:"最多输入50个字符"};
+		Validate.init("theForm",rules,messages,
+			function(form){
+				App.formAjaxSubmit('theForm','${base}/buy/prizeOrder/editPrizeOrder.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href="${base}/buy/prizeOrder/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+		
+		Validate.init("lgcForm",rules,messages,
+			function(form){
+
+				App.formAjaxSubmit('lgcForm','${base}/buy/prizeOrder/editPrizeOrder.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href="${base}/buy/prizeOrder/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+		
+	  	$("#edit_lgc").click(function(){
+	  		$("#lgcForm")[0].reset();
+			layer.open({
+				type: 1,
+				title: '修改物流',
+				area: ['40%', '40%'],
+				shadeClose: true,
+				content: $('#lgc_div'),
+				btn: ['确定', '关闭'],
+				yes: function(){
+				   $("#lgcForm").submit();
+				}
+			});			  	
+	  	});
+		
+		$("#company").on('change',function () {
+			var code = $(this).find("option:selected").attr("data-code");
+			$("#logistics_code").val(code);
+		})
+		$("#company_layer").on('change',function () {
+			var code = $(this).find("option:selected").attr("data-code");
+			$("#logistics_code_layer").val(code);
+		})
+	});
+	
+</script>
+</body>
+</html>
+

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-分配权限</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		<link href="${base}/plugin/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		<div class="main-container" id="main-container">
+			<div class="main-container-inner">
+				<div class="main-content">
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<form id="theForm" name="theForm" class="form-horizontal">
+									<input type="hidden" name="id" id="id" value="$!{roleId}" />
+									<input type="hidden" name="ruleIds" id="rule_ids" value="" />
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 权限选择</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<ul id="ruleTree" class="ztree"></ul>
+											</div>
+										</div>
+									</div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script type="text/javascript" src="${base}/plugin/ztree/js/jquery.ztree.core.js"></script>
+		<script type="text/javascript" src="${base}/plugin/ztree/js/jquery.ztree.excheck.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var setting = {
+					view: {
+						selectedMulti: true
+					},
+					check: {
+						enable: true,
+						chkboxType: { "Y" : "ps", "N" : "ps" }
+					},
+					data: {
+						simpleData: {
+							enable: true
+						}
+					}
+				};
+				
+				var zNodes =[
+					#foreach($rule in $ruleList)
+					{ id:$rule.id, pId:$rule.parentId, name:"$rule.title", #foreach($ckr in $ckrule) #if($ckr==$rule.id) checked:true, #end #end open:false},
+					#end
+				];
+				
+				$.fn.zTree.init($("#ruleTree"), setting, zNodes);
+			
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						
+					},
+				    messages: {
+					    
+					},
+					invalidHandler: function (event, validator) {
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function(form) {
+						var nodes = $.fn.zTree.getZTreeObj('ruleTree').getCheckedNodes(true);
+						var s=[];
+						for(var i=0;i<nodes.length;i++){
+							s.push(nodes[i].id);
+						}
+						if(s.length==0){
+							Box.alert('请选择权限!');
+							return;
+						}
+						$('#rule_ids').val(s.join(','));
+					    App.formAjaxSubmit('theForm','${base}/sys/role/assignRule.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					var index = parent.layer.getFrameIndex(window.name);		
+				  					parent.layer.close(index);
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+			  	});
+				 
+			});
+			
+			function submitForm(){
+				$("#theForm").submit();
+			}
+		</script>
+</body>
+</html>

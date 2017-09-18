@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>运费模板管理</title>
+		<meta name="keywords" content="运费模板管理" />
+		<meta name="description" content="运费模板管理" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+		<style type="text/css">
+			.tab{
+				margin-top: 15px;
+				border: 1px solid #dddddd;
+			}
+		</style>
+		<link rel="stylesheet" href="${base}/mocentre/css/1116citychose.css">
+	</head>
+
+	<body class="no-skin">	
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+						<h3>创建运费模板
+						<a class="btn btn-sm btn-primary" style="margin-right: 50px;float: right;" onclick="javascript:history.back(-1);">返回</a>
+						</h3>
+						<div class="space-4"></div>
+						
+						<div class="space-4"></div>	
+							<div class="col-xs-12">
+							<div class="panel panel-primary">
+								  <div class="panel-heading">模板基本信息</div>
+								  <div class="panel-body">
+								  	<label for='name'>模板名称*:</label>
+								  	<input type="text" name="name" valid="['null']" id="name" />
+								  </div>
+								  <div class="panel-body">
+								  	<label for='sendAddr'>发货地址*:</label>
+								  	<input type="text" name="sendAddr" valid="['null']" id="sendAddr" class="input-text long" />
+								  </div>
+								  <div class="panel-body">
+								  	<label for="sendDate">发货时间*:</label>
+								  	<select name="sendDate" id="sendDate" class='long jobsel'>
+												<option value="">---请选择---</option>
+												<option value="1">12小时内发货</option>
+												<option value="2">24小时内发货</option>
+									</select>
+								  </div>
+								  <div class="panel-body">
+								  	<label for='sendAddr'>是否包邮:</label>
+								  	<div id="isFree">
+									  	<input id="free" type="radio" name='isFree' class='url' value='free' checked="checked"/> 卖家承担运费
+										<input id="nofree" type="radio" name='isFree' class='url' value='nofree' /> 买家承担运费
+								  	</div>
+								  </div>
+								  <div class="panel-body">
+								  	<label for='sendAddr'>是否指定包邮条件:</label>
+								  	<div id="postRequire">
+								  		<input id="postRequire" type="radio" name='postRequire' class='url' value='1' />是
+										<input id="no_postRequire" type="radio" name='postRequire' class='url' value='0' checked="checked"/> 否
+								  	</div>
+								  </div>
+								  <div class="panel-body">
+								  	<label for='sendAddr'>计价方式:</label>
+								  	<div id="calcWay" >
+								  		<input id="num" type="radio" name='calcWay' class='url' value='num'checked="checked" /> 按件数
+										<input id="weight" type="radio" name='calcWay' class='url' value='weight' /> 按重量
+								 	</div>
+								  </div>
+							</div><!-- /.panel -->
+							
+							<div class="panel panel-primary">
+							  <div class="panel-heading">运送方式(除指定地区外,其他地区的运费采用“默认运费”)</div>
+							  
+							  <div id="tabcontent">
+								  <div class="panel-body">
+									  <div class="panel panel-success">
+										  <div class="panel-body">
+										  <label><input id ="express" type="checkbox" />快递</label>
+										  	<div id="defultexpress"></div>
+										  	<div class="tab-div">
+												<table id="tabexpress" border="1" class="tab table">
+												</table>
+											</div>
+											<a id="addexpress" class="add"></a>
+										  </div>
+									  </div>
+								  </div>
+							  
+								  <div class="panel-body">
+									  <div class="panel panel-success">
+										  <div class="panel-body">
+										    <label><input id ="mail" type="checkbox" />平邮</label>
+										  	<div id="defultmail"></div>
+										  	<div class="tab-div">
+												<table id="tabmail" border="1" class="tab table">
+												</table>
+											</div>
+											<a id="addmail" class="add"></a>
+										  </div>
+									  </div>
+								  </div>
+							  
+								  <div class="panel-body">
+									  <div class="panel panel-success">
+										  <div class="panel-body">
+										   	<label><input id ="ems" type="checkbox" />EMS</label>
+									  		<div id="defultems"></div>
+									  		<div class="tab-div">
+												<table id="tabems" border="1" class="tab table">
+												</table>
+											</div>
+											<a id="addems" class="add"></a>
+										  </div>
+								  	</div>
+							  	</div>
+							  	
+							  </div> <!-- /.tabcontent -->
+							</div><!-- /.panel -->
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="button" id="submit">
+                                      		<i class="icon-ok bigger-110"></i>
+                                      			提交
+                           		      	</button>
+
+									&nbsp; &nbsp; &nbsp;
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+							</div>
+							</div><!-- /.col -->	
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script src="${base}/mocentre/js/areas/underscore-min.js"></script>
+		<script src="${base}/mocentre/js/validate.js"></script>
+		<script type="text/temple" id="city_tpl">
+        <%$.each(cityInfo,function(i,item){%>
+        	<li class="city-cont">
+            	<a href="javascript:;" data-add="1" data-num="<%=i%>" data-id="<%=item.code%>" data-text="<%=item.name%>" class="province city-block"><%=item.name%></a>
+            	<ul class="city-list">
+            	<%num=i%>
+                	<%$.each(item.childrenList,function(i,item){%>
+                	<li data-add="1" data-num="<%=num%>" data-id="<%=item.code%>" data-text="<%=item.name%>" class="city city-block"><%=item.name%></li>
+                	<%})%>
+            	</ul>
+        	</li>
+        <%})%>
+    	</script>
+		
+		<script>
+			var cityInfo  = ${cityInfo};
+		
+			function delttt(bt,index) {
+				var tr = $(bt).parent().parent();
+				var trCls = tr.attr("class");
+				var tbody = tr.parent();
+				var table = tbody.parent();
+				var tableCls= table.attr("id");
+				var _len = tbody.find("tr[class]").length; 
+				
+				if (_len>1) {
+					$("."+trCls).remove();
+				}else if(_len==1){
+					$("."+trCls).parent().remove();
+				}
+				
+				var tbb = tbody.find("tr[class]");
+				for (var i = 0; i < tbb.length; i++) {
+					tbb[i].removeAttribute("class");
+					tbb[i].setAttribute("class","tr_"+tableCls+i.toString());
+					var cls = tbb[i].getAttribute('class');
+					
+					var ipt = $("."+cls).find("input[type='text']");
+					for (var j = 0; j < ipt.length; j++) {
+						var id = ipt[j].id;
+						var idsplit = id.split('_')
+						$("#"+id).attr('id',idsplit[0]+'_'+idsplit[1]+'_'+tableCls+i.toString());
+					}
+				}
+			};
+			
+		    $(document).ready(function(){
+		    	// 是否包邮
+		    	var calcWay = "num";
+		    	// 计价方式
+		    	var isFree  = "free";
+		    	
+		    	var postRequire = "0";
+				// 单选按钮选中赋值
+				 $("input[type='radio']").click(function(){
+					 var This = $(this);
+					 var rdId = This.parent().attr("id");
+					 if (rdId == "isFree") {
+						 isFree = $(this).attr("id")
+					} else if(rdId == "calcWay"){
+						 calcWay = $(this).attr("id");
+						 
+						 var cbx = $(".panel-body > label > input[type='checkbox']");
+						 for (var i = 0; i < cbx.length; i++) {
+							 if ($("#"+cbx[i].id).is(':checked')) {
+								 var prompt = appendPrompt(cbx[i].id,calcWay);
+								 $("#defult"+cbx[i].id).html(prompt);
+							}
+						}
+					}else if(rdId == "postRequire"){
+						postRequire =  $(this).val();
+					}
+			     });
+				
+				// 拼接地区运费table
+				function appendTab(id,calcWay,num) {
+					var tab = "";
+					var name = "_"+id+num;
+					var thead="";
+					var tbody = "<tr class='tr"+name+"'>"+
+					  				 "<td>"+
+										"<input class='hidden' type='text' id='arriveArea"+name+"' name='arriveArea'>"+
+										"<input class='wrap' valid="+"['null']"+" id='put_show"+name+"' type='text' value='请选择地区'>"+
+									 "</td>"+
+					  				 "<td><input valid="+"['null']"+" id='firstNum"+name+"' name='firstNum' type='text'></td>"+
+									 "<td><input valid="+"['null']"+" id='firstFree"+name+"'name='firstFree' type='text'></td>"+
+									 "<td><input valid="+"['null']"+" id='nextNum"+name+"'name='nextNum' type='text'></td>"+
+									 "<td><input valid="+"['null']"+" id='nextFree"+name+"'name='nextFree' type='text'></td>"+
+									 "<td><a onclick='delttt(this,"+num+")' >删除</a></td>"+
+									 "<td class='hidden'><input id='isDefault"+name+"'class='hidden' name='isDefault' type='text' value='0'></td>";
+								 "</tr>"; 
+					if (calcWay=="weight") {
+						thead = "<tr>"+
+				  				 "<td>运送到</td>"+
+								 "<td>首重(kg)</td>"+
+								 "<td>首费(元)</td>"+
+								 "<td>续重(kg)</td>"+
+								 "<td>续费(元)</td>"+
+								 "<td>操作</td>"+
+								 "</tr>";
+					} else {
+						thead ="<tr>"+
+				  				 "<td>运送到</td>"+
+								 "<td>首件(件)</td>"+
+								 "<td>首费(元)</td>"+
+								 "<td>续件(件)</td>"+
+								 "<td>续费(元)</td>"+
+								 "<td>操作</td>"+
+			      				 "</tr>";
+					}
+					if (num>0) {
+						tab+=tbody;
+					}else{
+						tab+=thead+tbody;
+					}
+					return tab;
+				}
+				
+				
+		    	// 拼接默认运费 
+				 function appendPrompt(id,calcWay) {
+						var Prompt = "";
+						if (calcWay=="weight") {
+							Prompt = "默认运费*：<input valid="+"['null']"+" id='firstNum_"+id+"' name='firstNum' type='text'>"+
+									"kg内,<input valid="+"['null']"+" id='firstFree_"+id+"' name='firstFree' type='text'>元,"+
+									"每增加<input  valid="+"['null']"+" id='nextNum_"+id+"' name='nextNum' type='text'>kg,"+
+									"增加运费<input  valid="+"['null']"+" id='nextFree_"+id+"' name='nextFree' type='text'>元"+
+									"<input class='hidden' name='isDefault' id='isDefault_"+id+"' type='text' value='1'>"+
+									"<input class='hidden' name='sendWay' id='sendWay_"+id+"' type='text' value='"+id+"'>"+
+									"<input class='hidden' name='arriveArea' id='arriveArea_"+id+"' type='text' value='10000'>";
+						} else {
+							Prompt = "默认运费*：<input valid="+"['null']"+" id='firstNum_"+id+"' name='firstNum' type='text'>"+
+									"件内,<input valid="+"['null']"+" id='firstFree_"+id+"' name='firstFree' type='text'>元"+
+									",每增加<input valid="+"['null']"+" id='nextNum_"+id+"' name='nextNum' type='text'>件"+
+									",增加运费<input valid="+"['null']"+" id='nextFree_"+id+"' name='nextFree' type='text'>元"+
+									"<input class='hidden' name='isDefault' id='isDefault_"+id+"' type='text' value='1'>"+
+									"<input class='hidden' name='sendWay' id='sendWay_"+id+"' type='text' value='"+id+"'>"+
+									"<input class='hidden' name='arriveArea' id='arriveArea_"+id+"' type='text' value='10000'>";
+						}
+						return Prompt;
+						
+					}
+				
+		    	 // 复选框点击事件
+		    	$("input[type='checkbox']").change(function () {
+		    		var This = $(this);
+					var id = This.attr("id");
+		    		if(This.is(':checked')){
+		    	    	var Prompt = appendPrompt(id,calcWay);
+		    	    	$("#defult"+id).append(Prompt);
+		    	    	$("#add"+id).text("为指定地区设置运费")
+		    	    }else{
+		    	    	$("#defult"+id).html("")
+		    	    	$("#add"+id).text("")
+		    	    	$("#tab"+id).html("")
+		    	    } 
+		    	});
+		    	
+		    	
+		        //增加<tr/>操作
+		        $(".add").click(function(){
+		        	// 页面所有的tr数
+		        	var This = $(this);
+		        	var tab_div = This.prev(".tab-div");
+		        	var tab = tab_div.find(".tab").eq(0);
+		            var _len = tab_div.find("tr[class]").length;
+		            var table_msg = appendTab(tab.attr("id"),calcWay,_len);
+		            tab.append(table_msg);
+		        });
+		        
+		        $("#submit").on("click", function () {
+		        	var flag = true;
+		        	
+		        	var ovalid = $("input[valid]");
+		            for(var i = 0;i<ovalid.length;i++){
+		                validate(ovalid.eq(i));
+		            }
+		        	
+	            	for(var i = 0;i<ovalid.length;i++){
+		                if(ovalid.eq(i).next(".error").length > 0){
+		                    flag=false;
+		                    layer.msg("请填写基本信息与默认运费!");
+		                    break;
+		                }
+		            }
+	            	
+	            	if ($("#sendDate").val() == '') {
+	            		flag=false;
+	            		layer.msg("请填写基本信息与默认运费!");
+					}
+	            	
+		            
+		            if (flag) {
+						flag = false;
+			        	var list = [];
+			        	var MoudleparamMap={};
+			        	var CarryListMap=[];
+			        	MoudleparamMap.name = $("#name").val();
+			        	MoudleparamMap.sendAddr = $("#sendAddr").val();
+			        	MoudleparamMap.sendDate = $("#sendDate").val();
+			        	MoudleparamMap.isFree = isFree;
+			        	MoudleparamMap.calcWay = calcWay;
+			        	MoudleparamMap.postRequire=postRequire;
+			        	
+			        	
+			        	var tabContent = $("#tabcontent");
+			        	var cboxs = tabContent.find("input[type='checkbox']:checked");
+						for (var i = 0; i < cboxs.length; i++) {
+							//获取每个运送方式下的默认运费信息
+							id = cboxs[i].id;
+							var carryDefultMap = {};
+							var defult = $("#defult"+id);
+							var defultInput = defult.find("input");
+							
+							for (var j = 0; j < defultInput.length; j++) {
+								var key = defultInput[j].name;
+								var val = ""
+								if ((key == "firstFree") || (key == "nextFree")) {
+									var valnum = parseFloat(defultInput[j].value);
+									val = (valnum*100).toString();
+									carryDefultMap[key] = val;
+								}else{
+									val = defultInput[j].value;
+									carryDefultMap[key] = val;
+								}
+							}
+							
+							var trlength = $("#tab"+id).find("tr[class]").length;
+							for (var j = 0; j < trlength; j++) {
+								var table = $(".tr_tab"+id+j);
+								var tableInput = table.find("input");
+								carryTableMap={};
+							     for (var j1 = 0; j1 < tableInput.length; j1++) {
+							     	if (tableInput[j1].name != '') {
+							     		console.log(tableInput[j1])
+										var key = tableInput[j1].name;
+										var val = ""
+										if ((key == "firstFree") || (key == "nextFree")) {
+											var valnum = parseFloat(tableInput[j1].value);
+											val = (valnum*100).toString();
+											carryTableMap[key] = val;
+										}else{
+											val = tableInput[j1].value;
+											carryTableMap[key] = val;
+											carryTableMap.sendWay = id;
+										}
+							     	} 
+								} 
+							     CarryListMap.push(carryTableMap)
+							} 
+							CarryListMap.push(carryDefultMap)
+							if (i == cboxs.length-1) {
+								flag=true;
+							}
+						}
+						if(flag){
+						   $.ajax({
+						        "async": false,
+						        "type": "POST",
+						        "data":{"carryModeList":JSON.stringify(CarryListMap),"freightMould":JSON.stringify(MoudleparamMap)},
+						        "url": '${base}/fee/freightmould/addFreightMould.htm',
+						        "beforeSend" : function(){
+					            	fm.showLoging("正在添加运费模板...");
+					    		},
+						        "success": function (data) {
+						        	fm.closeUnBlock();
+						        	window.location.href = "${base}/fee/freightmould/index.htm";
+						        }
+						    })
+						}
+		            }
+		        });
+		    });
+		  
+		</script>
+		<script src="${base}/mocentre/js/areas/city.js"></script>
+</body>
+</html>

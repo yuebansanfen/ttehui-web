@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>店铺管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+	
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try {
+					ace.settings.check('main-container', 'fixed')
+				} catch (e) {
+				}
+			</script>
+			<div class="main-container-inner">
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>店铺详情</h1>
+						</div><!-- /.page-header -->
+					<input type="hidden" id="shopId" name="shopId" value="$!{shop.id}">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">基本信息</h4>
+								</div>
+								<div class="widget-body">
+									<div class="widget-main">
+										
+										<div class="widget-main padding-16">
+											<img src="${shop.img_logo}" width="200" hegiht="200"/>
+										</div>
+									  	<div class="widget-main padding-16">
+									        	名称：$!{shop.name}
+									  	</div>
+									  	<div class="widget-main padding-16">
+									        	负责人：$!{shop.leader}
+									  	</div>
+									  	<div class="widget-main padding-16">
+									           	地址：$!{shop.address}
+									  	</div>
+									  	<div class="widget-main padding-16">
+									           	开店时间：$!date.format('yyyy-MM-dd',$!shop.open_date)
+									  	</div>
+									  	<div class="panel-body">
+									          	营业情况：#if($shop)
+											           	#if(${shop.buss_status}=='opening')
+											           		营业中
+											           	#elseif(${shop.buss_status}=='stop')
+											           		关闭
+											           	#elseif(${shop.buss_status}=='pause')
+											           		停止营业
+											           	#end
+											           #end
+									  	</div>
+									  	<div class="panel-body">
+									      	     链接地址：$!{shop.show_url}
+									  	</div>
+									  	<div class="panel-body">
+									          	 等级：$!{shop.level}
+									  	</div>
+									  	<div class="panel-body">
+									  		<div class="clearfix form-actions">
+			                            		<div class="col-md-offset-3 col-md-9">
+			                                		<a class="btn btn-info" type="reset" id="pass" onclick="examine(this)">
+			                                        	<i class="icon-undo bigger-110"></i>
+			                                        	审核通过
+			                                    	</a>
+			                                    	<a class="btn " type="reset" id="unpass" onclick="examine(this)">
+			                                        	<i class="icon-undo bigger-110"></i>
+			                                        	审核驳回
+			                                    	</a>
+			                                	</div>
+			                            	</div>
+									     </div>
+										
+									</div>
+								</div>
+							</div><!--/.widget>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.page-content -->
+			</div>
+			<!-- /.main-content -->
+		</div>
+		<!-- /.main-container-inner -->
+		#parse("commons/scroll.vm")
+	</div>
+	<!-- /.main-container -->
+	#parse("commons/footerJs.vm")
+		<script type="text/javascript">
+			function examine(obj) {
+				var status = $(obj).attr("id");
+				var id = $("#shopId").val();
+				Box.confirm("您确定要这么做吗?",function(){
+					jQuery.ajax({
+			            type: 'post', 
+			            url: '${base}/sp/shop/examineShop.htm',  
+			            data:  {"id":id,"status":status},
+			            dataType: 'json',  
+			            success: function(data){
+			            	if(data.success){
+				            	window.location.href = "${base}/sp/shop/index.htm";
+			            	}else{
+			            		layer.msg(data.message);
+			            	}
+						},
+						error: function(data) {
+							console.log(data);
+							layer.msg('系统异常，请联系系统管理员!');
+						}  
+					});
+				});
+			}
+		</script>
+</body>
+</html>

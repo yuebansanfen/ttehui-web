@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-活动管理</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+									<a class="btn btn-sm btn-primary" href="${base}/act/activity/add.htm">新增</a>
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">刷新 </button>
+									</form>
+								</div>
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="5%">#</th>
+													<th width="15%">活动名称</th>
+													<th width="10%">活动类型</th>
+													<th width="10%">展示位置</th>
+													<th width="10%">是否展示</th>
+													<th width="10%">排序</th>
+													<th width="15%">创建时间</th>
+													<th width="25%">操作</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th width="5%">#</th>
+													<th width="10%">活动类型</th>
+													<th width="15%">活动名称</th>
+													<th width="10%">展示位置</th>
+													<th width="10%">是否展示</th>
+													<th width="10%">排序</th>
+													<th width="15%">创建时间</th>
+													<th width="25%">操作</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+	<script type="text/javascript">
+		var mTable;
+		$(document).ready(function() {
+		    mTable = $('#sample-table').DataTable({
+		    	"processing": true,
+				"serverSide": true,
+				"ajax": {
+               		url:"${base}/act/activity/query.htm",
+               		type:"post",
+               		data: function (d) {
+                        d.orderby = 'asc';
+                        d.column = 'sorting'
+               		},
+                    "dataSrc":function(json){
+                        if(!json.success){
+                            json.data=[];
+                            var code = json.code;
+                            if(code==400){
+                                Box.alert(json.message,function(){
+                                    window.location.href="${base}/sys/login/logout";
+                                },"确定");
+                            }else{
+                                layer.msg(json.message);
+                            }
+                        }
+                        return json.data;
+                    }
+               	},
+				"columns" : [
+					{"data":null,"orderable":false}, 
+					{"data":"title","orderable":false}, 
+					{"data":"type","orderable":true},
+					{"data":"showLocal","orderable":true},
+					{"data":"isShow","orderable":false}, 
+					{"data":"sorting","orderable":true},
+					{"data":"gmtCreated","orderable":true},
+					{"data":null,"orderable":false}
+				],
+				"columnDefs": [
+					{
+                    	"targets":0
+        			},
+                    {
+                        "render":function(data, type, row){
+		                            if (data == "seckill") {
+		                                return "秒杀";
+		                            }else if(data == "groupon"){
+		                                return "团购";
+		                            }
+		                            return data;
+		                        },
+                        "targets":2
+                    },
+                    {
+						"render":function(data, type, row){
+                         	 	 	if (data == "mall") {
+		                                return "商城";
+		                            }else if(data == "abc"){
+		                                return "农行客户端";
+		                            }
+		                            return data;
+                         		},
+                    	"targets":3
+					},
+					{
+						"render":function(data, type, row){
+                             	 	if (data == "1") {
+										return "是";
+									}else if(data == "0"){
+										return "否";
+									}
+									return data;
+                             	},
+                    	"targets":4
+					},
+					{
+						"render":function(data, type, row){
+                             	 	return displayDate(data,"yyyy-MM-dd HH:mm:ss");  
+                             	},
+                    	"targets":6
+					},
+					{
+                    	"render":function(data, type, row){
+                    					var ope = [];
+                    					ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+	                    				ope.push("<a href=\"${base}/act/activity/view.htm?id="+row.id+"&type="+row.type+"\">查看活动商品</a>");
+                            			ope.push("<span class=\"text-explode\">|</span>");
+	                    				if (row.isShow == "1") {
+	                    					ope.push("<a href=\"javascript:void(0);\" onclick=\"updateShow(0,"+row.id+")\">关闭显示</a>");
+										} else if (row.isShow == "0"){
+											ope.push("<a href=\"javascript:void(0);\" onclick=\"updateShow(1,"+row.id+")\">开启显示</a>");
+										}
+	                    				ope.push("<span class=\"text-explode\">|</span>");
+	                    				ope.push("<a href=\"${base}/act/activity/edit.htm?id="+row.id+"\">修改</a>");
+	                    				ope.push("<span class=\"text-explode\">|</span>");
+	                    				ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+	                    				ope.push("</div></div>");
+                    				return ope.join("");
+                             	},
+                    	"targets":7,
+                    	"orderable":false 
+        			}
+        		],
+        		"order": [[5, 'asc']],
+        		"bFilter" : false,
+        		"bPaginate" : true ,
+        		"iDisplayLength" : 50,
+				"oLanguage" : {
+					"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+				}
+			});
+			
+			mTable.on('draw.dt',
+			    function() {
+			        mTable.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+		                i = i+1;
+		                var page = mTable.page.info();
+		                var pageno = page.page;
+		                var length = page.length;
+		                var columnIndex = (i+pageno*length);
+		                cell.innerHTML = columnIndex;
+			        });
+			    });
+			
+			$('#search_form').submit(function(){
+				mTable.draw();
+				return false;
+			});
+			
+		});
+		
+		function del(id){
+			Box.confirm("是否删除该活动?",function(){
+				jQuery.ajax({
+		            type: 'post', 
+		            url: '${base}/act/activity/delete.htm',  
+		            data:  {"id":id},
+		            dataType: 'json',  
+		            success: function(data){
+		            	if(data.success){
+		            		mTable.draw();
+						}else{
+							Box.alert(data.message);
+						}
+					},
+					error: function(data) {
+						Box.alert('系统异常，请联系系统管理员!');
+					}  
+				});
+			});
+		}
+		
+		function updateShow(show,id){
+			Box.confirm("是否确定这样操作?",function(){
+				jQuery.ajax({
+		            type: 'post', 
+		            url: '${base}/act/activity/updateshow.htm',  
+		            data:  {"id":id,"show":show},
+		            dataType: 'json',  
+		            success: function(data){
+		            	if(data.success){
+		            		mTable.draw();
+						}else{
+							Box.alert(data.message);
+						}
+					},
+					error: function(data) {
+						Box.alert('系统异常，请联系系统管理员!');
+					}  
+				});
+			}); 
+		}
+	</script>
+</body>
+</html>

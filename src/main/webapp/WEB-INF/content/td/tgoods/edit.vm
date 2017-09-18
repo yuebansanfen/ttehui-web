@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-编辑第三方商品</title>
+		<meta name="keywords" content="编辑第三方商品" />
+		<meta name="description" content="编辑第三方商品" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm")
+        <link type="text/css" rel="stylesheet" href="${base}/plugin/area/css/default/zyzn.css" />
+        <link type="text/css" rel="stylesheet" href="${base}/plugin/kindeditor/themes/default/default.css" />
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>
+                                编辑第三方商品
+                                #parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal">
+                                    <input type="hidden" id="area_list" name="areaList" value="">
+                                    <input type="hidden" id="id" name="id" value="$!{thirdGoods.id}">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>展示位置：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <select name="showLocal" id="show_local"  class="form-control chosen-select" >
+                                                    <option value="act" #if($!{thirdGoods.showLocal}=="act") selected="selected" #end>活动精选</option>
+                                                    <option value="special" #if($!{thirdGoods.showLocal}=="special") selected="selected" #end>爆品特卖</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品名称：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="title" id="title" value="$!{thirdGoods.title}" type="text" placeholder="商品名称" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品售价：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="sellPrice" id="sell_price" value="$!{thirdGoods.sellPrice}" type="text" placeholder="商品售价" />
+                                            </div>
+                                        </div>
+                                        <span class="help-inline"><span class="middle">注: 显示价格，不参与计算</span></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品原价：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="oldPrice" id="old_price" value="$!{thirdGoods.oldPrice}" type="text" placeholder="商品原价" />
+                                            </div>
+                                        </div>
+                                        <span class="help-inline"><span class="middle">注: 显示价格，不参与计算</span></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品描述：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="describe" id="describe" value="$!{thirdGoods.describe}" type="text" placeholder="商品描述" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>展示图片：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control hidden" name="showImg" id="show_img" value="$!{thirdGoods.showImg}" type="text" placeholder="展示图片" />
+                                            </div>
+                                            <img id="show_img_preview" src="$!{thirdGoods.showImg}" width="100" height="100"/>
+                                            <a class="btn btn-minier btn-primary" onclick="addImg('show_img');">上传</a>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>外部链接：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="linkUrl" id="link_url"  value="$!{thirdGoods.linkUrl}" type="text" placeholder="外部链接" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" ><span class="middle red">*</span>投放城市：</label>
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                #set($areaCode='')
+                                                #set($areaName='')
+                                                #if($thirdGoods&&$thirdGoods.areasList.size()>0)
+                                                    #foreach($launch in $thirdGoods.areasList)
+                                                        #set($areaCode=$areaCode+$!{launch.cityCode}+"-")
+                                                        #set($areaName=$areaName+$!{launch.cityName}+"-")
+                                                    #end
+                                                    #set($areaCode=$areaCode.substring(0,$areaCode.lastIndexOf('-')))
+                                                    #set($areaName=$areaName.substring(0,$areaName.lastIndexOf('-')))
+                                                #end
+                                                <input type='text' class="col-xs-10 col-sm-5" id="put_areas" readonly="readonly" value="$areaName" data-value="$areaCode" onclick="appendCity(this,'duoxuan')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span> 排序 ：</label>
+                                        <div class="col-sm-6">
+                                            <div class="clearfix">
+                                                <input type="text" id="sorting" name="sorting" placeholder="排序" value="$!{thirdGoods.sorting}" class="col-xs-10 col-sm-5" />
+                                                <span class="help-inline"><span class="middle">越小越靠前</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="submit" id="submit">
+                                                <i class="icon-ok bigger-110"></i>
+                                               		 提交
+                                            </button>
+
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn" type="reset">
+                                                <i class="icon-undo bigger-110"></i>
+                                                	重置
+                                            </button>
+                                        </div>
+                                    </div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script type="text/javascript">
+            var __LocalDataCities = {};
+            __LocalDataCities.list = {};
+            __LocalDataCities.relations = {};
+            __LocalDataCities.category = {};
+            var attrData = [];
+            var editor;
+            KindEditor.ready(function(K){
+                editor = K.create('#details',{
+                    resizeType: 1,
+                    allowFileManager: true,
+                    allowImageUpload: false,
+                    items : [
+                        'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                        'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                        'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
+                        'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                        'anchor', 'link', 'unlink', '|'
+                    ],
+                    uploadCallback: addImg
+                });
+            });
+            $(document).ready(function(){
+                $.ajax({
+                    type:"post",
+                    url:'${base}/goods/goods/ajax/areas.htm',
+                    dataType:"JSON",
+                    success:function(result){
+                        if(result.success == true) {
+                            var dataStr = result.data;
+                            if(dataStr!=null){
+                                var provArr = JSON.parse(dataStr);
+                                __LocalDataCities.category["provinces"] = [];
+                                __LocalDataCities.category["hotcities"] = [];
+                                $.each(provArr,function(n,prov){
+                                    __LocalDataCities.list[prov.code] = [prov.name,prov.code];
+                                    __LocalDataCities.relations[prov.code] = [];
+                                    if(prov.name!='北京市'&&prov.name!='天津市'&&prov.name!='上海市'){
+                                        __LocalDataCities.category["provinces"].push(prov.code);
+                                    }
+                                    var cityArr = prov.childrenList;
+                                    if(cityArr!=null){
+                                        $.each(cityArr,function(m,city){
+                                            __LocalDataCities.list[city.code] = [city.name,city.code];
+                                            __LocalDataCities.relations[prov.code].push(city.code);
+                                            if(city.name=='北京'||city.name=='上海'||city.name=='广州'||city.name=='深圳'||
+                                                    city.name=='天津'||city.name=='苏州'||city.name=='重庆'||city.name=='南京'||
+                                                    city.name=='杭州'||city.name=='大连'||city.name=='成都'||city.name=='武汉'){
+                                                __LocalDataCities.category["hotcities"].push(city.code);
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        }
+                    }
+                });
+
+                $('#sorting').ace_spinner({min:1,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+
+                var rules = {},messages = {};
+                rules.showLocal = {required:true};
+                rules.title = {required:true};
+                rules.sellPrice = {required:true,digitsOrTwo:true};
+                rules.oldPrice = {required:true,digitsOrTwo:true};
+                rules.describe = {required:true};
+                rules.showImg = {required:true};
+                rules.linkUrl = {required:true};
+
+                messages.showLocal = {required:"请选择展示位置"};
+                messages.title = {required:"商品名称不能为空"};
+                messages.sellPrice = {required:"商品售价不能为空"};
+                messages.oldPrice = {required:"商品原价不能为空"};
+                messages.describe = {required:"商品描述不能为空"};
+                messages.showImg = {required:"展示图片不能为空"};
+                messages.showImg = {required:"展示图片不能为空"};
+                messages.linkUrl = {required:"链接不能为空"};
+
+                Validate.init("theForm",rules,messages,
+                        function(form){
+                            var areaList = $("#put_areas").data("value");
+                            if (areaList == ''){
+                                layer.msg("投放区域不能为空");
+                                return;
+                            }
+                            $("#area_list").val(areaList);
+                            App.formAjaxSubmit('theForm','${base}/td/tgoods/editThirdGoods.htm','post',
+                                function(result){
+                                    var suc = result.success;
+                                    if(suc){
+                                        window.location.href="${base}/td/tgoods/index.htm";
+                                    }else{
+                                        layer.msg(result.message);
+                                    }
+                                }
+                            );
+                        }
+                );
+            })
+            /* 上传图片 */
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        layer.close(index);
+                    }
+                });
+            }
+		</script>
+        <script src="${base}/plugin/area/js/areadata.js"></script>
+    </body>
+</html>

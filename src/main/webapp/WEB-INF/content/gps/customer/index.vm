@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>客户管理-${baseDescribe}</title>
+		<meta name="keywords" content="客户管理" />
+		<meta name="description" content="客户管理" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										<a class="btn btn-sm btn-primary" href="${base}/gps/customer/add.htm">新增</a> 
+									</form>
+								</div>
+								<div class="space-4"></div>
+									
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>机构单位</th>
+													<th>用户名</th>
+													<th>电话</th>
+													<th>运营人员</th>
+													<th>运营人员电话</th>
+													<th>创建时间</th>
+													<th width="15%">操作</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+									
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script type="text/javascript">
+			var mTable;
+			$(document).ready(function() {
+			    mTable = $('#sample-table').DataTable({
+			    	"processing": true,
+					"serverSide": true,
+					"ajax": {
+	               		url:"${base}/gps/customer/query.htm",
+	               		type:"post",
+	               		data: function (d) {
+                            d.orderby = 'asc';
+                            d.column = 'gmtCreated'
+	               		},
+                        "dataSrc":function(json){
+                            if(!json.success){
+                                json.data=[];
+                                var code = json.code;
+                                if(code==400){
+                                    Box.alert(json.message,function(){
+                                        window.location.href="${base}/sys/login/logout";
+                                    },"确定");
+                                }else{
+                                    layer.msg(json.message);
+                                }
+                            }
+                            return json.data;
+                        }
+	               	},
+					"columns" : [
+						{"data":null,"orderable":false},
+						{"data":"organization",}, 
+						{"data":"userName"}, 
+						{"data":"telephone"}, 
+						{"data":"operator"}, 
+						{"data":"optTelephone"},
+						{"data":"gmtCreated"}
+					],
+					"columnDefs": [
+						{
+							"class":"center",
+	                    	"targets":0
+	        			},
+	        			{
+	                    	"orderable":false ,
+							"render":function(data, type, row){
+	                             	 	return displayDate(data,"yyyy-MM-dd");  
+	                             	},
+	                    	"targets":6
+						},
+						{
+	                    	"render":function(data, type, row){
+	                    					var ope = [];
+		                    				ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+		                    				ope.push("<a href=\"${base}/gps/customer/edit_base.htm?id="+row.id+"\">修改基本信息</a>");
+		                    				ope.push("<span class=\"text-explode\">|</span>");
+		                    				ope.push("<a href=\"${base}/gps/customer/edit_passwd.htm?id="+row.id+"\">修改密码</a>");
+		                    				ope.push("<span class=\"text-explode\">|</span>");
+		                    				ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+		                    				ope.push("</div></div>");
+	                    				return ope.join("");
+	                             	},
+	                    	"targets":7,
+	                    	"orderable":false 
+	        			}
+	        		],
+	        		"bFilter" : false,
+	        		"bPaginate" : true ,
+	        		"iDisplayLength" : 50,
+	        		"order": [[6, 'asc']],
+					"oLanguage" : {
+						"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+					}
+				});
+			    
+			    mTable.on('order.dt search.dt',
+					    function() {
+					        mTable.column(0, {
+					            search: 'applied',
+					            order: 'applied'
+					        }).nodes().each(function(cell, i) {
+					            cell.innerHTML = i + 1;
+					        });
+					    });
+				
+				$('table th input:checkbox').on('click' , function(){
+						var that = this;
+						$(this).closest('table').find('tr > td:first-child input:checkbox')
+						.each(function(){
+							this.checked = that.checked;
+							$(this).closest('tr').toggleClass('selected');
+						});
+				});
+				
+				$('#search_form').submit(function(){
+					mTable.draw();
+					return false;
+				});
+				
+			});
+			
+			function del(id){
+				Box.confirm("是否删除该客户?",function(){
+					jQuery.ajax({
+			            type: 'post', 
+			            url: '${base}/gps/customer/delete.htm',  
+			            data:  {"ids":id},
+			            dataType: 'json',  
+			            success: function(data){
+			            	if(data.success){
+			            		mTable.draw();
+							}else{
+								Box.alert(data.message);
+							}
+						},
+						error: function(data) {
+							Box.alert('系统异常，请联系系统管理员!');
+						}  
+					});
+				});
+			}
+			
+		</script>
+</body>
+</html>

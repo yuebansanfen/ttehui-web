@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改商品属性-属性管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>修改商品属性#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal">
+									<input type="hidden" name="id" id="id" value="${attribute.id}"/>
+									<input type="hidden" name="isImg" id="is_img" value="${attribute.isImg}"/>
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>属性名称：</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+                                                <input type="text" id="name" name="name" placeholder="属性名称" class="col-xs-10 col-sm-5" value="$!{attribute.name}"/>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> <span class="middle red">*</span>属性编码：</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="code" name="code" placeholder="属性编码" class="col-xs-10 col-sm-5" value="$!{attribute.code}"/>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2">是否需要图片：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="clearfix">
+                                                <input id="imgChecked" name="imgChecked" class="ace ace-switch ace-switch-5" type="checkbox" #if($!{attribute.isImg}==1) checked #end/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="space-4"></div>
+
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-info" type="btn-submit">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												重置
+											</button>
+										</div>
+									</div>
+								</form>
+								
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var rules = {},messages = {};
+				rules.name = {required:true};
+				rules.code = {required:true};
+				messages.name = {required:"属性名不能为空"};
+				messages.code = {required:"属性code不能为空"};
+				Validate.init("theForm",rules,messages,
+					function(form){
+						$("input[name='imgChecked']:checkbox").each(function(){ 
+			                if($(this).is(':checked')){
+			                    $("#is_img").val("1");
+			                }else{
+			                	goodsCheck = false;
+			                	$("#is_img").val("0");
+			                }
+			            });
+						App.formAjaxSubmit('theForm','${base}/goods/attribute/editAttribute.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href="${base}/goods/attribute/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+				);
+		
+			});
+		</script>
+</body>
+</html>

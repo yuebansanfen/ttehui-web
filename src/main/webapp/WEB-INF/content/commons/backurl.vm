@@ -1,0 +1,11 @@
+#if($pcList&&$pcList.size()>1)
+#set($size = $pcList.size() - 1)
+#foreach($rule in $pcList)
+	#if($velocityCount == $size)
+	<button type="submit" class="btn btn-purple btn-sm pull-right inline" onclick="javascript:window.location.href='${base}/$!{rule.url}'">
+		<i class="ace-icon fa fa-reply icon-only"></i>
+		返回
+	</button>
+	#end
+#end
+#end

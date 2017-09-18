@@ -1,0 +1,63 @@
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='${base}/mocentre/js/jquery.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='${base}/mocentre/js/jquery1x.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='${base}/mocentre/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+		</script>
+		<script src="${base}/mocentre/js/bootstrap.js"></script>
+
+		<!-- page specific plugin scripts -->
+		<script charset="utf-8" src="${base}/plugin/kindeditor/kindeditor-min.js"></script>
+		<script charset="utf-8" src="${base}/plugin/kindeditor/lang/zh_CN.js"></script>
+		<script charset="utf-8" src="${base}/plugin/layer/layer.js?v=2.2"></script>
+		<!--<script charset="utf-8" src="${base}/plugin/layer/extend/layer.ext.js"></script>-->
+		
+		<!-- ace scripts -->
+		<script src="${base}/mocentre/js/bootbox.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.scroller.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.colorpicker.js"></script>	
+		<script src="${base}/mocentre/js/ace/elements.typeahead.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.wysiwyg.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.spinner.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.wizard.js"></script>
+		<script src="${base}/mocentre/js/ace/elements.aside.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.ajax-content.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.touch-drag.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.sidebar.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.sidebar-scroll-1.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.submenu-hover.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.widget-box.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.settings.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.settings-rtl.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.widget-on-reload.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.searchbox-autocomplete.js"></script>
+		<script src="${base}/mocentre/js/ace/ace.widget-on-reload.js"></script>
+		<script src="${base}/mocentre/js/chosen.jquery.js"></script>
+		<script src="${base}/mocentre/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="${base}/mocentre/js/date-time/moment.js"></script>
+		<script src="${base}/mocentre/js/date-time/moment_zh-CN.js"></script>
+		<script src="${base}/mocentre/js/date-time/bootstrap-datetimepicker.js"></script>
+		<script src="${base}/mocentre/js/jquery.autosize.js"></script>
+		<script src="${base}/mocentre/js/jquery.validate.js"></script>
+		<script src="${base}/mocentre/js/jquery.form.js"></script>
+		<script src="${base}/js/app.js"></script>
+		
+		<!-- 查询蒙版 -->
+		<script src="${base}/mocentre/js/jquery.blockUI.min.js"></script>
+		<script src="${base}/mocentre/js/public.js"></script>
+		<!-- 提示框 -->
+		<script src="${base}/mocentre/js/jquery.toast.js"></script>
+		<!-- inline scripts related to this page -->

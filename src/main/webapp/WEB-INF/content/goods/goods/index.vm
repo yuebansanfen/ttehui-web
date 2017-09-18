@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>商品管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										<a class="btn btn-sm btn-primary" href="${base}/goods/goods/add.htm" value="">新增</a>
+										<input type="text" id="title" name="title" class="input-sm" placeholder="商品名称">&nbsp;&nbsp;
+										审核状态：
+										<select id="is_check" name="isCheck">
+											<option value=""></option>
+											<option value="unCheck">待审核</option>
+											<option value="checkPass">审核通过</option>
+											<option value="checkFail">审核驳回</option>
+										</select>
+										上架状态：
+										<select id="is_show" name="isShow">
+											<option value=""></option>
+											<option value="notShelf">待上架</option>
+											<option value="onShelf">上架中</option>
+											<option value="offShelf">已下架</option>
+										</select>
+										<button type="submit" class="btn btn-purple btn-sm" >
+											搜索
+										</button>
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">
+											<i class="icon-refresh"></i>
+											刷新
+										</button>
+									</form>
+								</div>
+								<div class="space-4"></div>
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="3%">#</th>
+													<th width="25%">商品名称</th>
+													<th width="15%">商品价格</th>
+                                                    <th width="12%">库存总量</th>
+													<th width="13%">审核状态</th>
+													<th width="12%">上架状态</th>
+													<th width="20%">操作</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th width="3%">#</th>
+													<th width="25%">商品名称</th>
+													<th width="15%">商品价格</th>
+                                                    <th width="12%">库存总量</th>
+													<th width="13%">审核状态</th>
+													<th width="13%">上架状态</th>
+													<th width="20%">操作</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+						
+						<div id="goods_detail" class="hide">
+							<div class="col-xs-12">
+				            	<div class="form-horizontal">
+				                    <div class="form-group">
+					                    <label class="col-sm-3 control-label no-padding-right" >商品名称 ：</label>
+					                    <div class="col-sm-7 control-label align-left" id="dlg_goods_title"></div>
+				                    </div>
+				                    <div class="form-group">
+					                    <label class="col-sm-3 control-label no-padding-right"> 商品价格（元）： </label>
+					                    <div class="col-sm-7 control-label align-left" id="dlg_goods_price"></div>
+					                </div>
+			                		<div class="form-group">
+										<table class="table table-striped table-bordered table-hover">
+					                    <thead>
+					                    	<tr>
+					                    		<th>#</th>
+					                    		<th>属性描述</th>
+					                    		<th>库存</th>
+					                    		<th>现价</th>
+					                    	</tr>
+					                    </thead>
+				                   		</table>
+			                   		</div>
+		                    	</div>
+		                    </div>
+						</div>
+						
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script type="text/javascript">
+			var mTable;
+            $(document).ready(function() {
+                mTable = $('#sample-table').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        url:"${base}/goods/goods/queryPage.htm",
+                        type:"post",
+                        data: function (d) {
+                            d.title = $("#title").val();
+                            d.isShow = $("#is_show").val();
+                            d.isCheck = $("#is_check").val();
+                        },
+                        "dataSrc":function(json){
+                            if(!json.success){
+                                json.data=[];
+                                var code = json.code;
+                                if(code==400){
+                                    Box.alert(json.message,function(){
+                                        window.location.href="${base}/sys/login/logout";
+                                    },"确定");
+                                }else{
+                                    layer.msg(json.message);
+                                }
+                            }
+                            return json.data;
+                        }
+                    },
+                    "columns" : [
+                        {"data":null,"orderable":false},
+                        {"data":"title","orderable":true},
+                        {"data":"sellPrice","orderable":false},
+                        {"data":"storeTotal","orderable":false},
+                        {"data":"isChecked"},
+                        {"data":"isShow"},
+                        { "data":null,"orderable":false},
+                    ],
+                    "columnDefs": [
+                        {
+							"class":"center",
+	                    	"targets":0
+	        			},
+                        {
+                            "class":"left",
+                            "orderable":false,
+                            "render":function(data, type, row){
+                                if (data=="unCheck") {
+                                    return '<span>待审核 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">审核</a>';
+                                }else if(data=="checkPass"){
+                                    return '<span style="color:green">审核通过 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">重新审核</a>';
+                                }else if(data=="checkFail"){
+                                    return '<span style="color:red">审核驳回 </span><a href="javascript:void(0)" onclick="goodsCheck('+row.id+')">重新审核</a>';
+                                }
+                                return data;
+                            },
+                            "targets":4
+                        },
+                        {
+                            "class":"left",
+                            "orderable":false,
+                            "render":function(data, type, row){
+                                if(data=="notShelf"){
+                                    return "<span>待上架 </span><a href=\"javascript:void(0)\" onclick=\"goodsShow('"+row.isChecked+"',"+row.id+",'onShelf')\">上架</a> ";
+                                }else if(data=="onShelf"){
+                                    return "<span style=\"color:green\">已上架 </span><a href=\"javascript:void(0)\" onclick=\"goodsShow('"+row.isChecked+"',"+row.id+",'offShelf')\">下架</a> ";
+                                }else if(data=="offShelf"){
+                                    return "<span style=\"color:red\">已下架 </span><a href=\"javascript:void(0)\" onclick=\"goodsShow('"+row.isChecked+"',"+row.id+",'onShelf')\">重新上架</a> ";
+                                }
+                                return data;
+                            },
+                            "targets":5
+                        },
+                        {
+                            "render":function(data, type, row){
+                            	var ope = [];
+	                    		ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+	                    		ope.push("<a href=\"${base}/goods/goods/editBase.htm?id="+row.id+"\">基本信息</a>");
+	                    		ope.push("<span class=\"text-explode\">|</span>");
+	                    		ope.push("<a href=\"${base}/goods/goods/editDetail.htm?id="+row.id+"\">详情信息</a>");
+                                ope.push("<span class=\"text-explode\">|</span>");
+                                ope.push("<a href=\"${base}/goods/goods/editStorage.htm?id="+row.id+"\">库存</a>");
+                               	ope.push("<span class=\"text-explode\">|</span>");
+                               	ope.push("<a data-toggle=\"dropdown\" href=\"javascript:void(0)\">更多<span class=\"ace-icon fa fa-caret-down icon-on-right\"></span></a>");
+								ope.push("<ul class=\"dropdown-menu dropdown-info dropdown-menu-right\">");
+								ope.push("<li><a href=\"${base}/goods/goods/editParam.htm?id="+row.id+"\">参数 </a></li>");
+								ope.push("<li><a href=\"${base}/goods/goods/editShare.htm?id="+row.id+"\">分享 </a></li>");
+								ope.push("<li><a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a></li>");
+								ope.push("</ul></div></div>");
+                                return ope.join("");
+                            },
+                            "targets":6,
+                            "orderable":false
+                        }
+                    ],
+                    "fnDrawCallback": function(){
+				        　　	this.api().column(0).nodes().each(function(cell, i) {
+				        cell.innerHTML=i+1;
+				      });
+				    },
+                    "order": [[1, 'asc']],
+                    "bFilter" : false,
+                    "bPaginate" : true ,
+        			"iDisplayLength" : 25,
+                    "oLanguage" : {
+                        "sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+                    }
+                });
+
+                $('#search_form').submit(function(){
+                    mTable.draw();
+                    return false;
+                });
+
+
+            });
+            function del(id){
+                Box.confirm("是否删除?",function(){
+                    jQuery.ajax({
+                        type: 'post',
+                        url: '${base}/goods/goods/delById.htm',
+                        dataType:"JSON",
+                        data:  {"id":id},
+                        success: function(data){
+                            if(data.success ){
+                                mTable.draw();
+                            }else {
+                                layer.msg(data.message);
+							}
+                        },
+                        error: function(data) {
+                            layer.msg('系统异常，请联系系统管理员!');
+                        }
+                    });
+                });
+
+            }
+            function goodsCheck(id){
+            	var index = layer.load(1, {shade: [0.1,'#fff']});
+               	var otable = $("#goods_detail").find("table");
+               	otable.children("tbody").remove();
+            	$.ajax({
+                    url: '${base}/goods/goods/ajax/getGoodsAndStorageById.htm',
+                    type: "POST",
+                    data: {"id":id},
+                    dataType:"JSON",
+                    success: function (data) {
+                    	layer.close(index);
+                    	if(data.success){
+		                    $('#goods_detail').removeClass("hide");
+	                        var goods = data.data.goods;
+	                        var goodsStorageList = data.data.storageList;
+	                        $("#dlg_goods_title").html(goods.title);
+	               	 		$("#dlg_goods_price").html(goods.sellPrice);
+	               	 		var tbody = "<tbody>"
+	               	 		for(var i= 0;i<goodsStorageList.length;i++){
+		                        tbody+="<tr><td>"+(i+1)+"</td><td>"+goodsStorageList[i].describe+"</td><td>"+goodsStorageList[i].stockNum+"</td><td>"+goodsStorageList[i].salePrice+"</td></tr>";
+		                    }
+		                    tbody +="</tbody>";
+		                    otable.append(tbody);
+			            	layer.open({
+								type: 1,
+							  	title: "商品审核",
+							  	area: ['60%', '80%'],
+							  	shade: 0.5,
+							  	shadeClose: true,
+							  	content: $('#goods_detail'),
+	                            end: function(){
+	                                $('#goods_detail').addClass("hide");
+	                            },
+							  	btn: ['审核通过', '审核驳回','关闭'],
+							  	btn1: function(){
+							  		updateStatus(id,"pass");
+							  		return false;
+							  	},
+							  	btn2: function(){
+							  		updateStatus(id,"notPassed");
+							  		return false;
+							  	},
+							  	btn3: function(){
+							  		$('#goods_detail').addClass("hide");
+							  		layer.closeAll();
+							  	}
+							});
+                    	}else{
+                    		layer.msg(data.message);
+                    	}
+                    },
+                    error: function(){
+                    	layer.closeAll();
+                    }
+                })
+            }
+            
+            function updateStatus(id,status){
+                $.ajax({
+                    type:"post",
+                    url:"${base}/goods/goods/updateGoodsCheck.htm",
+                    data:{"id":id,"status":status},
+                    dataType:"JSON",
+                    success:function(data){
+                        layer.closeAll();
+                    	if(data.success){
+	                        mTable.draw();
+                    	}else{
+                    		layer.msg(data.message);
+                    	}
+                    },
+                    error:function(data){
+                    	layer.msg("系统异常");
+                    }
+                })
+            }
+            
+            function goodsShow(isChecked,id,status){
+				if(status == "onShelf" && (isChecked == "unCheck" || isChecked == "checkFail")){
+                    layer.msg("请先审核，再上架！");
+					return;
+				}
+            	Box.confirm("确认操作?",function(){
+	            	$.ajax({
+	                    type:"post",
+	                    url:"${base}/goods/goods/updateGoodsShow.htm",
+	                    data:{"id":id,"status":status},
+	                    dataType:"JSON",
+	                    success:function(data){
+	                    	if(data.success){
+		                        mTable.draw();
+	                    	}else{
+	                    		layer.msg(data.message);
+	                    	}
+	                    },
+	                    error:function(data){
+	                    	layer.msg("系统异常");
+	                    }
+	                })
+            	})
+            }
+
+		</script>
+</body>
+</html>

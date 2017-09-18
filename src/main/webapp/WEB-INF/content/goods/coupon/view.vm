@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>优惠券详情列表-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>查看“${coupon.couponName}”优惠券
+							#parse("commons/backurl.vm")
+							</h3>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										优惠券码：<input type="text" id="coupon_sn" name="couponSn" class="input-sm" placeholder="">
+										使用者：<input type="text" id="telephone" name="telephone" class="input-sm" placeholder="">
+										<button type="submit" class="btn btn-purple btn-sm">搜索 </button> 
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">刷新 </button>
+									</form>
+								</div>
+								<div class="space-4"></div>
+								
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="3%">#</th>
+													<th width="10%">优惠券码</th>
+													<th width="17%">状态(使用时间)</th>
+													<th width="25%">使用者(领取时间)</th>
+													<th width="15%">优惠券说明</th>
+													<th width="10%">优惠券面值</th>
+													<th width="10%">开始时间</th>
+													<th width="10%">到期时间</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th width="3%">#</th>
+													<th width="10%">优惠券码</th>
+													<th width="17%">状态(使用时间)</th>
+													<th width="25%">使用者(领取时间)</th>
+													<th width="15%">优惠券说明</th>
+													<th width="10%">优惠券面值</th>
+													<th width="10%">开始时间</th>
+													<th width="10%">到期时间</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+									<div class="space-4"></div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+	<script type="text/javascript">
+		var mTable;
+		$(document).ready(function() {
+		    mTable = $('#sample-table').DataTable({
+		    	"processing": true,
+				"serverSide": true,
+				"ajax": {
+               		url:"${base}/goods/coupon/queryDetail.htm?id="+${id},
+               		type:"post",
+               		data: function (data) {
+               			data.couponSn=$("#coupon_sn").val();
+               			data.telephone=$("#telephone").val();
+               		},
+                    "dataSrc":function(json){
+                        if(!json.success){
+                            json.data=[];
+                            var code = json.code;
+                            if(code==400){
+                                Box.alert(json.message,function(){
+                                    window.location.href="${base}/sys/login/logout";
+                                },"确定");
+                            }else{
+                                layer.msg(json.message);
+                            }
+                        }
+                        return json.data;
+                    }
+               	},
+				"columns" : [
+					{"data":null,"orderable":false}, 
+					{"data":"couponSn","orderable":true}, 
+					{"data":"status","orderable":true}, 
+					{"data":null,"orderable":false}, 
+					{"data":"couponDes","orderable":false},
+					{"data":"couponMoney","orderable":false}, 
+					{"data":"beginTime","orderable":false}, 
+					{"data":"endTime","orderable":false}
+				],
+				"columnDefs": [
+					{
+                    	"targets":0
+        			},
+        			{
+						"render":function(data, type, row){
+                             	 	if (data == "unused") {
+										return "未使用";
+									}else if (data == "used"){
+										return "已使用("+displayDate(row.useTime,"yyyy-MM-dd HH:mm:ss")+")";
+									}
+                             	},
+                    	"targets":2
+					},
+					{
+						"render":function(data, type, row){
+									if(row.customerInfo!=null){
+	                             	 	return row.customerInfo.telephone+"("+displayDate(row.receiveTime,"yyyy-MM-dd HH:mm:ss")+")";
+									}
+									return "";
+                             	},
+                    	"targets":3
+					},
+					{
+						"render":function(data, type, row){
+                     	 			return data+"元";
+                     			},
+                    	"targets":5
+					},
+					{
+						"render":function(data, type, row){
+		     	 					return displayDate(data,"yyyy-MM-dd");
+		     					},
+                    	"targets":6
+					},
+					{
+						"render":function(data, type, row){
+		     	 					return displayDate(data,"yyyy-MM-dd");
+		     					},
+                    	"targets":7
+					},
+        		],
+        		"order": [[6, 'asc']],
+        		"bFilter" : false,
+        		"bPaginate" : true ,
+        		"iDisplayLength" : 25,
+				"oLanguage" : {
+					"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+				}
+			});
+			
+			mTable.on('draw.dt',
+			    function() {
+			        mTable.column(0, {
+			            search: 'applied',
+			            order: 'applied'
+			        }).nodes().each(function(cell, i) {
+		                i = i+1;
+		                var page = mTable.page.info();
+		                var pageno = page.page;
+		                var length = page.length;
+		                var columnIndex = (i+pageno*length);
+		                cell.innerHTML = columnIndex;
+			        });
+			    });
+			
+			$('#search_form').submit(function(){
+				mTable.draw();
+				return false;
+			});
+			
+		});
+			
+	</script>
+</body>
+</html>

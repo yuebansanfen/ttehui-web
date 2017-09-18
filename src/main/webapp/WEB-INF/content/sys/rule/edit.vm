@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-编辑菜单</title>
+		<meta name="keywords" content="编辑菜单" />
+		<meta name="description" content="编辑菜单" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>
+								编辑菜单
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal">
+									<input type="hidden" name="status" id="status" value="$!rule.status"/>
+									<input type="hidden" name="id" id="id" value="$!rule.id"/>
+									<input type="hidden" name="token" id="token" value="$!token" />
+									<input type="hidden" name="tips" id="tips" value="" />
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 上级菜单 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<select class="col-sm-5 tag-input-style" id="parent_id" name="parentId" data-placeholder="选择菜单...">
+												<option value="0">顶级菜单</option>
+												#foreach($r in $ruleList)
+													<option value="$r.id" #if($!rule.parentId==$r.id)selected#end>$r.title</option>
+												#end
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-1"> 菜单名称 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="title" name="title" placeholder="菜单名称" value="$!rule.title" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 类型 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<select class="tag-input-style" id="type" name="type" data-placeholder="选择类型...">
+													<option value="1" #if($!rule.type=="1")selected#end>菜单</option>
+													<option value="2" #if($!rule.type=="2")selected#end>按钮</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+	
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 链接 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="url" name="url" placeholder="链接，如index/index.htm" value="$!rule.url" class="col-xs-10 col-sm-5" />
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> ICON图标 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="icon" name="icon" placeholder="ICON图标" value="$!rule.icon" class="col-xs-10 col-sm-5" />
+												<span class="help-inline col-sm-3"><span class="middle"><i class="$!rule.icon"></i></span></span>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 显示状态</label>
+										
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="checkbox" name="isChecked" #if($!rule.status=='1') checked #end class="ace ace-switch ace-switch-2" />
+												<span class="lbl"></span>
+												<span class="help-inline"><span class="middle">YES，显示；NO，隐藏</span></span>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 排序 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="orderby" name="orderby" placeholder="排序" value="$!rule.orderby" class="col-xs-10 col-sm-5" />
+												<span class="help-inline"><span class="middle">越小越靠前</span></span>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+	
+									<div class="form-group">
+										<label class="col-sm-1 control-label no-padding-right" for="form-field-4">页面提示</label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<textarea name="descp" id="descp" placeholder="页面提示" class="col-xs-10 col-sm-7" rows="2">$!rule.tips</textarea>
+												<span class="help-inline col-xs-12 col-sm-7">
+													<span class="middle"></span>
+												</span>
+											</div>
+										</div>
+									</div>
+	
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											<button class="btn btn-info" type="submit">
+												<i class="icon-ok bigger-110"></i>
+												提交
+											</button>
+	
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												重置
+											</button>
+										</div>
+									</div>
+								</form>
+								
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script type="text/javascript">
+			var editor
+			$('#parent_id').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+			$(document).ready(function() {
+				editor = KindEditor.create('textarea[name="descp"]',{
+					resizeType : 1,
+					allowPreviewEmoticons : false,
+					allowImageUpload : false,
+					items : [
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'emoticons','link']
+				});
+				 
+				$('#orderby').ace_spinner({value:$!rule.orderby,min:1,max:200,step:1, btn_up_class:'btn-info' , btn_down_class:'btn-info'});
+				 
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						title:{
+							required:true
+						}
+					},
+				    messages: {
+					    title:{required:"菜单名称不能为空"},
+					},
+					invalidHandler: function (event, validator) {  
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function (form) {
+						var ischeck=false;
+			            $("input[name='isChecked']:checkbox").each(function(){ 
+			                if($(this).is(':checked')){
+			                    ischeck=true;
+			                }
+			            })
+			            if(ischeck){
+			            	$("#status").val("1")
+			            }else{
+			            	$("#status").val("0")
+			            }
+			            $('#tips').val(editor.html());
+			            App.formAjaxSubmit('theForm','${base}/sys/rule/save.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href="${base}/sys/rule/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+			  	});
+				 
+			});
+			
+		</script>
+</body>
+</html>

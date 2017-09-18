@@ -1,0 +1,38 @@
+		<!-- basic styles -->
+
+		<link href="${base}/mocentre/css/bootstrap.css" rel="stylesheet" />
+		<link rel="stylesheet" href="${base}/mocentre/css/font-awesome.css" />
+		<!--<link rel="stylesheet" href="${base}/mocentre/css/font-awesome1.min.css" />-->
+		
+		<link rel="stylesheet" href="${base}/mocentre/css/ace-fonts.css" />
+
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="${base}/mocentre/css/ace-part2.css" class="ace-main-stylesheet" />
+		<![endif]-->
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="${base}/mocentre/css/ace-ie.css" />
+		<![endif]-->
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="${base}/mocentre/css/datepicker.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/chosen.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/datepicker.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/daterangepicker.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="${base}/mocentre/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="${base}/plugin/layer/skin/default/layer.css" />
+		<!-- ace styles -->
+
+		<link rel="stylesheet" href="${base}/mocentre/css/ace.css" class="ace-main-stylesheet" id="main-ace-style"/>
+
+		<!-- 提示框 -->
+		<link rel="stylesheet" href="${base}/mocentre/css/jquery.toast.css" />
+		
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="${base}/mocentre/css/ace-ie.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->

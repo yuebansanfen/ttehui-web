@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>编辑导航栏-导航栏列表-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>编辑导航栏
+							#parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+										<form id="theForm" name="theForm" class="form-horizontal">
+											<input type="hidden" name="id" id="id" value="$!{navigate.id}"/>
+											<input type="hidden" name="isShow" id="is_show" value="$!{navigate.isShow}"/>
+											<input type="hidden" name="vartypeId" id="vartype_id" value="$!{navigate.typeId}"/>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>显示名称：</label>
+												<div class="col-sm-8">
+													<div class="clearfix">
+														<input class="col-xs-10 col-sm-5" name="title" id="title" value="$!{navigate.title}" type="text" />
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-1"><span class="middle red">*</span>关联类型 ： </label>
+			
+												<div class="col-sm-8 control-label align-left">
+													<div class="clearfix">
+														<label class="col-sm-2"><input name="type" type="radio" class="ace" value="subject" #if($!{navigate.type}=='subject')checked#end/><span class="lbl">专题</span></label>
+														<label class="col-sm-2"><input name="type" type="radio" class="ace" value="activity" #if($!{navigate.type}=='activity')checked#end/><span class="lbl">活动</span></label>
+													</div>
+												</div>
+											</div>
+											
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>显示内容：</label>
+												<div class="col-sm-3">
+													<select class="chosen-select form-control" id="type_id" name="typeId" data-placeholder="选择内容">
+														<option value=""></option>
+													</select>
+												</div>
+											</div>
+											
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>是否显示： </label>
+			
+												<div class="col-sm-8 control-label align-left">
+													<div class="clearfix">
+														<input type="checkbox" name="showCheckbox" #if($!{navigate.isShow}==1) checked #end class="ace ace-switch ace-switch-2" />
+														<span class="lbl"></span>
+														<span class="help-inline"><span class="middle">YES：是；NO：否</span></span>
+													</div>
+												</div>
+											</div>
+											
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2">展示图片： </label>
+												<div class="col-sm-8">
+													<div class="clearfix">
+														<input class="col-xs-10 col-sm-5" name="showImg" id="show_img" value="$!{navigate.showImg}" type="text" readonly="readonly"/>
+														<span class="help-inline col-sm-1"><span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('show_img');">添加</a></span></span>
+													</div>
+													<img id="show_img_preview" #if($!{navigate.showImg}!='')src="$!{navigate.showImg}"#else class="hidden" src="" #end width="100" height="100">
+												</div>
+											</div>
+											
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>排序 ：</label>
+												
+												<div class="col-sm-6">
+													<div class="clearfix">
+														<input type="text" id="sorting" name="sorting" placeholder="排序" value="$!{navigate.sorting}" class="col-xs-10 col-sm-5" />
+														<span class="help-inline"><span class="middle">越小越靠前</span></span>
+													</div>
+												</div>
+											</div>
+			
+											<div class="clearfix form-actions">
+												<div class="col-md-offset-3 col-md-9">
+													<button class="btn btn-info" type="submit" id="submit">
+														<i class="icon-ok bigger-110"></i>
+														提交
+													</button>
+													&nbsp; &nbsp; &nbsp;
+													<button class="btn" type="reset">
+														<i class="icon-undo bigger-110"></i>
+														重置
+													</button>
+												</div>
+											</div>
+										</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script>
+		$(document).ready(function(){
+			var type = $('input:radio[name="type"]:checked').val();
+			var typeId = $('#vartype_id').val();
+			showContent(type,typeId);
+			
+			$('input:radio[name="type"]').change(function(){
+				var type =$(this).val();
+				showContent(type);
+			})
+			
+			$('#type_id').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});		
+		
+			$('#sorting').ace_spinner({value:$!{navigate.sorting},min:1,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+			
+		    if(!ace.vars['touch']) {
+				$(window).off('resize.chosen').on('resize.chosen', function() {
+						$('.chosen-select').each(function() {
+							 var $this = $(this);
+							 $this.next().css({'width': $this.parent().width()});
+						})
+				}).trigger('resize.chosen');
+				//resize chosen on sidebar collapse/expand
+				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+					if(event_name != 'sidebar_collapsed') return;
+					$('.chosen-select').each(function() {
+						 var $this = $(this);
+						 $this.next().css({'width': $this.parent().width()});
+					})
+				});
+			}
+			
+			var rules = {},messages = {};
+			rules.title = {required:true};
+			rules.typeId = {required:true};
+			messages.title = {required:"名称不能为空"};
+			messages.typeId = {required:"显示内容不能为空"};
+			Validate.init("theForm",rules,messages,
+				function(form){
+					$("input[name='showCheckbox']:checkbox").each(function(){ 
+		                if($(this).is(':checked')){
+		                    $("#is_show").val(1);
+		                }else{
+		                	$("#is_show").val(0);
+		                }
+		            });
+					App.formAjaxSubmit('theForm','${base}/goods/navigate/addNavigate.htm','post',
+			  			function(result){
+			  				var suc = result.success;
+			  				if(suc){
+			  					window.location.href="${base}/goods/navigate/index.htm";
+			  				}else{
+			  					layer.msg(result.message);
+			  				}
+			  			}
+			  		);
+				}
+			);
+		})
+		
+		function showContent(type,typeId){
+			jQuery.ajax({
+	            type: 'post', 
+	            url: '${base}/goods/navigate/ajax/queryType.htm',  
+	            data: {type:type},
+	            dataType: 'json',  
+	            success: function(result){
+	            	if(result.success){
+					   	$("#type_id").chosen("destroy");
+					   	$("#type_id").html("<option value=''></option>");
+					   	var list = result.data;
+					   	if(list!=null){
+					   		var listArr = JSON.parse(list);
+						   	$.each(listArr,function(i){ 
+						   		if(listArr[i].id==typeId){
+						   			$("<option value='"+listArr[i].id+"' selected>"+listArr[i].name+"</option>").appendTo("#type_id");
+						   		}else{
+									$("<option value='"+listArr[i].id+"'>"+listArr[i].name+"</option>").appendTo("#type_id"); 
+						   		}
+							}); 
+					   	}
+						$('#type_id').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});			
+					}
+				}
+			});
+		}
+		
+		function addImg(nodeId){
+			var index = layer.open({
+			  type: 2,
+			  title: "上传图片",
+			  shadeClose: true,
+			  closeBtn: 1,
+			  area: ['30%', '50%'],
+			  content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+			  btn: ['关闭'],
+                yes:function(){
+                    var imgsrc = $("#"+nodeId).val();
+                    if (imgsrc != ''){
+                        $("#"+nodeId+"Preview").removeClass("hidden");
+                        $("#"+nodeId+"Preview").attr("src",imgsrc);
+                    }
+                    layer.close(index);
+                }
+			});
+		}
+		
+		</script>
+</body>
+</html>

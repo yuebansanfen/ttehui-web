@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改活动商品-活动商品列表-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>修改“$!{activity.title}”活动商品
+							<button type="submit" class="btn btn-purple btn-sm pull-right inline" onclick="javascript:window.location.href='${base}/act/activity/view.htm?id=$!{activity.id}'">
+								<i class="ace-icon fa fa-reply icon-only"></i>
+								返回
+							</button>
+							</h3>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+											<form id="theForm" name="theForm" class="form-horizontal">
+                                                <input type="hidden" id="act_goods_Id" name="id" value="$!{activityGoods.id}" />
+                                                <input type="hidden" id="goods_id" name="goodsId" value="$!{activityGoods.goodsId}" />
+												<input type="hidden" id="act_id" name="activityId" value="$!{activityGoods.activityId}"/>
+												<input type="hidden" id="storage_list" name="storageList" value=""/>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>类型：</label>
+													
+													<div class="col-sm-3">
+														<select name="type" id="type" disabled="disabled" class="form-control chosen-select" data-placeholder="选择活动类型" disabled="disabled">
+															<option value="seckill"  #if($!{activity.type}=="seckill") selected="selected" #end>秒杀</option>
+															<option value="groupon" #if($!{activity.type}=="groupon") selected="selected" #end>团购</option>
+														</select>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品名称：</label>
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input type="text" id="goods_name" name="goods_name" value="$!{activityGoods.goodsName}" class="col-xs-4" readonly="readonly"/>
+														</div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品图片： </label>
+													<div class="col-sm-8 ">
+														<div class="clearfix">
+															<input class="col-xs-4" name="goodsImg" id="goodsImg" type="text" readonly="readonly" value="$!{activityGoods.goodsImg}"/>
+															<span class="help-inline col-sm-4">
+																<span class="middle"><a class="btn btn-minier btn-primary" onclick="addImg('goodsImg');">上传</a></span>
+																<span class="middle">图片规格：200*200</span>
+															</span>
+														</div>
+                                                        <img id="goodsImg_preview" src="$!{activityGoods.goodsImg}" width="100" height="100">
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>宣传语：</label>
+													<div class="col-sm-3">
+														<div class="clearfix">
+															<textarea class="col-xs-12 col-sm-12 valid" id="tagline" value="$!{activityGoods.tagline}" name="tagline" style="height:100%" aria-invalid="false">$!{activityGoods.tagline}</textarea>
+														</div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class='col-sm-2 control-label no-padding-right' for='form-field-2'><span class='middle red'>*</span>活动商品起止时间：</label>
+													<div class='col-sm-8'>
+														<div class='input-daterange input-group'>
+															<input type='text' class='input-sm form-control' id='beginTime' name='beginTime' value=" $!date.format('yyyy-MM-dd HH:mm:ss ',$!activityGoods.beginTime)"/>
+															<span class='input-group-addon'>
+																<i class='fa fa-exchange'></i>
+															</span>
+															<input type='text' class='input-sm form-control' id='endTime' name='endTime' value="$!date.format('yyyy-MM-dd HH:mm:ss ',$!activityGoods.endTime)"/>
+														</div>
+													</div>
+												</div>
+												
+												#if($!{activity.type}=="groupon")
+												<div class="form-group" id="gpNum">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 可参与人数 ：</label>
+													
+													<div class="col-sm-6">
+														<div class="clearfix">
+															<input type="text" id="grouponNum" name="grouponNum" placeholder="可参与人数" value="$!{activityGoods.grouponNum}" class="col-xs-10 col-sm-5" />
+														</div>
+													</div>
+												</div>
+												#end
+												
+												<div class="form-group">
+													<label class='col-sm-2 control-label no-padding-right' for='form-field-2'><span class='middle red'>*</span>商品属性：</label>
+													<div class="col-sm-8">
+														<div id="attr_div" class="clearfix control-label align-left">
+															#if($activityGoods.standardList&&$activityGoods.standardList.size()>0)
+															<ul class="list-unstyled">
+															#foreach($standard in $activityGoods.standardList)
+																<li><input type="checkbox" class="ace control-label" name="goodsAttr" value="$standard.get('code')" onclick="addAttr(this)" #if($standard.get('checked')=="1")checked#end/><span class="lbl">$standard.get('name')</span></li>	
+															#end
+															</ul>
+															#end
+														</div>
+													</div>
+												</div>
+
+												<div class="panel-body ">
+													  <div class="panel panel-success">
+														  <div class="panel-body">
+														  	<div class="tab-div">
+																<table id="storage" border="0" class="tab table" style="text-align: center;">
+																	<thead>
+																	#if($!{activity.type}=='seckill')
+																		<tr>
+																			<td>商品属性</td>
+																			<td>秒杀库存</td>
+																			<td>秒杀价格(元)</td>
+																			<td>商品原价(元)</td>
+																	  	</tr>
+																	#else
+                                                                        <tr>
+                                                                            <td>商品属性</td>
+																			<td>团购库存</td>
+																			<td>团购价格(元)</td>
+																			<td>单买价格(元)</td>
+                                                                        </tr>
+																	#end
+																	</thead>
+																	<tbody>
+																		#foreach($sp in $activityGoods.goodsSP)
+                                                                        <tr id="$!{sp.standardCode}" sp_id="$!{sp.id}" sp_code="$!{sp.standardCode}">
+                                                                            <td>$!{sp.describe}</td>
+                                                                            <td><input type="text" value="$!{sp.stockNum}" /></td>
+                                                                            <td><input type="text" value="$!{sp.salePrice}" /></td>
+                                                                            <td><input type="text" value="$!{sp.oldPrice}" /></td>
+                                                                        </tr>
+																		#end
+																	</tbody>
+																</table>
+															</div>
+														  </div>
+													  </div>
+											  	</div>
+												
+												<div class="clearfix form-actions">
+													<div class="col-md-offset-3 col-md-9">
+														<button class="btn btn-info" type="submit" id="submit">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script>
+		var type = $("#type").val();
+		$(document).ready(function(){
+            /* 设置日期控件  */
+            $('#beginTime').datetimepicker({format:'YYYY-MM-DD HH:mm:ss',language:'zh-cn'});
+            $('#endTime').datetimepicker({format:'YYYY-MM-DD HH:mm:ss',language:'zh-cn'});
+			
+			/* 人数控件  */
+			$('#grouponNum').ace_spinner({value:2,min:2,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+			
+			/* 表单验证 */
+			var rules = {},messages = {};
+			var rules = {},messages = {};
+			rules.title = {required:true};
+			rules.intro = {required:true};
+			rules.goodsChannel = {required:true};
+			rules.goodsId = {required:true};
+			rules.tagline = {required:true};
+			rules.beginTime = {required:true};
+			rules.endTime = {required:true};
+			messages.title = {required:"名称不能为空"};
+			messages.intro = {required:"简介不能为空"};
+			messages.goodsChannel = {required:"分类不能为空"};
+			messages.goodsId = {required:"商品不能为空"};
+			messages.tagline = {required:"宣传语不能为空"};
+			messages.beginTime = {required:"开始时间不能为空"};
+			messages.endTime = {required:"结束时间不能为空"};
+			Validate.init("theForm",rules,messages,
+				function(form){
+					var goodsList = []
+		            var goodsId = $("#goods_id").val();
+		            if(goodsId==""){
+		            	layer.msg("请选择关联商品");
+		            	return;
+		            }
+	            	var imgVal = $("#goodsImg").val();
+                    if(imgVal == ''){
+                       layer.msg('请添加图片');
+                       return
+                    }
+        			var storageList = [];
+	            	$("#storage tbody").find('tr').each(function () {
+		            	var storage = {}
+		            	storage.goodsId = goodsId;
+		            	storage.standardCode = $(this).attr("id");
+		            	storage.describe = $(this).find("td").eq(0).text();
+                        storage.stockNum = $(this).find("td").eq(1).find("input[type='text']").eq(0).val();
+                        storage.salePrice = $(this).find("td").eq(2).find("input[type='text']").eq(0).val();
+                        storage.oldPrice = $(this).find("td").eq(3).find("input[type='text']").eq(0).val();
+		            	if (storage.stockNum!='') {
+		            		storageList.push(storage);
+						}
+		            })
+		            if (storageList.length == 0) {
+		            	layer.msg('请至少添加一个库存信息');
+		            	return;
+					}
+					$("#storage_list").val(JSON.stringify(storageList));
+		            App.formAjaxSubmit('theForm','${base}/act/activity/updateActivityGoods.htm','post',
+			  			function(result){
+			  				var suc = result.success;
+			  				if(suc){
+			  					window.location.href="${base}/act/activity/view.htm?id=$!{activity.id}";
+			  				}else{
+			  					layer.msg(result.message);
+			  				}
+			  			}
+			  		);
+				})
+		});
+		
+		/* 上传图片  */
+		function addImg(nodeId){
+			var index = layer.open({
+			  type: 2,
+			  title: "上传图片",
+			  shadeClose: true,
+			  closeBtn: 1,
+			  area: ['30%', '50%'],
+			  content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+			  btn: ['关闭'],
+              yes:function(){
+                    layer.close(index);
+                }
+			});
+		}
+        
+        function addAttr(obj){
+        	var code=$(obj).val();
+        	var name=$(obj).next("span").html();
+            var otable = $("#storage").find('tbody');
+            var isChecked = $(obj).prop("checked");
+        	if(isChecked){
+            	otable.append(getTbodyTr(code,name));
+        	}else{
+        		var otr = otable.find("tr");
+        		if(otr.length>0){
+        			otr.each(function(){
+        				var that = $(this);
+        				if(that.attr("id")==code){
+        					that.remove();
+        				}
+        			})
+        		}
+        	}
+        }
+        
+        function getTbodyTr(code,name){
+        	var trArr = [];
+        	trArr.push("<tr id=\""+code+"\">");
+        	trArr.push("<td>"+name+"</td>");
+        	trArr.push("<td><input type=\"text\" value=\"0\" /></td>");
+        	trArr.push("<td><input type=\"text\" value=\"0\" /></td>");
+        	trArr.push("<td><input type=\"text\" value=\"0\" /></td>");
+        	trArr.push("</tr>");
+            return trArr.join('');
+        }
+        
+		</script>
+</body>
+</html>
+

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>修改商品库存-商品管理-${baseDescribe}</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    #parse("commons/commonCss.vm")
+    #parse("commons/commonJs.vm")
+</head>
+
+<body class="no-skin">
+    #parse("commons/header.vm")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+
+        #parse("commons/sidebar.vm")
+        <div class="main-content">
+
+            #parse("commons/breadcrumbs.vm")
+            <div class="page-content">
+
+                #parse("commons/setting.vm")
+                <div class="page-header">
+                    <h1>
+	                	修改商品库存
+	                	#parse("commons/backurl.vm")
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form id="strogeInfoForm" name="strogeInfoForm" class="form-horizontal">
+                        	<input type="hidden" name="goodsId" id="goods_id" value="$!{goods.id}" />
+                        	<input type="hidden" id="param_map" name="paramMap" value=""/>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>商品属性：</label>
+                                <div class="col-sm-10">
+                                    <table id="attr_table" width="100%" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="10%">#</th>
+                                            <th width="40%">属性名</th>
+                                            <th width="40%">属性值</th>
+                                            <th width="10%">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        	<th colspan="4">商品属性加载中...</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="clearfix align-center">
+                                    <button id="btn_addAttri" class="btn btn-xs btn-yellow" type="button">
+                                       	 添加一个新属性
+                                    </button>
+                                    <button id="btn_createTable" class="btn btn-xs btn-success" type="button">
+                                                                                                                     生成价格库存表
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>库存价格：</label>
+                                <div class="col-sm-10">
+                                    <table width="100%" id="sku_table" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th width="35%">属性描述</th>
+                                            <th width="20%">库存</th>
+                                            <th width="20%">售价</th>
+                                            <th width="20%">原价</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        #if($storageList.size()>0)
+                                    	#foreach($storage in $storageList)
+                                        <tr>
+                                        	<th>$!{velocityCount}</th>
+                                        	<th code="$!{storage.standardCode}">${storage.describe}</th>
+                                        	<th><input class="col-xs-10 col-sm-10" type="text" value="$!{storage.stockNum}"/></th>
+                                        	<th><input class="col-xs-10 col-sm-10" type="text" value="$!{storage.salePrice}"/>元</th>
+                                        	<th><input class="col-xs-10 col-sm-10" type="text" value="$!{storage.oldPrice}"/>元</th>
+                                        	#end
+                                        </tr>
+                                    	#else
+                                    	<tr>
+                                    		<th colspan="5">请先生成价格库存表</th>
+                                    	</tr>
+                                    	#end
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="space-4"></div><div class="space-4"></div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-1 col-md-9" >
+                                    <a class="btn btn-primary" id="saveStorage">
+                                        <i class="ace-icon fa fa-floppy-o bigger-120"></i>
+                                        	保存
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+    </div><!-- /.main-container-inner -->
+
+    #parse("commons/scroll.vm")
+</div><!-- /.main-container -->
+#parse("commons/footerJs.vm")
+</body>
+
+<script type="text/javascript">
+    var attrData = $!{attrList};
+    $(document).ready(function() {
+    	#set($std=$!{goods.standard})
+    	#if($std)
+    	var standard = $!{goods.standard};	
+    	#else
+    	var standard = [];
+    	#end
+    	bindAttribute(standard);
+    	var rules = {},messages = {};
+		Validate.init("strogeInfoForm",rules,messages,
+			function(form){
+				var storageData = getStorageData();
+		        if(storageData.length==0){
+		            layer.msg("请生成库存价格");
+		            return;
+		        }
+				var paramMap = {}
+		        paramMap.goodsId = $("#goods_id").val();
+		        paramMap.standard = getStandard();
+		        paramMap.goodsStorageList = storageData;
+	            $("#param_map").val(JSON.stringify(paramMap));
+	            App.formAjaxSubmit('strogeInfoForm','${base}/goods/goods/addOrUpdateSkuInfo.htm','post',
+		  			function(result){
+		  				var suc = result.success;
+		  				if(suc){
+		  					window.location.href = "${base}/goods/goods/index.htm";
+		  				}else{
+		  					layer.msg(result.message);
+		  				}
+		  			}
+		  		);
+			}
+		);
+    	
+    });
+
+    /**
+     * 单击添加一个属性值按钮
+     */
+    $(document).on("click",".btn_addAttrVal",function(){
+        var attrValThDom = $(this).parent().prev();
+        var attrVal ="<div class=\"space-2\"></div>";
+        attrVal+="<div class=\"clearfix\">";
+        attrVal+="<input class=\"col-xs-10 col-sm-10\" name=\"actName\" id=\"actName\" type=\"text\" />"
+        attrVal+="<span class=\"help-inline col-xs-2 col-sm-2 middle\"><a class=\"ace-icon glyphicon glyphicon-trash red del-attrValue\" href=\"javascript:void(0)\"></a></span>";
+        attrVal+="</div>";
+        attrValThDom.append(attrVal);
+    })
+    
+    /**
+     * 单击删除一个属性值按钮
+     */
+    $(document).on("click",".del-attrValue",function(){
+        var clearDom = $(this).parents(".clearfix");
+        clearDom.prev().remove();
+        clearDom.remove();
+        clearTbody();
+    })
+    /**
+     * 单击添加一个属性按钮
+     */
+    $(document).on("click","#btn_addAttri",function(){
+        addAttribute();
+    })
+    $(document).on("click","#saveStorage",function(){
+        $("#strogeInfoForm").submit();
+    })
+    /**
+     * 单击生成价格库存表按钮，生成价格库存表
+     */
+    $(document).on("click","#btn_createTable",function(){
+    	var tbodyDom = $("#sku_table > tbody");
+        tbodyDom.empty();
+        var allAttrNameList = [], allAttrCodeList = [];
+        var tableNameList = [], tableCodeList = [];
+        var tableTrList = getAttrTableData();
+        for(var i=0;i<tableTrList.length;i++){
+            var attrCodeList = [],attrNameList = [];
+            var attrValList =  tableTrList[i].attrVal;
+            var attrCode = tableTrList[i].attrCode;
+            var attrName = tableTrList[i].attrName;
+            for(var ii=0;ii<attrValList.length;ii++){
+                attrCodeList.push(attrCode+ii);
+                attrNameList.push(attrName+":"+attrValList[ii]);
+            }
+            allAttrCodeList.push(attrCodeList);
+            allAttrNameList.push(attrNameList);
+        }
+        var allAttrCodeListLen = allAttrCodeList.length;
+        if(allAttrCodeListLen==1){
+            for(var i=0;i<allAttrCodeList[0].length;i++){
+                tableCodeList.push(allAttrCodeList[0][i]);
+                tableNameList.push(allAttrNameList[0][i]);
+            }
+        }else if(allAttrCodeListLen==2){
+            for(var i=0;i<allAttrCodeList[0].length;i++){
+                for(var j=0;j<allAttrCodeList[1].length;j++){
+                    tableCodeList.push(allAttrCodeList[0][i]+"-"+allAttrCodeList[1][j]);
+                    tableNameList.push(allAttrNameList[0][i]+"-"+allAttrNameList[1][j]);
+                }
+            }
+        }else if(allAttrCodeListLen==3){
+            for(var i=0;i<allAttrCodeList[0].length;i++){
+                for(var j=0;j<allAttrCodeList[1].length;j++){
+                    for(var k=0;k<allAttrCodeList[2].length;k++){
+                        tableCodeList.push(allAttrCodeList[0][i]+"-"+allAttrCodeList[1][j]+"-"+allAttrCodeList[2][k]);
+                        tableNameList.push(allAttrNameList[0][i]+"-"+allAttrNameList[1][j]+"-"+allAttrNameList[2][k]);
+                    }
+                }
+            }
+        }
+        var bodyTrHtm = [];
+        for(var i= 0;i<tableCodeList.length;i++){
+            bodyTrHtm.push("<tr>");
+            bodyTrHtm.push("<th>"+(i+1)+"</th>");
+            bodyTrHtm.push("<th code="+tableCodeList[i]+">"+tableNameList[i]+"</th>");
+            //bodyTrHtm.push("<th>"+tableCodeList[i]+"</th>");
+            bodyTrHtm.push("<th><input class=\"col-xs-10 col-sm-10\" type=\"text\"/></th>");
+            bodyTrHtm.push("<th><input class=\"col-xs-10 col-sm-10\" type=\"text\"/>元</th>");
+            bodyTrHtm.push("<th><input class=\"col-xs-10 col-sm-10\" type=\"text\"/>元</th>");
+            bodyTrHtm.push("</tr>");
+        }
+        tbodyDom.append(bodyTrHtm.join(""));
+    })
+    
+	$(document).on("click",".btn-delAttr",function(){
+		$(this).parents("tr").remove();
+		clearTbody();
+		//var delObj = $(this);
+		//Box.confirm("确认删除?",function(delObj){
+	    //    $(delObj).parents("tr").remove();
+		//});
+	})
+    
+    function clearTbody(){
+        var tbodyDom = $("#sku_table > tbody");
+        tbodyDom.empty();
+        tbodyDom.append($("<tr><th colspan=\"5\">请先生成价格库存表</th></tr>"))
+    }
+    /**
+     * attrTable表格数据
+     * tableTrList=[{'attrName':xxx,'attrCode':xxx,'attrVal':[xx,xx]}]
+     */
+    function getAttrTableData(){
+        var tableTrList = [];
+        var attrTbodyTrDom = $("#attr_table > tbody > tr");
+        attrTbodyTrDom.each(function(i){
+            var attrNameValObj = {};
+            var attrName = $(this).find("th").eq(1).find("option:selected").text()
+            var attrCode = $(this).find("th").eq(1).find("option:selected").attr("code");
+            var attrValsDom = $(this).find("th").eq(2).find("input");
+            attrNameValObj.attrName = attrName;
+            attrNameValObj.attrCode = attrCode;
+            attrNameValObj.attrVal = [];
+            attrValsDom.each(function(j){
+                attrNameValObj.attrVal.push($(this).val());
+            });
+            tableTrList[i] = attrNameValObj;
+        });
+        return tableTrList;
+    }
+    /**
+     * strorageTable表格数据
+     */
+    function getStorageData(){
+        var storageList = [];
+        var attrTbodyTrDom = $("#sku_table > tbody > tr");
+        for(var i=0;i<attrTbodyTrDom.length;i++){
+            var thDom = attrTbodyTrDom.eq(i).find("th");
+            if(thDom.length==5){
+                var obj = {};
+                obj.standardCode = thDom.eq(1).attr("code");
+                obj.describe = thDom.eq(1).html();
+                obj.stockNum = thDom.eq(2).find("input").val();
+                obj.salePrice = thDom.eq(3).find("input").val();
+                obj.oldPrice = thDom.eq(4).find("input").val();
+                storageList.push(obj);
+            }
+        }
+        return storageList;
+    }
+    
+    function addAttribute(){
+    	if(attrData.length==0){
+            layer.msg("无属性名，不能添加");
+            return;
+        }
+        var tbodyDom = $("#attr_table > tbody");
+        var tbodyTrLen = tbodyDom.children("tr").length;
+        if(tbodyTrLen==3){
+            layer.msg("最多添加三个属性");
+            return;
+        }
+        var attrOpt = [];
+        for (var i in attrData) {
+            attrOpt.push("<option value="+attrData[i].id+" code="+attrData[i].code+">"+attrData[i].name+"</option>");
+        }
+        var times = new Date().getTime();
+        var thHtm = [];
+        thHtm.push("<tr>");
+        thHtm.push("<th>"+(tbodyTrLen+1)+"</th>");
+        thHtm.push("<th><select class=\"chosen-select form-control\" id=\"attr_"+tbodyTrLen+"\" name=\"attr"+tbodyTrLen+"\">"+attrOpt.join("")+"</select></th>");
+        thHtm.push("<th><div class=\"clearfix\"><input class=\"col-xs-10 col-sm-10\" name=\"attrName"+tbodyTrLen+"\" id=\"attrName_"+tbodyTrLen+"\" type=\"text\" /></div></th>");
+        thHtm.push("<th><a class=\"btn btn-xs btn-danger btn-delAttr\" id=\"btn_delAttr_"+tbodyTrLen+"\">删除</a><div class=\"space-2\"></div><a class=\"btn btn-xs btn-yellow btn_addAttrVal\">添加属性值</a></th>");
+        thHtm.push("</tr>");
+        tbodyDom.append(thHtm.join(""));
+    }
+
+    function bindAttribute(standard){
+    	var tbodyDom = $("#attr_table > tbody");
+    	tbodyDom.empty();
+    	var tbodyTrLen = tbodyDom.children("tr").length;
+        if(standard!=undefined){
+            var os = standard;
+            if(os.length>0){
+	            for(var i=0;i<os.length;i++){
+	                var name = os[i].name;
+	                var code = os[i].code;
+	                var attrOpt = [];
+			        for (var j in attrData) {
+			        	if(attrData[j].code==code){
+			        		attrOpt.push("<option value="+attrData[j].id+" code="+attrData[j].code+" selected>"+attrData[j].name+"</option>");
+			        	}else{
+				            attrOpt.push("<option value="+attrData[j].id+" code="+attrData[j].code+">"+attrData[j].name+"</option>");
+			        	}
+			        }
+			        var thHtm = [];
+			        thHtm.push("<tr>");
+			        thHtm.push("<th>"+(tbodyTrLen+1)+"</th>");
+			        thHtm.push("<th><select class=\"chosen-select form-control\" id=\"attr_"+tbodyTrLen+"\" name=\"attr"+tbodyTrLen+"\">"+attrOpt.join("")+"</select></th>");
+			        thHtm.push("<th>");
+	                for(var key in os[i]){
+	                    if(key!="name"&&key!="code"){
+					        thHtm.push("<div class=\"clearfix\"><input class=\"col-xs-10 col-sm-10\" name=\"attrName"+tbodyTrLen+"\" id=\"attrName_"+tbodyTrLen+"\" type=\"text\" value=\""+os[i][key]+"\"/></div>");
+	                    }
+	                }
+	                thHtm.push("</th>");
+	                if(i==0){
+	                	thHtm.push("<th><div class=\"space-2\"></div><a class=\"btn btn-xs btn-yellow btn_addAttrVal\">添加属性值</a></th>");
+	                }else{
+		                thHtm.push("<th><a class=\"btn btn-xs btn-danger btn-delAttr\" id=\"btn_delAttr_"+tbodyTrLen+"\">删除</a><div class=\"space-2\"></div><a class=\"btn btn-xs btn-yellow btn_addAttrVal\">添加属性值</a></th>");
+	                }
+			        thHtm.push("</tr>");
+			        tbodyDom.append(thHtm.join(""));
+	            }
+            }else{
+            	var attrOpt = [];
+            	for (var j in attrData) {
+			    	attrOpt.push("<option value="+attrData[j].id+" code="+attrData[j].code+">"+attrData[j].name+"</option>");
+		        }
+		        var thHtm = [];
+		        thHtm.push("<tr>");
+		        thHtm.push("<th>"+(tbodyTrLen+1)+"</th>");
+		        thHtm.push("<th><select class=\"chosen-select form-control\" id=\"attr_"+tbodyTrLen+"\" name=\"attr"+tbodyTrLen+"\">"+attrOpt.join("")+"</select></th>");
+				thHtm.push("<th><div class=\"clearfix\"><input class=\"col-xs-10 col-sm-10\" name=\"attrName"+tbodyTrLen+"\" id=\"attrName_"+tbodyTrLen+"\" type=\"text\" value=\"\"/></div></th>");
+                thHtm.push("<th><div class=\"space-2\"></div><a class=\"btn btn-xs btn-yellow btn_addAttrVal\">添加属性值</a></th>");
+		        thHtm.push("</tr>");
+		        tbodyDom.append(thHtm.join(""));
+            }
+        }
+    }
+    
+    /**
+     * 生成goods表standard字段
+     */
+    function getStandard(){
+        var attrDataList = getAttrTableData();
+        var standardList = [];
+        for(var i=0;i<attrDataList.length;i++){
+            var attrObj = {};
+            attrObj.name = attrDataList[i].attrName;
+            attrObj.code = attrDataList[i].attrCode;
+            var attrValList = attrDataList[i].attrVal;
+            for(var j=0;j<attrValList.length;j++){
+                attrObj[j] = attrValList[j];
+            }
+            standardList.push(attrObj);
+        }
+        return standardList
+    }
+</script>
+</html>

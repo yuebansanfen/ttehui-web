@@ -1,0 +1,22 @@
+								#if($cccMenus)
+									#set($tipm=$cccMenus)
+								#elseif($ccMenus)
+									#set($tipm=$ccMenus)
+								#elseif($cMenus)
+									#set($tipm=$cMenus)
+								#elseif($menus)
+									#set($tipm=$menus)
+								#end
+								
+								#if($tipm&&$!tipm.tips)
+								<div class="row">
+									<div class="alert alert-block alert-success">
+										<button type="button" class="close" data-dismiss="alert">
+											<i class="icon-remove"></i>
+										</button>
+	
+										<i class="icon-hand-right"></i>
+										$!tipm.tips
+									</div>
+								</div>
+								#end

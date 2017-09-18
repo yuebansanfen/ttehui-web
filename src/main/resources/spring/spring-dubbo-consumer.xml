@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:property-placeholder
+    	ignore-unresolvable="true" location="classpath:dubbo.properties" /> 
+    	
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="${dubbo.application.name}"  />
+    
+    <!--<dubbo:monitor protocol="registry"/>-->
+ 
+    <!-- 使用multicast广播注册中心暴露发现服务地址 -->
+    <dubbo:registry address="${dubbo.registry.address}" />
+    
+    <!-- 生成远程服务代理  -->
+	<dubbo:reference id="userManageService" 
+			interface="com.mocentre.tehui.UserManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="loginManageService" 
+		interface="com.mocentre.tehui.LoginManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="ruleManageService" 
+		interface="com.mocentre.tehui.RuleManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="roleManageService"
+		interface="com.mocentre.tehui.RoleManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="orderManageService"
+		interface="com.mocentre.tehui.OrderManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="areasManageService"
+		interface="com.mocentre.tehui.AreasManageService" check="false" version="${dubbo.method.version}"/>
+    <!-- 邮费模板模块 -->
+	<dubbo:reference id="freightMouldManageService"
+		interface="com.mocentre.tehui.FreightMouldManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="postageConditionManageService"
+		interface="com.mocentre.tehui.PostageConditionManageService" check="false" version="${dubbo.method.version}"/>
+    <!-- 店铺模块 -->
+	<dubbo:reference id="shopManageService"
+		interface="com.mocentre.tehui.ShopManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="attributeManageService"
+		interface="com.mocentre.tehui.AttributeManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="channelManageService"
+		interface="com.mocentre.tehui.ChannelManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="categoryManageService"
+		interface="com.mocentre.tehui.CategoryManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 发现页模块 -->
+	<dubbo:reference id="discoverManageService"
+		interface="com.mocentre.tehui.DiscoverManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="couponManageService"
+		interface="com.mocentre.tehui.CouponManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 买家用户 -->
+	<dubbo:reference id="customerInfoManageService"
+		interface="com.mocentre.tehui.CustomerInfoManageService" check="false" version="${dubbo.method.version}"/>
+	<!--商品-->
+	<dubbo:reference id="goodsManageService"
+		interface="com.mocentre.tehui.GoodsManageService" check="false" version="${dubbo.method.version}"/>
+	<!--商品分类-->
+	<dubbo:reference id="categoryGoodsManageService"
+		interface="com.mocentre.tehui.CategoryGoodsManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 供货商 -->
+	<dubbo:reference id="supplierManageService"
+		interface="com.mocentre.tehui.SupplierManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 专题模块 -->
+	<dubbo:reference id="subjectManageService"
+		interface="com.mocentre.tehui.SubjectManageService" check="false" version="${dubbo.method.version}"/>
+	<!--导航栏-->
+	<dubbo:reference id="navigateMangeService"
+		interface="com.mocentre.tehui.NavigateMangeService" check="false" version="${dubbo.method.version}"/>
+	<!-- 拼团活动 -->
+	<dubbo:reference id="grouponManageService"
+		interface="com.mocentre.tehui.GrouponManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 活动管理 -->
+	<dubbo:reference id="activityManageService"
+		interface="com.mocentre.tehui.ActivityManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 通知邮件管理 -->
+	<dubbo:reference id="ntcMailManageService"
+		interface="com.mocentre.tehui.NtcMailManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 支付管理 -->
+	<dubbo:reference id="payConfigManageService"
+		interface="com.mocentre.tehui.PayConfigManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 实物礼品订单 -->
+	<dubbo:reference id="prizeOrderManageService"
+		interface="com.mocentre.tehui.PrizeOrderManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 分享配置 -->
+	<dubbo:reference id="shareConfigManageService"
+		interface="com.mocentre.tehui.ShareConfigManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="mallHomeManageService"
+		interface="com.mocentre.tehui.MallHomeManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="memberAccountManageService"
+		interface="com.mocentre.tehui.MemberAccountManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="thirdGoodsManageService"
+		interface="com.mocentre.tehui.ThirdGoodsManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 前台接口 -->
+	<dubbo:reference id="goodsManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.GoodsManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="shopManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.ShopManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="shopCartManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.ShopCartManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="navigateMangeServiceFT"
+		interface="com.mocentre.tehui.frontend.service.NavigateManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="customerLoginManageServiceFT"
+		 interface="com.mocentre.tehui.frontend.service.LoginManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="subjectManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.SubjectManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="storeManageServiceFT"
+		 interface="com.mocentre.tehui.frontend.service.StoreManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="couponManageServiceFT"
+		 interface="com.mocentre.tehui.frontend.service.CouponManageService" check="false" version="${dubbo.method.version}"/>
+					 
+	<dubbo:reference id="orderManageServiceFT"
+		 interface="com.mocentre.tehui.frontend.service.OrderManageService" check="false" version="${dubbo.method.version}"/>
+		 
+	<dubbo:reference id="customerInfoManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.CustomerInfoManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="grouponManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.GrouponManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="activityManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.ActivityManageService" check="false" version="${dubbo.method.version}"/>
+	
+	<dubbo:reference id="areasManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.AreasManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="discoverManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.DiscoverManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="mallHomeManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.MallHomeManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="thirdOrderManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.ThirdOrderManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="memberAccountManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.MemberAccountManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="thirdGoodsManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.ThirdGoodsManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="prizeOrderManageServiceFT"
+		interface="com.mocentre.tehui.frontend.service.PrizeOrderManageService" check="false" version="${dubbo.method.version}"/>
+	<!-- 礼品平台 -->
+	<dubbo:reference id="giftCategoryManageService"
+		interface="com.mocentre.gift.GiftCategoryManageService" check="false" version="${dubbo.method.version}"/>
+		
+	<dubbo:reference id="giftGoodsManageService"
+		interface="com.mocentre.gift.GiftGoodsManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="giftCustomerManageService"
+		interface="com.mocentre.gift.GiftCustomerManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="giftDemandManageService"
+		interface="com.mocentre.gift.GiftDemandManageService" check="false" version="${dubbo.method.version}"/>
+
+	<dubbo:reference id="giftBannerManageService"
+		 interface="com.mocentre.gift.GiftBannerManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftOrderMangeService"
+					 interface="com.mocentre.gift.backend.service.GiftOrderMangeService" check="false" version="${dubbo.method.version}"/>
+	<!-- 礼品平台前端接口 -->
+	<dubbo:reference id="giftCategoryFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftCategoryManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftGoodsFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftGoodsManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftLoginFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftLoginManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftDemandFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftDemandManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftBannerFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftBannerManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftCustomerFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftCustomerManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftOrderFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftOrderManageService" check="false" version="${dubbo.method.version}"/>
+	<dubbo:reference id="giftGiftSheetFTManageService"
+		 interface="com.mocentre.gift.frontend.service.GiftGiftSheetManageService" check="false" version="${dubbo.method.version}"/>
+		 
+</beans>

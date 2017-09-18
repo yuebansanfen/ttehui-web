@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-修改分类商品</title>
+		<meta name="keywords" content="修改分类商品" />
+		<meta name="description" content="修改分类商品" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm")
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>
+                                修改分类商品
+                                #parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal">
+                                    <input type="hidden" id="is_chain" name="isChain" value="$!{categoryGoods.isChain}">
+                                    <input type="hidden" id="id" name="id" value="$!{categoryGoods.id}">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><span class="middle red">*</span>是否外链：</label>
+                                        <div class="col-sm-8 control-label align-left">
+                                            <div class="clearfix">
+                                                <input type="checkbox" name="chainChecked" id="chain_checked"  #if($!{categoryGoods.isChain}==1) checked #end class="ace ace-switch ace-switch-2" />
+                                                <span class="lbl"></span>
+                                                <span class="help-inline"><span class="middle">YES：是；NO：否</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品分类：</label>
+                                        <div class="col-sm-3">
+                                            <select name="categoryId" id="category_id"  class="form-control chosen-select" data-placeholder="商品分类">
+                                                <option value="">请选择</option>
+                                                #foreach($category in $categories)
+                                                    <option value="$!{category.id}" #if($!{categoryGoods.categoryId}==$!{category.id}) selected="selected" #end  >$category.name</option>
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="link" class="form-group #if($!{categoryGoods.isChain}!="1") hidden #end">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>外部链接：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="linkUrl" id="link_url"  value="$!{categoryGoods.linkUrl}" type="text" placeholder="外部链接" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="goods" class="#if($!{categoryGoods.isChain}!="0") hidden #end">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>关联商品：</label>
+                                            <div class="col-sm-3">
+                                                <select name="goodsId" id="goods_id"  class="form-control chosen-select" data-placeholder="关联商品">
+                                                    <option value="">请选择</option>
+                                                    #foreach($goods in $goodsList)
+                                                        <option value="$!{goods.id}" #if($!{categoryGoods.goodsId}==$!{goods.id}) selected="selected" #end>$goods.title</option>
+                                                    #end
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span> 排序 ：</label>
+                                        <div class="col-sm-6">
+                                            <div class="clearfix">
+                                                <input type="text" id="sorting" name="sorting" placeholder="排序" value="$!{categoryGoods.sorting}" class="col-xs-10 col-sm-5" />
+                                                <span class="help-inline"><span class="middle">越小越靠前</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>商品名称：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="showName" id="show_name" value="$!{categoryGoods.showName}" type="text"  placeholder="商品名称" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>展示图片：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control hidden" name="showImg" id="show_img" value="$!{categoryGoods.showImg}" type="text"  placeholder="展示图片" />
+                                            </div>
+                                            <img id="show_img_preview" src="$!{categoryGoods.showImg}" width="100" height="100"/>
+                                            <a class="btn btn-minier btn-primary" onclick="addImg('show_img');">上传</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="submit" id="submit">
+                                                <i class="icon-ok bigger-110"></i>
+                                               		 提交
+                                            </button>
+
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn" type="reset">
+                                                <i class="icon-undo bigger-110"></i>
+                                                	重置
+                                            </button>
+                                        </div>
+                                    </div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script type="text/javascript">
+            $(document).ready(function(){
+            	$('#sorting').ace_spinner({min:1,max:200,step:1, btn_up_class:'btn-info',btn_down_class:'btn-info'});
+	            /* 是否外链表单元素控制 */
+	            $("#chain_checked").on('change',function () {
+	                if($(this).is(':checked')){
+	                    $("#link").removeClass('hidden');
+                        $("#goods").addClass('hidden');
+                        clear()
+	                }else {
+                        $("#goods").removeClass('hidden');
+                        $("#link").addClass('hidden');
+                        clear()
+	                }
+	            })
+
+
+                /* 选择相关分类后获取普通商品 */
+                $("#category_id").on('change',function () {
+                    var id = $(this).val();
+                    if(id!=null&&id!=''){
+                        param = {"cid":id};
+                        query("/goods/goods/ajax/getByCategory.htm", param, "goods_id");
+                    }
+                })
+
+                /* 获取普通商品信息 */
+                $("#goods_id").on('change',function () {
+                    var id = $(this).val();
+                    if(id!=null&&id!=''){
+                        jQuery.ajax({
+                            type: 'post',
+                            url: '${base}/goods/goods/ajax/getGoodsById.htm',
+                            data:  {"id":id},
+                            dataType: 'json',
+                            success: function(result){
+                                if(result.success){
+                                    var info = result.data;
+                                    $("#show_name").val(info.title);
+                                    $("#show_img").val(info.imgCart);
+                                    $("#show_img_preview").attr("src",info.imgCart);
+                                }else{
+                                    layer.msg(result.message);
+                                }
+                            },
+                            error: function(result) {
+                                layer.msg('系统异常，请联系系统管理员!');
+                            }
+                        });
+                    }
+                })
+
+                var rules = {},messages = {};
+                rules.showName = {required:true};
+                rules.showImg = {required:true};
+                messages.showName = {required:"商品名称不能为空"};
+                messages.showImg = {required:"展示图片不能为空"};
+
+                Validate.init("theForm",rules,messages, function(form){
+                        $("input[name='chainChecked']:checkbox").each(function(){
+                            if($(this).is(':checked')){
+                                $("#is_chain").val("1");
+                            }else{
+                                $("#is_chain").val("0");
+                            }
+                        });
+
+                        if ($("#is_chain").val() == '1'){
+                            if ($("#link_url").val() == ''){
+                                layer.msg("外部链接不能为空!");
+                                return;
+                            }
+                        }
+
+                        App.formAjaxSubmit('theForm','${base}/goods/categoryGoods/editCategoryGoods.htm','post',
+                            function(result){
+                                var suc = result.success;
+                                if(suc){
+                                    window.location.href="${base}/goods/categoryGoods/index.htm";
+                                }else{
+                                    layer.msg(result.message);
+                                }
+                            }
+                        );
+                    }
+                );
+            })
+
+
+            function query(url, param , domId) {
+                jQuery.ajax({
+                    type: 'post',
+                    url: '${base}' + url,
+                    data:  param,
+                    dataType: 'json',
+                    success: function(result){
+                        if(result.success){
+                            var list = result.data;
+                            $("#"+ domId).html("<option value=''>请选择</option>");
+                            if(list!=null&&list.length>0){
+                                $.each(list,function(i){
+                                    $("#"+domId).append("<option value='"+list[i].id+"'>"+list[i].name+"</option>")
+                                });
+                            }else{
+                                layer.msg('未找到相关信息');
+                            }
+                        }else{
+                            layer.msg(result.message);
+                        }
+                    },
+                    error: function(result) {
+                        layer.msg('系统异常，请联系系统管理员!');
+                    }
+                });
+            }
+
+            function clear() {
+                $("#link_url").val("");
+                $("#show_name").val("");
+                $("#show_img").val("");
+                $("#show_img_preview").attr("src","");
+                $("#category_id").val("");
+                $("#goods_id").val("");
+            }
+
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        layer.close(index);
+                    }
+                });
+            }
+		</script>
+</body>
+</html>

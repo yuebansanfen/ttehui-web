@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改个人信息-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+		<link rel="stylesheet" href="${base}/mocentre/css/head.css">
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>个人资料</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+										<form id="theForm" name="theForm" class="form-horizontal">
+											<input type="hidden" name="id" id="id" value="$!user.id" />
+											<input type="hidden" name="userName" id="user_name" value="$!user.userName" />
+                                            <input type="hidden" name="token" id="token" value="$!token" />
+
+
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 头像 </label>
+
+                                                <div class="col-sm-9">
+                                                    <div class="col-xs-2 no-padding-left">
+                                                        <input type="hidden" name="head" id="head" value="$!user.head" />
+
+                                                        <div class="imgtest">
+                                                            <figure>
+                                                                <div>
+                                                                    <img id="head_perview" src="$!user.head" onclick="addImg('head');" />
+                                                                </div>
+                                                            </figure>
+                                                    	</div>
+													</div>
+                                                </div>
+                                            </div>
+
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-1 control-label no-padding-right" for="form-field-2"> 性别 </label>
+			
+												<div class="col-sm-9">
+													<div class="col-xs-2 no-padding-left">
+														<select name="sex" id="sex" class="form-control">
+															<option value="0" #if($!user.sex=="0")selected#end>保密</option>
+															<option value="1" #if($!user.sex=="1")selected#end>男</option>
+															<option value="2" #if($!user.sex=="2")selected#end>女</option>
+														</select>
+													</div>
+												</div>
+											</div>
+			
+											<div class="space-4"></div>
+											<div class="form-group">
+												<label class="col-sm-1 control-label no-padding-right" for="form-field-4">生日</label>
+			
+												<div class="col-sm-5">
+													<div class="col-xs-6 no-padding-left">
+														<div class="input-group">
+															<input class="form-control" name="birthday" id="birthday" value="$!{date.format('yyyy-MM-dd',$!user.birthday)}" type="text" />
+															<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+			
+											<div class="form-group">
+												<label class="col-sm-1 control-label no-padding-right" for="form-field-1"> 电话号码 </label>
+			
+												<div class="col-sm-9">
+													<div class="clearfix">
+														<input type="text" id="phone" name="phone" placeholder="电话号码" value="$!{user.phone}" class="col-xs-10 col-sm-5" />
+													</div>
+												</div>
+											</div>
+											
+											<div class="form-group">
+												<label class="col-sm-1 control-label no-padding-right" for="form-field-1"> QQ </label>
+			
+												<div class="col-sm-9">
+													<div class="clearfix">
+														<input type="text" id="qq" name="qq" placeholder="QQ" value="$!{user.qq}" class="col-xs-10 col-sm-5" />
+													</div>
+												</div>
+											</div>
+											
+											<div class="form-group">
+												<label class="col-sm-1 control-label no-padding-right" for="form-field-1"> Email </label>
+			
+												<div class="col-sm-9">
+													<div class="clearfix">
+														<input type="text" id="email" name="email" placeholder="Email" value="$!{user.email}" class="col-xs-10 col-sm-5" />
+													</div>
+												</div>
+											</div>
+			
+											<div class="clearfix form-actions">
+												<div class="col-md-offset-3 col-md-9">
+													<button class="btn btn-info" type="submit">
+														<i class="icon-ok bigger-110"></i>
+														提交
+													</button>
+			
+													&nbsp; &nbsp; &nbsp;
+													<button class="btn" type="reset">
+														<i class="icon-undo bigger-110"></i>
+														重置
+													</button>
+												</div>
+											</div>
+										</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script type="text/javascript">
+
+
+
+            /* 上传图片 */
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        var imgsrc = $("#"+nodeId).val();
+                        $("#"+nodeId+"_perview").attr("src",imgsrc);
+                        layer.close(index);
+                    }
+                });
+            }
+
+			function chose_mult_set_ini(select, values) {
+	            var arr = values.split(',');
+	            var length = arr.length;
+	            var value = '';
+	            for (i = 0; i < length; i++) {
+	                value = arr[i];
+	                $(select + " option[value='" + value + "']").attr('selected', 'selected');
+	            }
+	            $(select).trigger("liszt:updated");
+	        }
+	        
+			$(document).ready(function() {
+
+				$('#birthday').datepicker({
+				  		format: 'yyyy-mm-dd',
+						weekStart: 1,
+						autoclose: true,
+						todayBtn: 'linked',
+						language: 'de'
+				 });
+
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						userName:{required:true},
+						roles:{required:true},
+						email:{email:true}
+					},
+				    messages: {
+					    userName:{required:"用户名不能为空"},
+						roles:{required:"角色不能为空"},
+						email:{email:"请输入正确的email,eg:xxx@xx.xx"}
+					},
+					invalidHandler: function (event, validator) { //display error alert on form submit   
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function (form) {
+						$('#role_ids').val($('#chosen-role').val());
+						App.formAjaxSubmit('theForm','${base}/sys/user/updateBase.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.reload();
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					},
+					invalidHandler: function (form) {
+						
+					}
+			  	});
+				 
+			});
+			
+		</script>
+</body>
+</html>
+

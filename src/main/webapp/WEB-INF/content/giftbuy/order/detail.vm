@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>订单详情-订单管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>订单详情#parse("commons/backurl.vm")</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+							
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">订单</h4>
+                                    <input type="hidden" id="order_id" name="orderId" value="$!{order.id}" />
+                                    <input type="hidden" id="order_num" name="orderNum" value="$!{order.orderNum}" />
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right">用户手机号：</label>
+                                                <label class="col-sm-8 control-label align-left">$!{order.customerTelephone}</label>
+                                            </div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单号： </label>
+												<label class="col-sm-8 control-label align-left">$!{order.orderNum}</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">下单时间：</label>
+												<label class="col-sm-8 control-label align-left">$!date.format('yyyy-MM-dd HH:mm:ss',$!order.orderTime)</label>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单备注：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.note}</label>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单状态：</label>
+												<div class=" control-label align-left">
+##                                                    订单状态（commit:已提交  wait_check:等待审核 cancel:已取消  send:已发货  success:已完成）
+													#if(${order.orderStatus}=='commit')
+														订单已提交 &nbsp;<button type="button" class="btn btn-white btn-purple btn-sm" id="statusSend">发货</button> <span class="red">*发货候订单不能再修改</span>
+				                    				#elseif(${order.orderStatus}=='wait_check')
+                                                        等待管理员审核 &nbsp;<button type="button" class="btn btn-white btn-purple btn-sm editStatus" status="cancel">确认取消</button>&nbsp;<button type="button" class="btn btn-white btn-purple btn-sm editStatus"status="commit">撤回取消</button>
+				                    				#elseif(${order.orderStatus}=='cancel')
+				                    					订单已取消
+				                    				#elseif(${order.orderStatus}=='send')
+				                    					订单已发货 &nbsp; <button type="button" class="btn btn-white btn-purple btn-sm editStatus"status="success">确认完成</button>
+				                    				#elseif(${order.orderStatus}=='success')
+                                                        已完成
+				                    				#end
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label no-padding-right">订单总价：</label>
+												<label class="col-sm-8 control-label align-left">$!{order.totalPrice}元</label>
+											</div>
+											<div>
+												<table class="table table-striped table-bordered">
+													<thead>
+														<tr>
+															<th class="center">#</th>
+															<th>商品名称</th>
+															<th class="hidden-480">数量</th>
+															<th>价格</th>
+                                                            <th>操作</th>
+														</tr>
+													</thead>
+													<tbody>
+														#foreach($detail in $!{order.orderGoodsDetailList})
+														<tr>
+															<td class="center" detail-id="$!{detail.id}">$!{velocityCount}</td>
+															<td>
+																$!{detail.goodsName}
+															</td>
+
+															<td class="hidden-480">$!{detail.goodsAmount}</td>
+															<td>$!{detail.goodsPrice}</td>
+
+                                                            <td>
+																#if(${order.orderStatus}=='commit')
+                                                                    <a  class="saveDetail" ><span hidden="hidden">保存</span></a>
+                                                                    <a  class="editDetail"><span >修改</span></a>
+                                                                    &nbsp; <a href="javascript:void(0)" onclick="delById($!{detail.id})">删除</a>
+																#end
+															</td>
+														</tr>
+														#end
+													</tbody>
+												</table>
+												<div>
+													<div>
+
+													</div>
+
+												</div>
+												#if(${order.orderStatus}=='commit')
+                                                <a class="btn btn-info btn-sm" id="selectGoods">添加商品</a>
+												#end
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="space-8"></div>
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">收货信息</h4>
+								</div>
+	
+								<div class="widget-body">
+									<div class="widget-main">
+										<div class="form-horizontal to-input">
+											#if(${order.orderStatus}=='commit')
+											<div class="form-group " id="addrRecipient">
+												<label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>收件人： </label>
+                                                <input type="text" class="ace not-null"  name="recipient" id="recipient" value="$!{order.recipient}"/>
+											</div>
+											<div class="form-group " id="addrTelephone">
+												<label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>手机号： </label>
+                                                <input type="text" class="ace not-null"  name="telephone" id="telephone"  value="$!{order.telephone}"/>
+											</div>
+											<div class="form-group " id="addrAddress">
+												<label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>收货地址：</label>
+                                                <input type="text" class="ace not-null"  name="address" id="address"  value="$!{order.address}"/>
+											</div>
+##                                            <a class="btn btn-info btn-sm" id="editAddress">修改收获信息</a>
+                                            <a class="btn btn-info btn-sm " id="saveAddress" >保存</a>
+											#else
+                                            <div class="form-group " id="addrRecipient">
+                                                <label class="col-sm-2 control-label no-padding-right">收件人： </label>
+                                                <label class="col-sm-8 control-label align-left ">$!{order.recipient}</label>
+                                            </div>
+                                            <div class="form-group " id="addrTelephone">
+                                                <label class="col-sm-2 control-label no-padding-right">手机号： </label>
+                                                <label class="col-sm-8 control-label align-left ">$!{order.telephone}</label>
+                                            </div>
+                                            <div class="form-group " id="addrAddress">
+                                                <label class="col-sm-2 control-label no-padding-right">收货地址：</label>
+                                                <label class="col-sm-8 control-label align-left">$!{order.address}</label>
+                                            </div>
+											#end
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="space-8"></div>
+							<div class="widget-box">
+								<div class="widget-header widget-header-flat">
+									<h4 class="widget-title smaller">发票信息</h4>
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-main">
+									<div class="form-horizontal to-input">
+                                        <form id="billInfoForm" name="baseInfoForm" class="form-horizontal">
+											#if(${order.orderStatus}=='commit')
+                                                <div class="form-group">
+													#if($!{order.bill.isPaper} == "paper")
+                                                        <label class="col-sm-2 control-label no-padding-right"></label>
+                                                        <label>
+                                                            <input name="isPaper" type="radio" class="ace" checked="checked" value="paper" />
+                                                            <span class="lbl"> 纸质</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="isPaper" type="radio" class="ace" value="electronic"/>
+                                                            <span class="lbl"> 电子</span>
+                                                        </label>
+													#else
+                                                        <label class="col-sm-2 control-label no-padding-right"></label>
+                                                        <label>
+                                                            <input name="isPaper" type="radio" class="ace" value="paper" />
+                                                            <span class="lbl"> 纸质</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="isPaper" type="radio" class="ace" checked="checked" value="electronic"/>
+                                                            <span class="lbl"> 电子</span>
+                                                        </label>
+													#end
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right"></label>
+													#if($!{order.bill.isVAT} == "VAT")
+                                                        <label>
+                                                            <input name="isVAT" type="radio" class="ace" checked="checked" value="VAT" />
+                                                            <span class="lbl"> 增值税发票</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="isVAT" type="radio" class="ace" value="general"/>
+                                                            <span class="lbl"> 普通发票</span>
+                                                        </label>
+													#else
+                                                        <label>
+                                                            <input name="isVAT" type="radio" class="ace"value="VAT" />
+                                                            <span class="lbl"> 增值税发票</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="isVAT" type="radio" class="ace" checked="checked" value="general"/>
+                                                            <span class="lbl"> 普通发票</span>
+                                                        </label>
+													#end
+
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>纳税人识别号：</label>
+                                                    <input type="text" class="ace not-null"  name="taxId" id="taxId" class="not-null"  value="$!{order.bill.taxId}"/>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>名称：</label>
+                                                    <input type="text" class="ace not-null"  name="header" id="header"  value="$!{order.bill.header}"/>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>地址：</label>
+                                                    <input type="text" class="ace not-null"  name="billAddress" id="billAddress" value="$!{order.bill.address}"/>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>联系电话：</label>
+                                                    <input type="text" class="ace not-null"  name="billTtelephone" id="billTelephone"  value="$!{order.bill.telephone}"/>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>开户行：</label>
+                                                    <input type="text" class="ace not-null"  name="bank" id="bank"  value="$!{order.bill.bank}"/>
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right"><span class="middle red">*</span>银行卡卡号：</label>
+                                                    <input type="text" class="ace not-null"  name="accountNum" id="accountNum"   value="$!{order.bill.accountNum}"/>
+                                                </div>
+											##                                            <a class="btn btn-info btn-sm" id="editBill">修改发票信息</a>
+                                                <a class="btn btn-info btn-sm " id="saveBill" >保存</a>
+											#else
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right"></label>
+													#if($!{order.bill.isPaper} == "paper")
+                                                        <label class="col-sm-8 control-label align-left">纸质</label>
+													#end
+													#if($!{order.bill.isPaper} == "electronic")
+                                                        <label class="col-sm-8 control-label align-left">电子</label>
+													#end
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right"></label>
+													#if($!{order.bill.isVAT} == "VAT")
+                                                        <label class="col-sm-8 control-label align-left">增值税发票</label>
+													#end
+													#if($!{order.bill.isVAT} == "general")
+                                                        <label class="col-sm-8 control-label align-left">普通发票</label>
+													#end
+                                                </div>
+                                                <div class="form-group" >
+                                                    <label class="col-sm-2 control-label no-padding-right">纳税人识别号：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.taxId}</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right">名称：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.header}</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right">地址：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.address}</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right">联系电话：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.telephone}</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right">开户行：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.bank}</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label no-padding-right">银行卡卡号：</label>
+                                                    <label class="col-sm-8 control-label align-left">$!{order.bill.accountNum}</label>
+                                                </div>
+
+											#end
+                                        </form>
+
+									</div>
+								</div>
+							</div>
+							#if($!{order.orderStatus}!='commit')
+							<div class="space-8"></div>
+							<form id="theForm" name="theForm">
+								<input type="hidden" id="order_id" name="orderId" value="$!{order.id}" />
+								<input type="hidden" id="is_sms" name="isSms" value="" />
+								<div class="widget-box">
+									<div class="widget-header widget-header-flat">
+										<h4 class="widget-title smaller">发货物流</h4>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<div class="form-horizontal">
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+                                                        <label class="col-sm-8 control-label align-left">$!{order.expNum}</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+                                                        <label class="col-sm-8 control-label align-left">$!{order.expCompany}</label>
+                                                    </div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+							#end
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		
+		<form id="lgcForm" name="lgcForm">
+
+		<div class="widget-box" id="lgc_div" style="display:none">
+			<div class="widget-body">
+				<div class="widget-main">
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label no-padding-right">物流单号： </label>
+							<div class="col-sm-5">
+								<input type="text" id="exp_num" name="expNum" placeholder="物流单号" class="col-xs-12" value="$!{order.expNum}"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label no-padding-right">物流公司：</label>
+							<div class="col-sm-5">
+								<input type="text" id="compay" name="compay" placeholder="物流公司" class="col-xs-12" value="$!{order.company}"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+		
+		#parse("commons/footerJs.vm")
+		<script type="text/javascript">
+            var goodsList = [];
+			var orderId = $("#order_id").attr("value");
+			var orderNum =  $("#order_num").attr("value");
+			$(document).ready(function() {
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						expNum:{required:true,maxlength:20},
+						compay:{required:true,maxlength:50}
+					},
+				    messages: {
+					    expNum:{required:"物流单号不能为空",maxlength:"最多输入20个字符"},
+						compay:{required:"物流公司不能为空",maxlength:"最多输入50个字符"}
+					},
+					invalidHandler: function (event, validator) {  
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function (form) {
+						var ischeck=false;
+			            $("input[name='isChecked']:checkbox").each(function(){ 
+			                if($(this).is(':checked')){
+			                    ischeck=true;
+			                }
+			            })
+						App.formAjaxSubmit('theForm','${base}/giftbuy/order/send.htm','post',
+				  			function(result){
+				  				var suc = result.success;
+				  				if(suc){
+				  					window.location.href="${base}/giftbuy/order/index.htm";
+				  				}else{
+				  					layer.msg(result.message);
+				  				}
+				  			}
+				  		);
+					}
+			  	});
+			  	
+
+			  	$("#edit_lgc").click(function(){
+			  		$("#lgcForm")[0].reset();
+					layer.open({
+						type: 1,
+						title: '修改物流',
+						area: ['40%', '40%'],
+						shadeClose: true,
+						content: $('#lgc_div'),
+						btn: ['确定', '关闭'],
+						yes: function(){
+						   $("#lgcForm").submit();
+						}
+					});			  	
+			  	});
+                $.ajax({
+                    "type":"post",
+                    "async":"false",
+                    "url":"${base}/ggoods/goods/queryForSelect.htm",
+                    "success":function(data){
+                        goodsList = data.data;
+                    }
+                })
+			});
+
+            $("#statusSend").click(function(){
+               if(!checkNull()){
+                   layer.msg("有未填写的信息");
+				   return;
+			   }
+                $("#lgcForm")[0].reset();
+                layer.open({
+                    type: 1,
+                    title: '添加物流',
+                    area: ['40%', '40%'],
+                    shadeClose: true,
+                    content: $('#lgc_div'),
+                    btn: ['确定', '关闭'],
+                    yes: function () {
+                        var paramMap = {}
+                        paramMap.expNum = $("#exp_num").val();
+                        paramMap.expCompany = $("#compay").val() ;
+                        paramMap.orderId = orderId;
+						$("#saveBill").trigger("click");
+						$("#saveAddress").trigger("click");
+                        $.ajax({
+                            "type": "post",
+                            "url": "${base}/giftbuy/order/editSend.htm",
+                            "data":  paramMap,
+                            "success": function (data) {
+                                if(data.success){
+                                    window.location.reload();
+                                }else{
+                                    Box.alert(data.message);
+                                }
+                            }
+                        })
+                    }
+                });
+            });
+
+			$(document).on("click",".editDetail",function(){
+				// 显示保存按钮
+				$(this).siblings(".saveDetail").find("span").removeAttr("hidden");
+                // 隐藏修改按钮
+                $(this).find("span").attr("hidden","hidden")
+				// 显示input框
+				var v1 = $(this).closest("tr").find("td").eq(2).html();
+				var v2 = $(this).closest("tr").find("td").eq(3).html();
+                $(this).closest("tr").find("td").eq(2).html("<input type='text' placeholder='"+v1+"'>");
+                $(this).closest("tr").find("td").eq(3).html("<input type='text' placeholder='"+v2+"'>");
+
+			})
+            $(document).on("click",".saveDetail",function(){
+                // 显示修改按钮
+                $(this).siblings(".editDetail").find("span").removeAttr("hidden");
+                // 隐藏保存按钮
+                $(this).attr("hidden","hidden")
+                // 隐藏input框
+                var v1 = $(this).closest("tr").find("td input").eq(0).val();
+                var v2 = $(this).closest("tr").find("td input").eq(1).val();
+                $(this).closest("tr").find("td").eq(2).html(v1);
+                $(this).closest("tr").find("td").eq(3).html(v2);
+
+                var paramMap = {}
+                paramMap.id = $(this).attr("detailId") ;
+                paramMap.orderId = $(this).attr("orderId") ;
+                paramMap.goodsPrice = v1 ;
+                paramMap.goodsAmount = v2;
+			})
+
+			var count = 0;
+			$(document).on("click","#selectGoods",function(){
+                $("table tbody").append("<tr>" +
+						"<td></td>" +
+						"<td><select id='giftSelect"+count+"'></select></td>" +
+						"<td><input type='text'></td>" +
+						"<td><input type='text'></td>" +
+						"<td><a class='addDetail' >保存</a><a class='deletDetail' >删除</a></td>" +
+						"</tr>")
+
+				for(var i in goodsList){
+                    var goods = goodsList[i]
+                    $("#giftSelect"+count).append('<option price="'+goods.price+'" value ="'+goods.id+'">'+ goods.title+'</option>')
+				}
+                $("#giftSelect"+count).trigger("change");
+                count++;
+			})
+            $(document).on("change","table select",function(){
+				$(this).closest("tr").find("td").eq(3).find("input").val($(this).find("option:selected").attr("price"));
+			})
+			$(document).on("click","#saveAddress",function(){
+				var input = $("#addrRecipient").find(".address-input");
+                var param = {};
+				param.orderId = orderId;
+				param.recipient = $("#addrRecipient").find("input").val();
+				param.telephone = $("#addrTelephone").find("input").val();
+				param.address = $("#addrAddress").find("input").val();
+                $.ajax({
+                    url: "${base}/giftbuy/order/editAddress.htm",
+                    type: "post",
+                    dataType: "JSON",
+                    "data": param,
+                    "success": function (data) {
+                        if(data.success){
+                            window.location.reload();
+                        }else{
+                            Box.alert(data.message);
+                        }
+                    }
+                })
+			})
+			$(document).on("click","#saveBill",function(){
+				var input = $("#addrRecipient").find(".address-input");
+                var param = {};
+				param.orderId = orderId;
+				param.orderNum = orderNum;
+				param.isVAT = $('input[name="isVAT"]:checked').val();
+				param.isPaper = $('input[name="isPaper"]:checked').val();
+				param.taxId = $("#taxId").val();
+				param.header =  $("#header").val();
+				param.address =  $("#billAddress").val();
+				param.telephone =  $("#billTelephone").val();
+				param.bank =  $("#bank").val();
+				param.accountNum =  $("#accountNum").val();
+                $.ajax({
+                    url: "${base}/giftbuy/order/editBill.htm",
+                    type: "post",
+                    dataType: "JSON",
+                    "data": param,
+                    "success": function (data) {
+                        if(data.success){
+                            window.location.reload();
+                        }else{
+                            Box.alert(data.message);
+                        }
+                    }
+                })
+			})
+			$(document).on("click",".saveDetail",function(){
+			    var flag = true;
+				var td = $(this).closest("tr").find("td");
+                var param = {};
+				param.orderId = orderId;
+				param.orderNum = orderNum;
+				param.id = td.eq(0).attr("detail-id");
+                param.goodsPrice = td.eq(3).html();
+                param.goodsAmount = td.eq(2).html();
+                if (param.goodsPrice == '' || param.goodsAmount == ''){
+                    Box.alert("价格或数量为空");
+                    flag = false;
+				}
+                if (flag) {
+                    $.ajax({
+                        url: "${base}/giftbuy/order/editDetail.htm",
+                        type: "post",
+                        dataType: "JSON",
+                        "data": param,
+                        "success": function (data) {
+                            if(data.success){
+                                window.location.reload();
+                            }else{
+                                Box.alert(data.message);
+                            }
+                        }
+                    })
+				}
+			})
+			$(document).on("click",".addDetail",function(){
+				var input = $(this).closest("tr").find("input");
+				var td = $(this).closest("tr").find("td");
+                var param = {};
+				param.orderId = orderId;
+				param.orderNum = orderNum;
+				param.goodsId = td.eq(1).find("option:selected").val();
+				param.goodsName = td.eq(1).find("option:selected").text();
+				param.goodsPrice = td.eq(3).find("input").val();
+				param.goodsAmount = td.eq(2).find("input").val();
+                $.ajax({
+                    url: "${base}/giftbuy/order/editDetail.htm",
+                    type: "post",
+                    dataType: "JSON",
+                    "data": param,
+                    "success": function (data) {
+                        if(data.success){
+                            window.location.reload();
+                        }else{
+                            Box.alert(data.message);
+                        }
+                    }
+                })
+			})
+			$(document).on("click",".editStatus",function(){
+				var status = $(this).attr("status");
+                var param = {};
+                param.orderId = orderId;
+                param.status = status;
+                $.ajax({
+                    url: "${base}/giftbuy/order/editStatus.htm",
+                    type: "post",
+                    dataType: "JSON",
+                    "data": param,
+                    "success": function (data) {
+                        if(data.success){
+                            window.location.reload();
+                        }else{
+                            Box.alert(data.message);
+                        }
+                    }
+                })
+
+			})
+
+			function checkNull(){
+				var flag = true;
+				var input = $(".not-null");
+                input.removeClass("error");
+				for(var i = 0;i<input.length;i++){
+					if(input.eq(i).val() == ''){
+                        input.eq(i).addClass("error");
+                        flag = false;
+						break;
+					}
+				}
+				return flag;
+			}
+
+			function delById(id) {
+                Box.confirm("是否删除该项?",function(){
+					$.ajax({
+						"type": "POST",
+						"data": { "id":id},
+						"url": '${base}/giftbuy/order/delDetail.htm',
+						"success": function (data) {
+                            if(data.success){
+                                window.location.reload();
+                            }else{
+                                Box.alert(data.message);
+                            }
+						}
+					})
+                });
+            }
+
+		</script>
+</body>
+</html>
+

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>编辑客户</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h1>编辑客户
+							#parse("commons/backurl.vm")
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal" action="${base}/gps/customer/save.htm" method="post">
+									<input type="hidden" name="id" id="id" value="${giftCustomer.id}" />
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 机构 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="organization" name="organization" value="${giftCustomer.organization}" placeholder="机构" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户名 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="customerName" name="customerName" value="${giftCustomer.userName}" placeholder="用户名" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="middle red">*</span> 登录名 </label>
+
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="userName" name="userName" value="${giftCustomer.userName}" placeholder="登录名" class="col-xs-10 col-sm-5"/>
+												<input type="text" id="oldUserName" name="oldUserName" value="${giftCustomer.userName}"  class="col-xs-10 col-sm-5 hidden"/>
+											</div>
+										</div>
+									</div>
+	
+									<div class="space-4"></div>
+	
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 电话 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="telephone" name="telephone" value="${giftCustomer.telephone}" placeholder="电话号码" class="col-xs-10 col-sm-5" />
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 运营人员 </label>
+	
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="operator" name="operator" value="${giftCustomer.operator}" placeholder="运营人员" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 运营人员电话 </label>
+
+										<div class="col-sm-9">
+											<div class="clearfix">
+												<input type="text" id="optTelephone" name="optTelephone" value="${giftCustomer.optTelephone}" placeholder="电话号码" class="col-xs-10 col-sm-5" />
+											</div>
+										</div>
+									</div>
+	
+									<div class="clearfix form-actions">
+		                                <div class="col-md-offset-3 col-md-9">
+		                                    <button class="btn btn-info" type="submit">
+		                                    		提交
+		                                    </button>
+		                                    &nbsp; &nbsp; &nbsp;
+		                                    <button class="btn" type="reset" id="reset">
+		                                        	重置
+		                                    </button>
+		                                </div>
+		                            </div>
+								</form>
+								
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script type="text/javascript">
+
+			$(document).ready(function() {
+				jQuery("#theForm").validate({
+					errorElement: 'div',
+					errorClass: 'help-block',
+					focusInvalid: false,
+					onkeyup: false,
+				    ignore: "",
+			        rules: {
+						userName:{required:true},
+					},
+				    messages: {
+					    userName:{required:"用户名不能为空"},
+					},
+					invalidHandler: function (event, validator) { //display error alert on form submit   
+						$('.alert-danger', $('.login-form')).show();
+					},
+					highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+					},
+					success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+						$(e).remove();
+					},
+					errorPlacement: function (error, element) {
+						if(element.is(':checkbox') || element.is(':radio')) {
+							var controls = element.closest('div[class*="col-"]');
+							if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+							else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}else if(element.is('.select2')) {
+							error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}else if(element.is('.chosen-select')) {
+							error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}else error.insertAfter(element.parent());
+					},
+					submitHandler: function (form) {
+						var flag = false;
+						if($("#userName").val()==$("#oldUserName").val()){
+                            flag = true;
+						}else {
+                            $.ajax({
+                                "async": false,
+                                "type": "POST",
+                                "data":{"userName":$("#userName").val()},
+                                "url": '${base}/gps/customer/verify_user.htm',
+                                "success": function (data) {
+                                    if(data){
+                                        flag = true;
+                                    }else{
+                                        layer.msg("登录名已存在!");
+                                    }
+                                }
+                            })
+						}
+
+						if(flag){
+							App.formAjaxSubmit('theForm','${base}/gps/customer/save.htm','post',
+						  			function(result){
+						  				var suc = result.success;
+						  				if(suc){
+						  					window.location.href="${base}/gps/customer/index.htm";
+						  				}else{
+						  					layer.msg(result.message);
+						  				}
+						  			}
+						  		);
+						}
+						
+					}
+				})
+			  });
+			
+		</script>
+</body>
+</html>
+

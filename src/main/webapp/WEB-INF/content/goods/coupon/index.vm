@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>优惠券列表-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										<a class="btn btn-sm btn-primary" href="${base}/goods/coupon/add.htm">新增</a>
+										优惠券名称：<input type="text" id="coupon_name" name="couponName" class="input-sm" placeholder="">&nbsp;&nbsp;
+										生效时间：<input type="text" id="begin_time" name="beginTime" class="input-sm" placeholder="">&nbsp;&nbsp;
+										到期时间：<input type="text" id="end_time" name="endTime" class="input-sm" placeholder="">&nbsp;&nbsp;
+										<button type="submit" class="btn btn-purple btn-sm">搜索 </button> 
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">刷新 </button>
+									</form>
+								</div>
+								<div class="space-4"></div>
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="5%">#</th>
+													<th width="15%">优惠券名称</th>
+													<th width="10%">优惠券面额</th>
+													<th width="10%">优惠券数量</th>
+													<th width="10%">优惠券是否限量</th>
+                                                    <th width="10%">领取途径</th>
+													<th width="10%">满减金额</th>
+													<th width="15%">使用时间</th>
+													<th width="15%">操作</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th width="5%">#</th>
+													<th width="15%">优惠券名称</th>
+													<th width="10%">优惠券面额</th>
+													<th width="10%">优惠券数量</th>
+                                                    <th width="10%">优惠券是否限量</th>
+                                                    <th width="10%">领取途径</th>
+													<th width="10%">满减金额</th>
+													<th width="15%">使用时间</th>
+													<th width="15%">操作</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		
+		<form id="upload_form" action="${base}/goods/coupon/exportCoupon.htm" method="post"> 
+			<input type="input" name="couponId" id="coupon_id" value="" hidden="hidden" />
+		</form>
+
+		#parse("commons/footerJs.vm")
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+	<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+	<script type="text/javascript">
+		var mTable;
+		$(document).ready(function() {
+			$('#begin_time').datepicker({format:'yyyy-mm-dd',language:'cn'});
+			$('#end_time').datepicker({format:'yyyy-mm-dd',language:'cn'});
+		    mTable = $('#sample-table').DataTable({
+		    	"processing": true,
+				"serverSide": true,
+				"ajax": {
+               		url:"${base}/goods/coupon/query.htm",
+               		type:"post",
+               		data: function (d) {
+               			d.beginTime=$('#begin_time').val();
+               			d.endTime=$('#end_time').val();
+               			d.couponName=$('#coupon_name').val();
+               		},
+                    "dataSrc":function(json){
+                        if(!json.success){
+                            json.data=[];
+                            var code = json.code;
+                            if(code==400){
+                                Box.alert(json.message,function(){
+                                    window.location.href="${base}/sys/login/logout";
+                                },"确定");
+                            }else{
+                                layer.msg(json.message);
+                            }
+                        }
+                        return json.data;
+                    }
+               	},
+				"columns" : [
+					{"data":null,"orderable":false}, 
+					{"data":"couponName","orderable":false}, 
+					{"data":"couponMoney","orderable":false}, 
+					{"data":"couponNum","orderable":false}, 
+					{"data":"isLimit","orderable":false},
+					{"data":"isOuter","orderable":false},
+					{"data":"fullCut","orderable":false},
+					{"data":"beginTime","orderable":true}, 
+					{"data":null,"orderable":false}
+				],
+				"columnDefs": [
+					{
+                    	"targets":0
+        			},
+        			{
+						"render":function(data, type, row){
+										return data+"元";
+                             	},
+                    	"targets":2
+					},
+        			{
+						"render":function(data, type, row){
+                             	 	if (row.isLimit == 0) {
+										return "不限量";
+									}else{
+										return data;
+									}
+                             	},
+                    	"targets":3
+					},
+                    {
+                            "visible": false,
+                            "targets":4
+                    },
+                    {
+                        "render":function(data, type, row){
+                            if (data == 1) {
+                                return "外部领取";
+                            }else if(data == 0){
+                                return "内部领取";
+                            }else {
+                                return "";
+							}
+                        },
+                        "targets":5
+                    },
+					{
+						"render":function(data, type, row){
+										return data+"元";
+                             	},
+                    	"targets":6
+					},
+					{
+						"render":function(data, type, row){
+                             	 	return displayDate(row.beginTime,"yyyy-MM-dd")+"~"+displayDate(row.endTime,"yyyy-MM-dd");  
+                             	},
+                    	"targets":7
+					},
+					{
+                    	"render":function(data, type, row){
+                    					var ope = [];
+	                    				ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+	                    				ope.push("<a href=\"${base}/goods/coupon/view.htm?id="+row.id+"\">查看优惠券</a>");
+	                    				ope.push("<span class=\"text-explode\">|</span>");
+										if(row.isOuter == 1 || (row.isOuter == 0 && row.isLimit == 1  )){
+											ope.push("<a href=\"javascript:void(0);\" onclick=\"exportExcel("+row.id+")\">导出优惠券</a>");
+											ope.push("<span class=\"text-explode\">|</span>");
+										}
+										ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+	                    				ope.push("<a href=\"${base}/goods/coupon/edit.htm?id="+row.id+"\">修改</a>");
+	                    				ope.push("<span class=\"text-explode\">|</span>");
+	                    				ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+	                    				ope.push("</div></div>");
+                    				return ope.join("");
+                             	},
+                    	"targets":8,
+                    	"orderable":false 
+        			}
+        		],
+        		"order": [[7, 'desc']],
+        		"bFilter" : false,
+        		"bPaginate" : true ,
+        		"iDisplayLength" : 25,
+        		"fnDrawCallback": function(){
+			        　　	this.api().column(0).nodes().each(function(cell, i) {
+			        cell.innerHTML=i+1;
+			      });
+			    },
+				"oLanguage" : {
+					"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+				}
+			});
+			
+			$('#search_form').submit(function(){
+				mTable.draw();
+				return false;
+			});
+			
+		});
+		
+		function del(id){
+			Box.confirm("是否删除该优惠券?",function(){
+				jQuery.ajax({
+		            type: 'post', 
+		            url: '${base}/goods/coupon/delete.htm',  
+		            data:  {"idList":id},
+		            dataType: 'json',  
+		            success: function(data){
+		            	if(data.success){
+		            		mTable.draw();
+						}else{
+							layer.msg(data.message);
+						}
+					},
+					error: function(data) {
+						layer.msg('系统异常，请联系系统管理员!');
+					}  
+				});
+			});
+		}
+		
+        function exportExcel(id){
+        	$("#coupon_id").val(id);
+        	$("#upload_form").submit();
+        }
+
+	</script>
+</body>
+</html>

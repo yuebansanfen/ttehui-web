@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>修改优惠券-优惠券管理-${baseDescribe}</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+					
+						#parse("commons/setting.vm")
+						<div class="page-header">
+							<h3>修改优惠券
+							#parse("commons/backurl.vm")
+							</h3>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main">
+											<form id="theForm" name="theForm" class="form-horizontal">
+											<input type="text" class="hidden" id="id" name="id" value="$!{coupon.id}" />
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券名称：</label>
+				
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5" name="couponName" id="couponName" value="$!{coupon.couponName}" type="text" />
+															<span class="help-inline col-sm-5"><span class="middle">注：不作展示用</span></span>
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券说明：</label>
+				
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5" name="couponDes" id="couponDes" value="$!{coupon.couponDes}" type="text" />
+															<span class="help-inline col-sm-5"><span class="middle">注：前台展示用</span></span>
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券面额：</label>
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-10 col-sm-5" name="couponMoney" id="couponMoney" value="$!{coupon.couponMoney}" type="text" />
+															<span class="col-xs-1">元</span>
+														</div>
+													</div>
+												</div>
+												<div class="space-4"></div>
+												#if($!{coupon.isLimit}==0)
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-1">优惠券：</label>
+													<div class="col-sm-8 control-label align-left">
+														特惠优惠券
+													</div>
+												</div>
+												#else
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券数量：</label>
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<span class="col-xs-10 col-sm-5">$!{coupon.couponNum}+<input name="couponNum" id="coupon_num" value="" type="text" /></span>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券编码： </label>
+													<div class="col-sm-6">
+														<div class="clearfix">
+															<div class="radio">
+																<label>
+																	<input type="radio" name="snType" value="1" disabled #if($!{coupon.snType}==1) checked #end class="ace" />
+																	<span class="lbl">随机编码 </span>
+																</label>
+																<label>
+																	<input type="radio" name="snType" value="2" disabled #if($!{coupon.snType}==2) checked #end class="ace" />
+																	<span class="lbl">指定起始编码 </span>
+																</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												#end
+												
+												<div class="space-4"></div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>优惠券类型： </label>
+													<div class="col-sm-6">
+														<div class="clearfix">
+															<div class="radio">
+																<label>
+																	<input type="radio" name="relateType" disabled value="no" #if($!{coupon.relateType}=='no') checked #end class="ace" />
+																	<span class="lbl">全场通用 </span>
+																</label>
+																<label>
+																	<input type="radio" name="relateType" disabled value="shop" #if($!{coupon.relateType}=='shop') checked #end class="ace" />
+																	<span class="lbl">店铺可用 </span>
+																</label>
+																<label>
+																	<input name="relateType"  type="radio" disabled value="category" #if($!{coupon.relateType}=='category') checked #end class="ace" />
+																	<span class="lbl">指定分类 </span>
+																</label>
+																<label>
+																	<input name="relateType" type="radio" disabled value="goods" #if($!{coupon.relateType}=='goods') checked #end class="ace" />
+																	<span class="lbl">指定商品 </span>
+																</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div id="tab_3" #if($!{coupon.relateType}!='category') class="hidden" #end>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>指定分类：</label>
+														<div class="col-sm-6 control-label align-left">
+															#set ($typeId = ${coupon.typeIds.split(",")})  
+															#foreach($cy in $cyList)
+																#foreach($tid in $!{typeId}) 
+													                #if($tid==$cy.id)
+													                	${cy.name}
+													                #end  
+													            #end 
+															#end
+														</div>
+													</div>
+												</div>
+												
+												<div id="tab_2" #if($!{coupon.relateType}!='goods') class="hidden" #end>
+													<div class="form-group">
+														<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>指定商品：</label>
+														<div class="col-sm-8">
+															<div class="clearfix">
+																<label class="col-sm-8 control-label align-left">
+																#foreach($goods in $goodsList)
+																$!{goods.title}
+																#end
+																</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>满减金额：</label>
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<input class="col-xs-3 col-sm-2" name="fullCut" id="full_cut" value="$!{coupon.fullCut}" type="text" /><span class="col-xs-1">元</span>
+														</div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>起止时间：</label>
+													<div class="col-sm-8">
+														<div class="input-daterange input-group">
+															<input type="text" class="input-sm form-control" id="begin_time" name="beginTime" value="$!date.format('yyyy-MM-dd',$!coupon.beginTime)" />
+															<span class="input-group-addon">
+																<i class="fa fa-exchange"></i>
+															</span>
+															<input type="text" class="input-sm form-control" id="end_time" name="endTime" value="$!date.format('yyyy-MM-dd',$!coupon.endTime)" />
+														</div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 优惠券描述：</label>
+				
+													<div class="col-sm-8">
+														<div class="clearfix">
+															<textarea class="col-xs-10 col-sm-6" name="description">$!{coupon.description}</textarea>
+														</div>
+													</div>
+												</div>
+												<div class="clearfix form-actions">
+													<div class="col-md-offset-3 col-md-9">
+														<button class="btn btn-info" type="submit" id="submit">
+															<i class="icon-ok bigger-110"></i>
+															提交
+														</button>
+														&nbsp; &nbsp; &nbsp;
+														<button class="btn" type="reset">
+															<i class="icon-undo bigger-110"></i>
+															重置
+														</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+			</div><!-- /.main-container-inner -->
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+		#parse("commons/footerJs.vm")
+		<script>
+		$(document).ready(function(){
+			$('#begin_time').datepicker({format:'yyyy-mm-dd',weekStart:1,autoclose:true,todayBtn:'linked',language:'cn'});
+			$('#end_time').datepicker({format:'yyyy-mm-dd',weekStart: 1,autoclose: true,todayBtn: 'linked',language: 'cn'});
+			var rules = {},messages = {};
+			rules.couponDes = {required:true};
+			rules.couponName = {required:true};
+			rules.couponMoney = {required:true,number:true};
+			rules.couponNum = {number:true};
+			rules.beginTime = {required:true,date:true};
+			rules.endTime = {required:true,date:true};
+			rules.fullCut = {required:true,digitsOrOne:true};
+			messages.couponDes = {required:"说明不能为空"}
+			messages.couponName = {required:"名称不能为空"};
+			messages.couponMoney = {required:"面额不能为空",number:"请填写数字"};
+			messages.couponNum = {number:"请填写数字"};
+			messages.beginTime = {required:"日期不能为空",date:"请填写正确的日期格式"};
+			messages.endTime = {required:"日期不能为空",date:"请填写正确的日期格式"};
+			messages.fullCut = {required:"满减金额不能为空",digitsOrOne:"请填写整数或精确到小数点后一位"};
+			Validate.init("theForm",rules,messages,
+				function(form){
+					App.formAjaxSubmit('theForm','${base}/goods/coupon/editCoupon.htm','post',
+			  			function(result){
+			  				var suc = result.success;
+			  				if(suc){
+			  					window.location.href="${base}/goods/coupon/index.htm";
+			  				}else{
+			  					layer.msg(result.message);
+			  				}
+			  			}
+			  		);
+				}
+			);
+		  	
+			if(!ace.vars['touch']) {
+				$('#goods_channel').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true})
+				.change(function(){
+					cleanChosen('goods_id');
+					var cId = $(this).val();
+					if(cId!=null&&cId!=""){
+						jQuery.ajax({
+				            type: 'post', 
+				            url: '${base}/goods/goods/ajax/getByCategory.htm',
+				            data:  {'cid':cId},
+				            dataType: 'json',  
+				            success: function(result){
+				            	if(result.success){
+								   	$("#goods_id").chosen("destroy");
+				            		$("#goods_id").html("<option value=''></option>");
+								   	var list = result.data;
+								   	if(list!=null&&list.length>0){
+									   	$.each(list,function(i){ 
+											$("<option value='"+list[i].id+"'>"+list[i].name+"</option>").appendTo("#goods_id"); 
+										}); 
+								   	}
+									$('#goods_id').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});			
+								}else{
+									layer.msg(result.message);
+								}
+							},
+							error: function(result) {
+								layer.msg('系统异常，请联系系统管理员!');
+							}  
+						});
+					}
+				});
+				
+				$('#goods_id').chosen({no_results_text:"未找到此选项：",allow_single_deselect:true})
+				
+				$(window).off('resize.chosen').on('resize.chosen', function() {
+						$('.chosen-select').each(function() {
+							 var $this = $(this);
+							 $this.next().css({'width': $this.parent().width()});
+						})
+				}).trigger('resize.chosen');
+				//resize chosen on sidebar collapse/expand
+				$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+					if(event_name != 'sidebar_collapsed') return;
+					$('.chosen-select').each(function() {
+						 var $this = $(this);
+						 $this.next().css({'width': $this.parent().width()});
+					})
+				});
+			}
+			
+		})
+		
+		function cleanChosen(id){
+			$("#"+id).html("<option value=''></option>");
+		   	$("#"+id).chosen("destroy");
+		   	$('#'+id).chosen({no_results_text:"未找到此选项：",allow_single_deselect:true});
+		}
+		</script>
+</body>
+</html>

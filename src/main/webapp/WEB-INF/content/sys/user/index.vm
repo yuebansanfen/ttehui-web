@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>用户管理-${baseDescribe}</title>
+		<meta name="keywords" content="用户管理" />
+		<meta name="description" content="用户管理" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										<a class="btn btn-sm btn-primary" href="${base}/sys/user/add.htm">新增</a> 
+										<input type="text" id="user_name" name="userName" class="input-sm" placeholder="用户名">&nbsp;&nbsp;
+										<input type="text" id="phone" name="phone" class="input-sm" placeholder="电话">&nbsp;&nbsp;
+										<input type="text" id="qq" name="qq" class="input-sm" placeholder="QQ">&nbsp;&nbsp;
+										<input type="text" id="email" name="email" class="input-sm" placeholder="Email">&nbsp;&nbsp;
+										<!--<label class="inline">用户搜索</label> -->
+										<button type="submit" class="btn btn-purple btn-sm">
+											搜索
+										</button> 
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">
+											<i class="icon-refresh"></i>
+											刷新
+										</button>
+									</form>
+								</div>
+								<div class="space-4"></div>
+									
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th>用户名</th>
+													<th class="hidden-480">性别</th>
+													<th><i class="icon-time bigger-110 hidden-480"></i> 生日</th>
+													<th class="hidden-480">电话</th>
+													<th>QQ</th>
+													<th>店铺</th>
+													<th>创建时间</th>
+													<th width="15%">操作</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th class="center"><label> <input
+															type="checkbox" class="ace" /> <span class="lbl"></span>
+													</label></th>
+													<th>用户名</th>
+													<th class="hidden-480">性别</th>
+													<th><i class="icon-time bigger-110 hidden-480"></i> 生日</th>
+													<th class="hidden-480">电话</th>
+													<th>QQ</th>
+													<th>店铺</th>
+													<th>创建时间</th>
+													<th width="15%">操作</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+									<div class="space-4"></div>
+									<div class="cf">
+										<input id="btn-del" onclick="batchDel()" class="btn disabled btn-sm btn-primary" type="button" value="删除">
+									</div>
+								</div>
+									
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script type="text/javascript">
+			var mTable;
+			$(document).ready(function() {
+			    mTable = $('#sample-table').DataTable({
+			    	"processing": true,
+					"serverSide": true,
+					"sort" : "position",
+					"iDisplayLength" : 25,
+					"ajax": {
+	               		url:"${base}/sys/user/queryPaged.htm",
+	               		type:"post",
+	               		data: function (d) {
+	                   		d.userName = $('#user_name').val();
+	                   		d.phone = $('#phone').val();
+	                   		d.qq = $('#qq').val();
+	                   		d.email = $('#email').val();
+	               		},
+	               		"dataSrc":function(json){
+	               			if(!json.success){
+		               			json.data=[];
+	               				var code = json.code;
+	               				if(code==400){
+	               					Box.alert(json.message,function(){
+	               						window.location.href="${base}/sys/login/logout";
+	               					},"确定");
+	               				}else{
+			               			layer.msg(json.message);
+	               				}
+	               			}
+	               			return json.data;
+	               		}
+	               	},
+					"columns" : [
+						{"data":null}, 
+						{"data":"userName","orderable":true}, 
+						{"data":"sex"}, 
+						{"data":"birthday"}, 
+						{"data":"phone"}, 
+						{"data":"qq"}, 
+						{"data":"shopName"},
+						{"data":"gmtCreated"}
+					],
+					"columnDefs": [
+						{
+	        				"class":"center",
+	                    	"orderable":false,
+	                    	"render":function(data, type, row){
+	                             	 	return "<input type=\"checkbox\" class=\"ace\" value=\""+row.id+"\"/><span class=\"lbl\"></span>";  
+	                             	},
+	                    	"targets":0
+	        			},
+	        			{
+	                    	"render":function(data, type, row){
+	                    				if(data==1){
+	                    					return "男";
+	                    				}else if(data==2){
+	                    					return "女";
+	                    				}else{
+	                    					return "保密";
+	                    				}
+	                             	},
+	                    	"targets":2
+	        			},
+						{
+	                    	"orderable":false, 
+							"render":function(data, type, row){
+	                             	 	return displayDate(data);  
+	                             	},
+	                    	"targets":3
+						},
+						{	
+							"orderable":false,
+							"render":function(data, type, row){
+											if(data!=null){
+			                             	 	return "<a href='javascript:void(0)' onclick='shop("+row.shopId+")'>"+data+"</a>";  
+											}else{
+												return "";
+											}
+	                             	},
+	                    	"targets":6,
+	                    	"orderable":false 
+						},
+						{
+							"render":function(data, type, row){
+	                             	 	return displayDate(data,"yyyy-MM-dd HH:mm:ss");  
+	                             	},
+	                    	"targets":7,
+	                    	"orderable":false 
+						},
+						{
+	                    	"render":function(data, type, row){
+	                    					var ope = [];
+		                    				ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+		                    				ope.push("<a href=\"${base}/sys/user/edit.htm?id="+row.id+"\">修改</a>");
+		                    				ope.push("<span class=\"text-explode\">|</span>");
+		                    				ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+		                    				ope.push("</div></div>");
+	                    				return ope.join("");
+	                             	},
+	                    	"targets":8,
+	                    	"orderable":false 
+	        			}
+	        		],
+	        		"fnDrawCallback": function (oSettings) {
+			            $('table').find('tr > td:first-child input:checkbox').bind("click", function () {
+			            	var that = this;
+			            	if(that.checked){
+			            		$('#btn-del').removeClass("disabled");
+			            	}else{
+			            		var $chk = $(this).parents('table').find('tr > td:first-child input:checkbox');
+			            		if($chk.filter(":checked").length==0){
+			            			$('#btn-del').addClass("disabled");
+			            		}
+			            	}
+			            });
+			        },
+	        		"order": [[1, 'asc']],
+					"bFilter" : false,//搜索栏
+					"fnPreDrawCallback": function(settings) {
+					},
+					"oLanguage" : {
+						"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+					}
+				});
+				
+				$('table th input:checkbox').on('click' , function(){
+					var that = this;
+					if(that.checked){
+						$('#btn-del').removeClass("disabled");
+					}else{
+						$('#btn-del').addClass("disabled");
+					}
+					$(this).closest('table').find('tr > td:first-child input:checkbox')
+					.each(function(){
+						this.checked = that.checked;
+						$(this).closest('tr').toggleClass('selected');
+					});
+				});
+				
+				$('#search_form').submit(function(){
+					mTable.draw();
+					return false;
+				});
+				
+			});
+			
+			function batchDel(){
+				var ids = [];
+				$('table').find('tr > td:first-child input:checkbox').each(function(){
+					var chk = $(this).prop('checked');
+					if(chk){
+						ids.push($(this).val());
+					}
+				})
+				if(ids.length>0){
+					del(ids.join(","));
+				}
+			}
+			
+			function shop(sid){
+				var index = layer.open({
+				  type: 2,
+				  title: "店铺详情",
+				  shadeClose: true,
+				  closeBtn: 1,
+				  area: ['50%', '70%'],
+				  content: ['${base}/sys/user/shop_detail.htm?shopId='+sid, 'yes'],
+				  btn: ['关闭']
+				});
+			}
+			
+			function del(id){
+				Box.confirm("是否删除该用户?",function(){
+					jQuery.ajax({
+			            type: 'post', 
+			            url: '${base}/sys/user/delete.htm',  
+			            data:  {"ids":id},
+			            dataType: 'json',  
+			            success: function(data){
+			            	if(data.success){
+			            		mTable.draw();
+							}else{
+								layer.msg(data.message);
+							}
+						},
+						error: function(data) {
+							layer.msg('系统异常，请联系系统管理员!');
+						}  
+					});
+				});
+			}
+			
+		</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${baseDescribe}-修改分享配置</title>
+		<meta name="keywords" content="修改分享配置" />
+		<meta name="description" content="修改分享配置" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm")
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						
+						#parse("commons/setting.vm")
+
+                        <div class="page-header">
+                            <h1>编辑分享配置</h1>
+                        </div>
+
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+								<form id="theForm" name="theForm" class="form-horizontal"  enctype="multipart/form-data">
+
+                                    <input type="hidden" id="id" name="id" value="$!{shareConfig.id}" >
+                                    <input type="hidden" id="isDefault" name="isDefault" value="$!{shareConfig.isDefault}">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>分享标题：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="title" id="title" value="$!{shareConfig.title}" type="text" placeholder="分享标题" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>分享类型：</label>
+                                        <div class="col-sm-3">
+                                            <select name="type" id="type"  class="form-control chosen-select" >
+                                                <option value="link" #if($!{shareConfig.type}=="link") selected="selected" #end>链接</option>
+                                                <option value="music" #if($!{shareConfig.type}=="music") selected="selected" #end>音乐</option>
+                                                <option value="video" #if($!{shareConfig.type}=="video") selected="selected" #end>视频</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group  #if($!{shareConfig.type}=="link") hidden #end" id="tab">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>数据链接：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="dataUrl" id="dataUrl" value="$!{shareConfig.dataUrl}" type="text" placeholder="数据链接" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group ">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>分享链接：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="linkUrl" id="linkUrl" value="$!{shareConfig.linkUrl}" type="text" placeholder="分享链接" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>分享描述：</label>
+                                        <div class="col-sm-3">
+                                            <div class="clearfix">
+                                                <input class="form-control" name="description" id="description" value="$!{shareConfig.description}" type="text" placeholder="分享描述" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2"><span class="middle red">*</span>分享图片： </label>
+                                        <div class="col-sm-8 ">
+                                            <div class="clearfix">
+                                                <input class="col-xs-10 col-sm-5 " name="imgUrl" id="imgUrl" type="text" readonly="readonly" value="$!{shareConfig.imgUrl}"/>
+                                                <span class="help-inline col-sm-1">
+                                                    <span class="middle">
+                                                        <a class="btn btn-minier btn-primary" onclick="addImg('imgUrl');">上传</a>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <img id="imgUrl_Preview"  src="$!{shareConfig.imgUrl}" style="height: 100px;width: 100px">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 是否默认 </label>
+                                        <div class="col-sm-8 control-label align-left">
+                                            <div class="clearfix">
+                                                <input type="checkbox" name="defaultCheck" id="defaultCheck" #if($!{shareConfig.isDefault}==1) checked #end class="ace ace-switch ace-switch-2" />
+                                                <span class="lbl"></span>
+                                                <span class="help-inline"><span class="middle">YES：是；NO：否</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="submit" id="submit">
+                                                <i class="icon-ok bigger-110"></i>
+                                                提交
+                                            </button>
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn" type="reset">
+                                                <i class="icon-undo bigger-110"></i>
+                                                重置
+                                            </button>
+                                        </div>
+                                    </div>
+								</form>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/fuelux/fuelux.spinner.js"></script>
+		<script src="${base}/mocentre/js/common.js"></script>
+		<script type="text/javascript">
+
+            $(document).ready(function(){
+
+
+
+                var rules = {},messages = {};
+                rules.title = {required:true};
+                rules.type = {required:true};
+                rules.description = {required:true};
+                rules.linkUrl = {required:true};
+                rules.imgUrl = {required:true};
+                messages.title = {required:"分享标题不能为空"};
+                messages.type = {required:"分享类型不能为空"};
+                messages.description = {required:"分享描述不能为空"};
+                messages.linkUrl = {required:"链接不能为空"};
+                messages.imgUrl = {required:"分享图片不能为空"};
+
+
+                Validate.init("theForm",rules,messages, function(form){
+                    $("input[name='defaultCheck']:checkbox").each(function(){
+                        if($(this).is(':checked')){
+                            $("#isDefault").val(1);
+                        }else{
+                            $("#isDefault").val(0);
+                        }
+                    });
+
+                    if ($("#type").val() != 'link' && $("#dataUrl").val() == ""){
+                        layer.msg("数据链接不能为空");
+                        return;
+                    }
+                    App.formAjaxSubmit('theForm','${base}/sys/share/editShareConfig.htm','post',
+                        function(result){
+                            var suc = result.success;
+                            if (suc) {
+                                window.location.href = "${base}/sys/share/index.htm";
+                            }else {
+                                layer.msg(result.message);
+                            }
+                        }
+                    );
+                })
+            });
+
+            $("#type").change("on",function () {
+                var typeVal = $(this).val();
+                if (typeVal!= "link"){
+                    $("#tab").removeClass("hidden");
+                }else {
+                    $("#tab").addClass("hidden");
+                }
+            });
+
+            /* 上传图片 */
+            function addImg(nodeId){
+                var index = layer.open({
+                    type: 2,
+                    title: "上传图片",
+                    shadeClose: true,
+                    closeBtn: 1,
+                    area: ['30%', '50%'],
+                    content: ['${base}/common/upyun/uploadImg.htm?nodeId='+nodeId, 'no'],
+                    btn: ['关闭'],
+                    yes:function(){
+                        var imgsrc = $("#"+nodeId).val();
+                        if (imgsrc != ''){
+                            $("#"+nodeId+"_Preview").removeClass("hidden");
+                            $("#"+nodeId+"_Preview").attr("src",imgsrc);
+                        }
+                        layer.close(index);
+                    }
+                });
+            }
+		</script>
+</body>
+</html>

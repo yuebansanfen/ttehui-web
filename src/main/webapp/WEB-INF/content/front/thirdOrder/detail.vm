@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="format-detection"  content="telephone=no">
+  <title></title>
+  <script>
+   !function(){function e(){document.documentElement.style.fontSize=(document.documentElement.clientWidth>414?414:document.documentElement.clientWidth)/12+"px"}var n=null;window.addEventListener("resize",function(){clearTimeout(n),n=setTimeout(e,300)},!1),e()}(window);
+ </script>
+</head>
+<style>
+	html {
+		font-family: sans-serif;
+		-ms-text-size-adjust: 100%;
+		-webkit-text-size-adjust: 100%;
+	}
+	html,body,h1,h2,h3,h4,h5,h6,p,ul,ol,form,button,dl,dt,dd,input,textarea {
+		-webkit-box-sizing:border-box;
+		-webkit-tap-highlight-color:rgba(0,0,0,0);
+		padding:0;
+		margin:0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a {
+		background-color: transparent;
+	}
+
+	a:active,
+	a:hover {
+		outline-width: 0;
+	}
+	
+	.pay-box {
+  		position: absolute;
+  		width: 12rem;
+  		height: 100%;
+  		background: #ececec;
+	}
+	.pay-box .pay-container {
+    	position: absolute;
+    	top: 1rem;
+    	left: 0.656rem;
+    	background: #fff;
+    	width: 10.688rem;
+    	min-height: 5.056rem;
+    	border-radius: 0.096rem;
+	}
+	.pay-box .pay-container .title {
+	      margin: 0 0.672rem;
+	      margin-top: 0.128rem;
+	      padding-left: 0.384rem;
+	      width: 8.96rem;
+	      height: 1.344rem;
+	      line-height: 1.344rem;
+	      font-size: 0.576rem;
+	      color: #323232;
+	      border-bottom: 1px solid #ececec;
+	}
+	.pay-box .pay-container .goods {
+	      margin: 0 0.672rem;
+	      width: 9.344rem;
+	      min-height: 1.728rem;
+	      display: -ms-inline-flexbox;
+	      display: inline-flex;
+	}
+	.pay-box .pay-container .goods .label {
+	        margin-left: 0.224rem;
+	        padding-left: 1.152rem;
+	        color: #a0a0a0;
+	        font-size: 0.48rem;
+	        width: 3.2rem;
+	        height: 1.728rem;
+	        line-height: 1.728rem;
+	        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAlCAYAAADFniADAAACTElEQVRYhe3YT4hNYRjH8c+9c/3/OyFslLKzQEOYUrpXEUWKlGRDKZZkYzHYKRtFKTsa+bdQlhw1hCwkFpgsZIWFlPwLYyze9zSnibnn3jvdQ82vbu9zzn3e93zPc97zvM97StVqVdQB7MEi7dcbXEyS5BiUIlQvdhYAM1yP0F0RYFKgH7iHgTbDLMY8dKGngn3xj49YheftpEmSRK1Wm4JnWIAd5UgIL9sNlAH7jPvxcFIZX+JBRxFAGZVjO1DOnCwVQZJRGpTB8ohuBake1Cxcwk0sa/Fa83EVt7B8JMdKnYGuYW20+wTIH01CncXmaN/GTPz6k2O9SHVm7AGtzbvJGXvaSGPVg9qBt9E+jO8tQO03FJntRkjQ9aD6cTra01sAgglCdJ4I0+KvyvP23Y3toRahTkWo8/Uc80DdEVbxeTjTJNA2pOVI72hAMbQ+7sfeBoG6hFQAx/FutKBu4EK0z+Fgzn5b8DDa/ejJ06mRjL4b16N9UnismzBnmN8UrMaV6N+BV/FcLtVLnsO1FUeFO14Tfz/xGO8xUcj8MzJ9eoXH/znvRZpZ+45iiRCFb8KNrcAGIfunQH1Yj12NANF4pFI9FaLWiXURciq+CjVZH143OXbTUKk+CG/W1XqOjei/LF0K0RhUXo1B5dUYVF79s1BpAT9YJIjMzqaM8dFudus0Wko3JZWysH7BQqEWKkpLYztYEYqxbszGC1zGp3aR1Gq1CjYK36jgVqlarY7DA6GWLlrvsLQizKWVOCHU1HMLgPmABEeSJHn7GwhrbMqaEtY4AAAAAElFTkSuQmCC) no-repeat;
+	        background-size: 0.592rem 0.592rem;
+	        background-position: 0.288rem 0.568rem;
+	}
+	.pay-box .pay-container .goods .goods-list {
+	        margin-top: 0.448rem;
+	}
+	.pay-box .pay-container .goods .goods-list li {
+          color: #a0a0a0;
+          font-size: 0.48rem;
+          width: 5.12rem;
+          height: 0.832rem;
+          display: -ms-flexbox;
+          display: flex;
+	}
+	.pay-box .pay-container .goods .goods-list li .name {
+            width: 3.84rem;
+            height: 0.832rem;
+            line-height: 0.832rem;
+            text-align: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+	}
+	.pay-box .pay-container .goods .goods-list li .num {
+            padding: 0 0.16rem;
+            width: 0.96rem;
+            height: 0.832rem;
+            line-height: 0.832rem;
+	}
+	.pay-box .pay-container .price {
+	      margin: 0 0.672rem;
+	      width: 9.344rem;
+	      height: 1.664rem;
+	      display: -ms-inline-flexbox;
+	      display: inline-flex;
+	}
+	.pay-box .pay-container .price .label {
+	        margin-left: 0.224rem;
+	        padding-left: 1.152rem;
+	        width: 3.616rem;
+	        height: 1.344rem;
+	        color: #a0a0a0;
+	        font-size: 0.48rem;
+	        line-height: 1.344rem;
+	        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAlCAYAAADFniADAAAE7klEQVRYhaXYa8wdRRkH8N97etpKK5UXaCmCxg8iCYpFiBJSQui7gCGGAII21PCl1FAgII2B0g8FTAmkQKoC4VJFExRJwCiEgqAsiVzaxsYAmkihARIuDRUULBT7lhb88MzmzNmeyx78J5udyzMz/5155rns2MTEhE+ABTgK8/BlHIqZ2ImteAF/xT/wCHb3m6gsy73a2iMQmYNLcRq+0kdmX8xOZL+b2l7DQ/gxXmyyUKuhzGq8jBV9CL2FV7ENu2p9n8NSsXu3Yf9hCw7bqWNxF75Ua9+Ep/B0Km/DJKZhXBztifgGcv1YioVYjPs/CamLcEut7dfpebTPmF2J4KOZzPxE5EJMSaR/j1W4stck/Y5vdY3QJhyHcwcQ6oencQkOx+NZ+0rc3ZTUUlye1X8jjmHjiGTqeAmF+OAKi4qiuHYYqa8JZaxwM773f5Kp4wr8MKuvKIrijEGkHszK94htr+NsnNKQwDx8p8c6a3BNVr+vKIpZvUitwSGp/Hcs6rHIctwn9Or7Qwh9Hc/iXqzt0b9SZxPaQk26SM3GsmxA13ZmmJaV14qr3QtHY31W72ebFgovAN8qimJeTqqu2C/3mWQV7szqd+K8mkx1KSpz82wPmQr/xU+z+koYm5iYaAlX8NnUMQ9/6zNJhZ/XFlqSCB6ZSFQf+1wiWbfyOebgdUxNcoe0cHJGaEMDQhWJe2okr8SfMkLPC48wiJCyLP+Jdak6Dae2hEJW+EMDQhUWJTIVfoSDUvk5YV4mG861LivPr5N6bARSxA38Sa1tvfB9TQlVpPak8jEtoUOwA8+MSIq4tc+n8nbh60ZCOsKtqTreFuaACD929hzVwRfwM8zV+bJJHZ2cjj/jM6k+Be+J2/3UkLnfFWHOp9v4eIhwjqtx0oD+6TihR/vNQscGYUd6z2iL2zFTXMlhWCuihdk6OwX7Cbv0Ed7R+dApeF9EncMwlt4ft/G2iHHGMQMfDBi4XoQgMxKBChuFbv4bX9RR8pYwkE1Oo/J977VEcC8t9NUGgwniO7On2voP8Z+s/YMmhIqiaIvkA7a3RdZxempYYHjcNFccV47x9J4uPiw3mJN4ZcicEyLpgM1tYejyzusGDD4bv8Kn+vTvX5uvwnJcP2DeM7PyEy0RhvwrNZyEzw8YfMoAQoNwVr+OoihaNVKPtMX23q/jYJfpDmNyXCEUfI7QlUpfCnGkk8JV7RG3qSXs1A0DCJ+n4542lGW5eSxlyIfpJIq70wI79h7fFxuF830TB48wDt7QMb6nlWW5rvLoW0TqRNibB0acuLJxU9LTFDdlhJ4py3Id3eHwEp1bUwjr3RRjWbnpr4BzcHFWX1gVclKTeQeuwvkNFzggvWfVCPbDqbKYHMvLstzSixSh8Ddm9dt1h8r9UJmBNw0J6kQc9nC+ZlmWXeaiVzJ6mUirK6wWkcGMIQstFsf+0QC5Nbqz4k1lWZ5ZF+qXtn9bKGGFJSLDvVzHeud4H79MMnVMxwXYrNvU/FbE73th0K+gH+hODuaKXXtJJAln6TjROvYRenNbkr9VOPIKK0SS2hPDbsov8KT42VFlxePiqBaLSHOr2KndwhzMFMbwgPpkeEKox18GLdrk+m7BN4W+XCiOtsIs/Xcrxx9xB37XQHak34tleg4X0eXxOAIHJmJTxW5tF3HVZhECbzBi7P8/ErsbAAjjwBIAAAAASUVORK5CYII=) no-repeat;
+	        background-size: 0.592rem 0.592rem;
+	        background-position: 0.288rem 0.376rem;
+	}
+	.pay-box .pay-container .price .totalPrice {
+	        width: 5.12rem;
+	        height: 1.344rem;
+	        line-height: 1.344rem;
+	        font-size: 0.48rem;
+	        color: #09bb07;
+	}
+	.pay-box .pay-container .submit {
+	      position: fixed;
+	      left: 0.48rem;
+	      bottom: 0.8rem;
+	      font-size: 0.576rem;
+	      width: 11.04rem;
+	      height: 1.408rem;
+	      line-height: 1.408rem;
+	      text-align: center;
+	      color: #ececec;
+	      border-radius: 0.16rem;
+	      background: #55b837;
+	}
+</style>
+<body>
+	<div class="pay-box">
+		<div class="pay-container">
+			<div class="title">支付信息</div>
+			#if($orderDetail.detailList&&$orderDetail.detailList.size()>0)
+			<div class="goods">
+				<div class="label">
+					商品描述
+				</div>
+				<ul class="goods-list">
+					#foreach($detail in $orderDetail.detailList)
+					<li>
+						<div class="name">
+							$!{detail.goodsName}
+						</div>
+						<div class="num">
+							$!{detail.buyNum}
+						</div>
+					</li>
+					#end
+				</ul>
+			</div>
+			#end
+			<div class="price">
+				<div class="label">实收金额</div>
+				<div class="totalPrice">¥$!{orderDetail.totalMoney}</div>
+			</div>
+			<div class="submit" onclick="goPay()">去付款</div>
+		</div>
+	</div>
+</body>
+<script>
+	function onBridgeReady(){
+   		WeixinJSBridge.invoke(
+       		'getBrandWCPayRequest', {
+           		"appId":"$!{wxPayData.appId}",
+           		"timeStamp":"$!{wxPayData.timeStamp}",
+           		"nonceStr":"$!{wxPayData.nonceStr}",
+           		"package":"$!{wxPayData.packageStr}",
+           		"signType":"$!{wxPayData.signType}",
+           		"paySign":"$!{wxPayData.paySign}"
+       		},
+       		function(res){
+       			//var strRes = JSON.stringify(res); 
+       			//alert(strRes)
+           		if(res.err_msg == "get_brand_wcpay_request:ok") {
+           			window.location="${base}/front/notify/tdResultSuccess.htm?total=$!{orderDetail.totalMoney}&returnUrl=$!{returnUrl}";
+           		}else{
+           			window.location="${base}/front/notify/tdResultFail.htm?total=$!{orderDetail.totalMoney}&returnUrl=$!{returnUrl}";
+           		}
+       		}
+   		); 
+	}
+	function goPay(){
+		if (typeof WeixinJSBridge == "undefined"){
+	   		if( document.addEventListener ){
+				document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	   		}else if (document.attachEvent){
+	       		document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+	       		document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	   		}
+		}else{
+	   		onBridgeReady();
+		} 
+	}
+</script>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>买家用户详细信息-${baseDescribe}</title>
+    <meta name="keywords" content="详细信息" />
+    <meta name="description" content="详细信息" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	#parse("commons/commonCss.vm")
+	#parse("commons/commonJs.vm")
+</head>
+
+<body class="no-skin">
+	#parse("commons/header.vm")
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <div class="main-container-inner">
+
+		#parse("commons/sidebar.vm")
+        <div class="main-content">
+
+			#parse("commons/breadcrumbs.vm")
+            <div class="page-content">
+
+				#parse("commons/setting.vm")
+                <div class="page-header">
+                    <h1>
+                    	用户详细信息#parse("commons/backurl.vm")
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form id="theForm" name="theForm" class="form-horizontal">
+                            <input type="hidden" name="status" id="status" value=""/>
+                            <input type="hidden" name="token" id="token" value="$!token" />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 手机号 ：</label>
+
+                                <div class="col-sm-9">
+                                    <label id="telephone" name="telephone"class="col-xs-10 col-sm-5 control-label align-left">$!{cusInfo.telephone}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 注册时间  ：</label>
+                                <div class="col-sm-9">
+                                    <label id="registerTime" name="registerTime"class="col-xs-10 col-sm-5 control-label align-left">$!date.format('yyyy-MM-dd HH:mm:ss ',$!{cusInfo.registerTime})</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 最后登录时间 ： </label>
+                                <div class="col-sm-9">
+                                    <label id="lastLoginTime" name="lastLoginTime"class="col-xs-10 col-sm-5 control-label align-left">$!date.format('yyyy-MM-dd HH:mm:ss ',$!{cusInfo.lastLoginTime})</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-2"> 性别  ：</label>
+                                <div class="col-sm-9">
+                                    <label id="sex" name="sex" class="col-xs-10 col-sm-5 control-label align-left">#if(${cusInfo.sex}=='1')男 #elseif(${cusInfo.sex}=='2')女 #else保密#end</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 生日  ：</label>
+                                <div class="col-sm-9">
+                                    <label id="birthday" name="birthday" class="col-xs-10 col-sm-5 control-label align-left">$!date.format('yyyy-MM-dd HH:mm:ss ',$!{cusInfo.birthday})</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 邮件 ： </label>
+                                <div class="col-sm-9">
+                                    <label id="email" name="email" class="col-xs-10 col-sm-5 control-label align-left">$!{cusInfo.email}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 头像 ： </label>
+                                <div class="col-sm-9">
+                                    <div class="clearfix">
+                                    	#if($!{cusInfo.profile}&&$!{cusInfo.profile}!='')
+                                    	<img src="$!{cusInfo.profile}" width="100" height="100" />
+                                    	#else
+                                    	<img src="${base}/mocentre/images/profile.png" width="100" height="100" />
+                                    	#end
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 积分 ： </label>
+                                <div class="col-sm-9">
+                                    <label id="integral" name="integral" class="col-xs-10 col-sm-5 control-label align-left">$!{cusInfo.integral}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 等级  ：</label>
+                                <div class="col-sm-9">
+                                    <label id="level" name="level" class="col-xs-10 col-sm-5 control-label align-left">$!{cusInfo.level}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 成长值  ：</label>
+                                <div class="col-sm-9">
+                                    <label id="growth" name="growth" class="col-xs-10 col-sm-5 control-label align-left">$!{cusInfo.growth}</label>
+                                </div>
+                            </div>
+                            <h5 class="padding-2"> 收货地址列表</h5> 
+							<hr>
+                            <table class="table" id="addressTable">
+                                <thead>
+	                                <tr>
+	                                    <th>收货人</th>
+	                                    <th>电话号码</th>
+	                                    <th>收货地址</th>
+	                                    <th>是否默认</th>
+	                                </tr>
+                                </thead>
+                                <tbody>
+                                	#foreach($adds in $cusInfo.customerAddsList)
+                                	<tr>
+                                		<th>${adds.recipient}</th>
+	                                    <th>${adds.telephone}</th>
+	                                    <th>${adds.provinceName}${adds.cityName}${adds.areaName}${adds.address}</th>
+	                                    <th>#if(${adds.isDefault}==1)是#else否#end</th>
+                                	</tr>
+                                	#end
+                                </tbody>
+                            </table>
+                        </form>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+    </div><!-- /.main-container-inner -->
+
+	#parse("commons/scroll.vm")
+</div><!-- /.main-container -->
+#parse("commons/footerJs.vm")
+</body>
+</html>

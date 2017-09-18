@@ -1,0 +1,9 @@
+		<!-- ace settings handler -->
+
+		<script src="${base}/mocentre/js/ace-extra.js"></script>
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+		<script src="${base}/mocentre/js/html5shiv.js"></script>
+		<script src="${base}/mocentre/js/respond.min.js"></script>
+		<![endif]-->

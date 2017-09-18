@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>菜单管理-${baseDescribe}</title>
+		<meta name="keywords" content="菜单管理" />
+		<meta name="description" content="菜单管理" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		#parse("commons/commonCss.vm") 
+		#parse("commons/commonJs.vm")
+	</head>
+
+	<body class="no-skin">
+		#parse("commons/header.vm")
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+
+				#parse("commons/sidebar.vm")
+				<div class="main-content">
+					
+					#parse("commons/breadcrumbs.vm")
+					<div class="page-content">
+						#parse("commons/setting.vm")
+						<div class="row">
+							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="row">
+									<form id="search_form" class="form-inline">
+										<a class="btn btn-sm btn-primary" href="${base}/sys/rule/add.htm" value="">新增</a> 
+										<input type="text" id="title" name="title" class="input-sm" placeholder="菜单名称">&nbsp;&nbsp;
+										<button type="submit" class="btn btn-purple btn-sm" >
+											搜索
+										</button>
+										<button type="submit" class="btn btn-purple btn-sm pull-right inline">
+											<i class="icon-refresh"></i>
+											刷新
+										</button>
+									</form>
+								</div>
+								<div class="space-4"></div>
+								
+								<div class="row">
+									<div class="table-header"></div>
+									<div class="table-responsive">
+										<table id="sample-table" width="100%" class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th width="25%">菜单名称</th>
+													<th width="20%">链接</th>
+													<th width="10%">图标</th>
+													<th width="10%">类型</th>
+													<th width="7%">排序</th>
+													<th width="18%">创建日期</th>
+													<th width="10%">操作</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th width="25%">菜单名称</th>
+													<th width="20%">链接</th>
+													<th width="10%">图标</th>
+													<th width="10%">类型</th>
+													<th width="7%">排序</th>
+													<th width="18%">创建日期</th>
+													<th width="10%">操作</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			#parse("commons/scroll.vm")
+		</div><!-- /.main-container -->
+
+		#parse("commons/footerJs.vm")
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.js"></script>
+		<script src="${base}/mocentre/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script type="text/javascript">
+			var mTable;
+			$(document).ready(function() {
+			    mTable = $('#sample-table').dataTable({
+					"processing": true,
+					"serverSide": true,
+					"ajax": {
+	               		url:"${base}/sys/rule/queryList.htm",
+	               		type:"post",
+	               		data: function (d) {
+	                   		d.title = $('#title').val();
+	               		},
+                        "dataSrc":function(json){
+                            if(!json.success){
+                                json.data=[];
+                                var code = json.code;
+                                if(code==400){
+                                    Box.alert(json.message,function(){
+                                        window.location.href="${base}/sys/login/logout";
+                                    },"确定");
+                                }else{
+                                    layer.msg(json.message);
+                                }
+                            }
+                            return json.data;
+                        }
+	               	},
+					"columns" : [
+						{"data":"title","orderable":true}, 
+						{"data":"url","orderable":false}, 
+						{"data":"icon"}, 
+						{"data":"type","orderable":false}, 
+						{"data":"orderby","orderable":false}, 
+						{"data":"gmtCreated"}
+					],
+					"columnDefs": [
+	        			{
+	                    	"orderable":false,
+	                    	"render":function(data, type, row){
+	                             	 	return "<i class=\""+data+"\"></i>";  
+	                             	},
+	                    	"targets":2,
+	        			},
+	        			{
+	                    	"orderable":false,
+	                    	"render":function(data, type, row){
+	                             	 	if(data==1){
+	                             	 		return "菜单";
+	                             	 	}else if(data==2){
+	                             	 		return "按钮";
+	                             	 	}
+	                             	},
+	                    	"targets":3
+	        			},
+						{
+							"render":function(data, type, row){
+	                             	 	return displayDate(data,"yyyy-MM-dd hh:mm:ss");  
+	                             	},
+	                    	"targets":5,
+	                    	"orderable":false 
+						},
+						{
+	                    	"render":function(data, type, row){
+		                    				var ope = [];
+		                    				ope.push("<div class=\"nowrap\"><div class=\"btn-group\">");
+		                    				ope.push("<a href=\"${base}/sys/rule/edit.htm?id="+row.id+"\">修改</a>");
+		                    				ope.push("<span class=\"text-explode\">|</span>");
+		                    				ope.push("<a href=\"javascript:void(0);\" onclick=\"del("+row.id+")\">删除</a>");
+		                    				ope.push("</div></div>");
+	                    				return ope.join("");
+	                             	},
+	                    	"targets":6,
+	                    	"orderable":false 
+	        			}
+	        		],
+	        		"paging":   false,
+					"ordering": false,
+					"bFilter" : false,
+					"bInfo": false,
+					"oLanguage" : {
+						"sUrl" : "${base}/mocentre/js/dataTables/de_DE.txt"
+					}
+				});
+				
+				$('table th input:checkbox').on('click' , function(){
+					var that = this;
+					$(this).closest('table').find('tr > td:first-child input:checkbox').each(function(){
+						this.checked = that.checked;
+						$(this).closest('tr').toggleClass('selected');
+					});
+							
+				});
+				$('#search_form').submit(function(){
+					mTable.fnDraw();
+					return false;
+				});
+			});
+			
+			function del(id){
+				Box.confirm("是否删除该菜单?",function(){
+					jQuery.ajax({
+			            type: 'post', 
+			            url: '${base}/sys/rule/delete.htm',  
+			            data:  {"ids":id},
+			            dataType: 'json',  
+			            success: function(data){
+			            	if(data.success){
+			            		mTable.fnDraw();
+							}else{
+								Box.alert(data.message);
+							}
+						},
+						error: function(data) {
+							Box.alert('系统异常，请联系系统管理员!');
+						}  
+					});
+				});
+			}
+		</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon"></i>
+								<a href="#">首页</a>
+							</li>
+							#foreach($pc in $pcList)
+							<li #if($curMenuid&&$!pc.id==$!curMenuid)class="active"#end>
+								#if($showMenuid&&$!pc.id==$!showMenuid)
+								<a href="${base}/$pc.url">$pc.title</a>
+								#else
+								$pc.title
+								#end
+							</li>
+							#end
+						</ul><!-- .breadcrumb -->
+						
+					</div>
